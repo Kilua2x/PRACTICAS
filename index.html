@@ -1,4 +1,3 @@
-<iframe id="practicasIframe" style="width:100%; height:1200px; border:none;" srcdoc="
 <!DOCTYPE html>
 <html lang='es'>
 <head>
@@ -15,7 +14,9 @@
         .estado-no-comienza { background-color: #ffcccc; color: #990000; }
         .estado-en-proceso { background-color: #ffffcc; color: #999900; }
         .estado-completada { background-color: #ccffcc; color: #009900; }
-        .chart-container { height: 400px; }
+        .evaluacion-excelente { color: #009900; }
+        .evaluacion-malo { color: #990000; }
+        .chart-container { height: 400px; margin-bottom: 30px; }
     </style>
 </head>
 <body>
@@ -27,14 +28,15 @@
                     <th>Nombre y Apellidos</th>
                     <th>RUT</th>
                     <th>Carrera</th>
+                    <th>SEDE</th>
+                    <th>Nombre instructor</th>
                     <th>Fecha de Inicio</th>
                     <th>Fecha de Término</th>
-                    <th>Seguimiento semana 2</th>
+                    <th>Seguimiento 1</th>
                     <th>Evaluación parcial</th>
-                    <th>Seguimiento mensual 1</th>
-                    <th>Revisión medio término</th>
-                    <th>Seguimiento mensual 2</th>
-                    <th>Preparación cierre</th>
+                    <th>Seguimiento 2</th>
+                    <th>Revisión de avance</th>
+                    <th>Evaluación instructor</th>
                     <th>Finalización práctica</th>
                     <th>Asignación hora examen título</th>
                 </tr>
@@ -47,12 +49,17 @@
             <button id='exportButton' class='btn btn-primary'>Exportar a Excel</button>
         </div>
         <div class='row mt-4'>
-            <div class='col-md-6'>
+            <div class='col-md-4'>
                 <div class='chart-container'>
                     <canvas id='estadosPracticasChart'></canvas>
                 </div>
             </div>
-            <div class='col-md-6'>
+            <div class='col-md-4'>
+                <div class='chart-container'>
+                    <canvas id='sedesChart'></canvas>
+                </div>
+            </div>
+            <div class='col-md-4'>
                 <div class='chart-container'>
                     <canvas id='carrerasChart'></canvas>
                 </div>
@@ -79,6 +86,8 @@
             'Técnico en Turismo'
         ];
 
+        const sedes = ['Ancud', 'Calama', 'Los Andes', 'San Felipe', 'Machali'];
+
         function generarRUTChileno() {
             let rut = Math.floor(Math.random() * 30000000) + 5000000;
             let dv = 11 - (rut % 11);
@@ -103,6 +112,22 @@
             </select>`;
         }
 
+        function crearSelectEvaluacion() {
+            return `<select class='form-select evaluacion-select'>
+                <option value='excelente' class='evaluacion-excelente'>Excelente</option>
+                <option value='bien'>Bien</option>
+                <option value='suficiente'>Suficiente</option>
+                <option value='deficiente'>Deficiente</option>
+                <option value='malo' class='evaluacion-malo'>Malo</option>
+            </select>`;
+        }
+
+        function crearSelectSede() {
+            return `<select class='form-select sede-select'>
+                ${sedes.map(sede => `<option value='${sede}'>${sede}</option>`).join('')}
+            </select>`;
+        }
+
         function generarFilas() {
             let tbody = $('#seguimientoPracticas tbody');
             for (let i = 0; i < 100; i++) {
@@ -111,14 +136,15 @@
                         <td><input type='text' class='form-control' value='${generarNombreApellido()}'></td>
                         <td><input type='text' class='form-control' value='${generarRUTChileno()}'></td>
                         <td><input type='text' class='form-control carrera-input' value='${carreras[Math.floor(Math.random() * carreras.length)]}'></td>
+                        <td>${crearSelectSede()}</td>
+                        <td><input type='text' class='form-control' placeholder='Nombre del instructor'></td>
                         <td><input type='text' class='form-control datepicker'></td>
                         <td><input type='text' class='form-control datepicker'></td>
                         <td>${crearSelectEstado()}</td>
+                        <td>${crearSelectEvaluacion()}</td>
                         <td>${crearSelectEstado()}</td>
-                        <td>${crearSelectEstado()}</td>
-                        <td>${crearSelectEstado()}</td>
-                        <td>${crearSelectEstado()}</td>
-                        <td>${crearSelectEstado()}</td>
+                        <td>${crearSelectEvaluacion()}</td>
+                        <td>${crearSelectEvaluacion()}</td>
                         <td>${crearSelectEstado()}</td>
                         <td>${crearSelectEstado()}</td>
                     </tr>
@@ -126,11 +152,12 @@
             }
         }
 
-        let estadosChart, carrerasChart;
+        let estadosChart, carrerasChart, sedesChart;
 
         function actualizarGraficos() {
             actualizarGraficoEstados();
             actualizarGraficoCarreras();
+            actualizarGraficoSedes();
         }
 
         function actualizarGraficoEstados() {
@@ -148,37 +175,79 @@
                 estadosChart.data.datasets[0].data = [estados['no-comienza'], estados['en-proceso'], estados['completada']];
                 estadosChart.update();
             } else {
-                let ctx = document.getElementById('estadosPracticasChart').getContext('2d');
+                const ctx = document.getElementById('estadosPracticasChart').getContext('2d');
                 estadosChart = new Chart(ctx, {
                     type: 'pie',
                     data: {
                         labels: ['No comienza', 'En proceso', 'Completada'],
                         datasets: [{
+                            label: 'Estados de Prácticas',
                             data: [estados['no-comienza'], estados['en-proceso'], estados['completada']],
                             backgroundColor: ['#ffcccc', '#ffffcc', '#ccffcc']
                         }]
                     },
                     options: {
+                        responsive: true
+                    }
+                });
+            }
+        }
+
+        function actualizarGraficoCarreras() {
+            let conteoCarreras = {};
+            carreras.forEach(carrera => conteoCarreras[carrera] = 0);
+
+            $('.carrera-input').each(function() {
+                let carrera = $(this).val();
+                if (conteoCarreras[carrera] !== undefined) {
+                    conteoCarreras[carrera]++;
+                }
+            });
+
+            if (carrerasChart) {
+                carrerasChart.data.datasets[0].data = carreras.map(carrera => conteoCarreras[carrera]);
+                carrerasChart.update();
+            } else {
+                const ctx = document.getElementById('carrerasChart').getContext('2d');
+                carrerasChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: carreras,
+                        datasets: [{
+                            label: 'Número de Estudiantes por Carrera',
+                            data: carreras.map(carrera => conteoCarreras[carrera]),
+                            backgroundColor: '#42A5F5'
+                        }]
+                    },
+                    options: {
                         responsive: true,
-                        maintainAspectRatio: false,
                         plugins: {
-                            title: {
-                                display: true,
-                                text: 'Estado de las Prácticas'
-                            },
                             legend: {
-                                position: 'bottom'
+                                display: false
                             },
                             tooltip: {
                                 callbacks: {
                                     label: function(context) {
-                                        let label = context.label || '';
-                                        let value = context.parsed || 0;
-                                        let sum = context.dataset.data.reduce((a, b) => a + b, 0);
-                                        let percentage = Math.round((value * 100) / sum) + '%';
-                                        return label + ': ' + value + ' (' + percentage + ')';
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            label += context.parsed.y;
+                                        }
+                                        return label;
                                     }
                                 }
+                            }
+                        },
+                        scales: {
+                            x: { 
+                                title: { display: true, text: 'Carreras' },
+                                ticks: { autoSkip: false, maxRotation: 90, minRotation: 45 }
+                            },
+                            y: { 
+                                title: { display: true, text: 'Número de Estudiantes' },
+                                beginAtZero: true
                             }
                         }
                     }
@@ -186,59 +255,34 @@
             }
         }
 
-        function actualizarGraficoCarreras() {
-            let carrerasCount = {};
+        function actualizarGraficoSedes() {
+            let conteoSedes = {};
+            sedes.forEach(sede => conteoSedes[sede] = 0);
 
-            $('.carrera-input').each(function() {
-                let carrera = $(this).val();
-                carrerasCount[carrera] = (carrerasCount[carrera] || 0) + 1;
+            $('.sede-select').each(function() {
+                let sede = $(this).val();
+                if (conteoSedes[sede] !== undefined) {
+                    conteoSedes[sede]++;
+                }
             });
 
-            if (carrerasChart) {
-                carrerasChart.data.labels = Object.keys(carrerasCount);
-                carrerasChart.data.datasets[0].data = Object.values(carrerasCount);
-                carrerasChart.update();
+            if (sedesChart) {
+                sedesChart.data.datasets[0].data = sedes.map(sede => conteoSedes[sede]);
+                sedesChart.update();
             } else {
-                let ctx = document.getElementById('carrerasChart').getContext('2d');
-                carrerasChart = new Chart(ctx, {
-                    type: 'bar',
+                const ctx = document.getElementById('sedesChart').getContext('2d');
+                sedesChart = new Chart(ctx, {
+                    type: 'pie',
                     data: {
-                        labels: Object.keys(carrerasCount),
+                        labels: sedes,
                         datasets: [{
-                            label: 'Número de estudiantes',
-                            data: Object.values(carrerasCount),
-                            backgroundColor: 'rgba(75, 192, 192, 0.6)'
+                            label: 'Participación por Sede',
+                            data: sedes.map(sede => conteoSedes[sede]),
+                            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
                         }]
                     },
                     options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: 'Distribución de Estudiantes por Carrera'
-                            },
-                            legend: {
-                                display: false
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        let value = context.parsed.y || 0;
-                                        return 'Estudiantes: ' + value;
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: 'Número de estudiantes'
-                                }
-                            }
-                        }
+                        responsive: true
                     }
                 });
             }
@@ -246,39 +290,23 @@
 
         $(document).ready(function() {
             generarFilas();
-
-            flatpickr.localize(flatpickr.l10ns.es);
-            
-            flatpickr('.datepicker', {
-                dateFormat: 'd-m-Y',
-                minDate: 'today',
-                maxDate: '31-12-2025',
-                locale: 'es'
-            });
-
-            let table = $('#seguimientoPracticas').DataTable({
-                pageLength: 10,
-                lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json'
-                },
+            $('#seguimientoPracticas').DataTable({
+                'pageLength': 10,
                 dom: 'Bfrtip',
                 buttons: [
                     {
-                        extend: 'excel',
+                        extend: 'excelHtml5',
                         text: 'Exportar a Excel',
                         filename: 'seguimiento_practicas',
                         exportOptions: {
                             columns: ':visible',
                             format: {
-                                body: function (data, row, column, node) {
-                                    let $node = $(node);
-                                    let $input = $node.find('input');
-                                    let $select = $node.find('select');
-                                    if ($input.length) {
-                                        return $input.val();
-                                    } else if ($select.length) {
-                                        return $select.val();
+                                body: function ( data, row, column, node ) {
+                                    // Verifica si el contenido es un select o un input
+                                    if ($(node).find('select').length > 0) {
+                                        return $(node).find('select').val();
+                                    } else if ($(node).find('input').length > 0) {
+                                        return $(node).find('input').val();
                                     }
                                     return data;
                                 }
@@ -286,41 +314,19 @@
                         }
                     }
                 ],
-                responsive: true
+                columnDefs: [
+                    { targets: [0, 1, 2], searchable: false }
+                ]
             });
 
-            $('#exportButton').on('click', function() {
-                table.button('.buttons-excel').trigger();
+            $('.datepicker').flatpickr({
+                locale: 'es'
             });
 
-            // Cambiar el color de fondo de los select según la opción seleccionada
-            $(document).on('change', '.estado-select', function() {
-                $(this).removeClass('estado-no-comienza estado-en-proceso estado-completada');
-                $(this).addClass('estado-' + $(this).val());
-                actualizarGraficos();
-            });
+            $('.estado-select, .evaluacion-select, .sede-select, .carrera-input').on('change', actualizarGraficos);
 
-            // Actualizar gráficos cuando se modifique una carrera
-            $(document).on('change', '.carrera-input', function() {
-                actualizarGraficos();
-            });
-
-            // Inicializar gráficos
             actualizarGraficos();
-
-            // Ajustar el tamaño del iframe
-            window.parent.postMessage({ event: 'resize', height: document.body.scrollHeight }, '*');
         });
     </script>
 </body>
 </html>
-">
-</iframe>
-
-<script>
-window.addEventListener('message', function(e) {
-    if (e.data && e.data.event === 'resize') {
-        document.getElementById('practicasIframe').style.height = e.data.height + 'px';
-    }
-}, false);
-</script>
