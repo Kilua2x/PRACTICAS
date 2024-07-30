@@ -1,4 +1,4 @@
-<iframe id="practicasIframe" style="width:100%; height:800px; border:none;" srcdoc="
+<iframe id="practicasIframe" style="width:100%; height:1200px; border:none;" srcdoc="
 <!DOCTYPE html>
 <html lang='es'>
 <head>
@@ -15,6 +15,7 @@
         .estado-no-comienza { background-color: #ffcccc; color: #990000; }
         .estado-en-proceso { background-color: #ffffcc; color: #999900; }
         .estado-completada { background-color: #ccffcc; color: #009900; }
+        .chart-container { height: 400px; }
     </style>
 </head>
 <body>
@@ -45,6 +46,18 @@
         <div class='text-center mt-3'>
             <button id='exportButton' class='btn btn-primary'>Exportar a Excel</button>
         </div>
+        <div class='row mt-4'>
+            <div class='col-md-6'>
+                <div class='chart-container'>
+                    <canvas id='estadosPracticasChart'></canvas>
+                </div>
+            </div>
+            <div class='col-md-6'>
+                <div class='chart-container'>
+                    <canvas id='carrerasChart'></canvas>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>
@@ -56,6 +69,7 @@
     <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/flatpickr'></script>
     <script src='https://npmcdn.com/flatpickr/dist/l10n/es.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/chart.js'></script>
 
     <script>
         const carreras = [
@@ -96,7 +110,7 @@
                     <tr>
                         <td><input type='text' class='form-control' value='${generarNombreApellido()}'></td>
                         <td><input type='text' class='form-control' value='${generarRUTChileno()}'></td>
-                        <td><input type='text' class='form-control' value='${carreras[Math.floor(Math.random() * carreras.length)]}'></td>
+                        <td><input type='text' class='form-control carrera-input' value='${carreras[Math.floor(Math.random() * carreras.length)]}'></td>
                         <td><input type='text' class='form-control datepicker'></td>
                         <td><input type='text' class='form-control datepicker'></td>
                         <td>${crearSelectEstado()}</td>
@@ -109,6 +123,124 @@
                         <td>${crearSelectEstado()}</td>
                     </tr>
                 `);
+            }
+        }
+
+        let estadosChart, carrerasChart;
+
+        function actualizarGraficos() {
+            actualizarGraficoEstados();
+            actualizarGraficoCarreras();
+        }
+
+        function actualizarGraficoEstados() {
+            let estados = {
+                'no-comienza': 0,
+                'en-proceso': 0,
+                'completada': 0
+            };
+
+            $('.estado-select').each(function() {
+                estados[$(this).val()]++;
+            });
+
+            if (estadosChart) {
+                estadosChart.data.datasets[0].data = [estados['no-comienza'], estados['en-proceso'], estados['completada']];
+                estadosChart.update();
+            } else {
+                let ctx = document.getElementById('estadosPracticasChart').getContext('2d');
+                estadosChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['No comienza', 'En proceso', 'Completada'],
+                        datasets: [{
+                            data: [estados['no-comienza'], estados['en-proceso'], estados['completada']],
+                            backgroundColor: ['#ffcccc', '#ffffcc', '#ccffcc']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Estado de las Prácticas'
+                            },
+                            legend: {
+                                position: 'bottom'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        let value = context.parsed || 0;
+                                        let sum = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        let percentage = Math.round((value * 100) / sum) + '%';
+                                        return label + ': ' + value + ' (' + percentage + ')';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function actualizarGraficoCarreras() {
+            let carrerasCount = {};
+
+            $('.carrera-input').each(function() {
+                let carrera = $(this).val();
+                carrerasCount[carrera] = (carrerasCount[carrera] || 0) + 1;
+            });
+
+            if (carrerasChart) {
+                carrerasChart.data.labels = Object.keys(carrerasCount);
+                carrerasChart.data.datasets[0].data = Object.values(carrerasCount);
+                carrerasChart.update();
+            } else {
+                let ctx = document.getElementById('carrerasChart').getContext('2d');
+                carrerasChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(carrerasCount),
+                        datasets: [{
+                            label: 'Número de estudiantes',
+                            data: Object.values(carrerasCount),
+                            backgroundColor: 'rgba(75, 192, 192, 0.6)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Distribución de Estudiantes por Carrera'
+                            },
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let value = context.parsed.y || 0;
+                                        return 'Estudiantes: ' + value;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Número de estudiantes'
+                                }
+                            }
+                        }
+                    }
+                });
             }
         }
 
@@ -165,7 +297,16 @@
             $(document).on('change', '.estado-select', function() {
                 $(this).removeClass('estado-no-comienza estado-en-proceso estado-completada');
                 $(this).addClass('estado-' + $(this).val());
+                actualizarGraficos();
             });
+
+            // Actualizar gráficos cuando se modifique una carrera
+            $(document).on('change', '.carrera-input', function() {
+                actualizarGraficos();
+            });
+
+            // Inicializar gráficos
+            actualizarGraficos();
 
             // Ajustar el tamaño del iframe
             window.parent.postMessage({ event: 'resize', height: document.body.scrollHeight }, '*');
