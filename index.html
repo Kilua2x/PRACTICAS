@@ -29,6 +29,7 @@
                     <th>RUT</th>
                     <th>Carrera</th>
                     <th>SEDE</th>
+                    <th>Nombre Centro de práctica</th>
                     <th>Nombre instructor</th>
                     <th>Fecha de Inicio</th>
                     <th>Fecha de Término</th>
@@ -78,31 +79,28 @@
     <script src='https://cdn.jsdelivr.net/npm/flatpickr'></script>
     <script src='https://npmcdn.com/flatpickr/dist/l10n/es.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/chart.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js'></script>
 
     <script>
         const carreras = [
-            'Técnico en Enfermería', 'Técnico en Administración', 'Técnico en Informática',
-            'Técnico en Contabilidad', 'Técnico en Electricidad', 'Técnico en Mecánica Automotriz',
-            'Técnico en Construcción', 'Técnico en Diseño Gráfico', 'Técnico en Gastronomía',
-            'Técnico en Turismo'
+            'Técnico De Nivel Superior En Administración De Empresas',
+            'Técnico De Nivel Superior En Agronomía',
+            'Técnico De Nivel Superior En Automatización Y Control Industrial',
+            'Técnico De Nivel Superior En Construcción',
+            'Técnico De Nivel Superior En Electricidad',
+            'Técnico De Nivel Superior En Mantenimiento Industrial',
+            'Técnico De Nivel Superior En Mecánica Industrial',
+            'Técnico De Nivel Superior En Minas',
+            'Técnico De Nivel Superior En Minería Y Metalurgia',
+            'Técnico Nivel Superior En Construcción Y Obras Civiles'
         ];
 
         const sedes = ['Ancud', 'Calama', 'Los Andes', 'San Felipe', 'Machali'];
 
-        function generarRUTChileno() {
-            let rut = Math.floor(Math.random() * 30000000) + 5000000;
-            let dv = 11 - (rut % 11);
-            if (dv === 11) dv = 0;
-            if (dv === 10) dv = 'K';
-            return rut + '-' + dv;
-        }
-
-        function generarNombreApellido() {
-            const nombres = ['Juan', 'María', 'Pedro', 'Ana', 'Luis', 'Carmen', 'José', 'Isabel', 'Francisco', 'Sofía'];
-            const apellidos = ['González', 'Rodríguez', 'Fernández', 'López', 'Martínez', 'Pérez', 'Gómez', 'Sánchez', 'Díaz', 'Torres'];
-            return nombres[Math.floor(Math.random() * nombres.length)] + ' ' + 
-                   apellidos[Math.floor(Math.random() * apellidos.length)] + ' ' + 
-                   apellidos[Math.floor(Math.random() * apellidos.length)];
+        function crearSelectCarrera() {
+            return `<select class='form-select carrera-select'>
+                ${carreras.map(carrera => `<option value='${carrera}'>${carrera}</option>`).join('')}
+            </select>`;
         }
 
         function crearSelectEstado() {
@@ -131,26 +129,39 @@
 
         function generarFilas() {
             let tbody = $('#seguimientoPracticas tbody');
-            for (let i = 0; i < 100; i++) {
-                tbody.append(`
-                    <tr>
-                        <td><input type='text' class='form-control' value='${generarNombreApellido()}'></td>
-                        <td><input type='text' class='form-control' value='${generarRUTChileno()}'></td>
-                        <td><input type='text' class='form-control carrera-input' value='${carreras[Math.floor(Math.random() * carreras.length)]}'></td>
-                        <td>${crearSelectSede()}</td>
-                        <td><input type='text' class='form-control' placeholder='Nombre del instructor'></td>
-                        <td><input type='text' class='form-control datepicker'></td>
-                        <td><input type='text' class='form-control datepicker'></td>
-                        <td>${crearSelectEstado()}</td>
-                        <td>${crearSelectEvaluacion()}</td>
-                        <td>${crearSelectEstado()}</td>
-                        <td>${crearSelectEvaluacion()}</td>
-                        <td>${crearSelectEvaluacion()}</td>
-                        <td>${crearSelectEstado()}</td>
-                        <td>${crearSelectEstado()}</td>
-                    </tr>
-                `);
+            const datosGuardados = JSON.parse(localStorage.getItem('datosPracticas')) || [];
+
+            if (datosGuardados.length > 0) {
+                datosGuardados.forEach(fila => {
+                    tbody.append(crearFila(fila));
+                });
+            } else {
+                for (let i = 0; i < 100; i++) {
+                    tbody.append(crearFila());
+                }
             }
+        }
+
+        function crearFila(datos = {}) {
+            return `
+                <tr>
+                    <td><input type='text' class='form-control' value='${datos.nombre || ''}'></td>
+                    <td><input type='text' class='form-control' value='${datos.rut || ''}'></td>
+                    <td>${crearSelectCarrera()}</td>
+                    <td>${crearSelectSede()}</td>
+                    <td><input type='text' class='form-control' value='${datos.centroPractica || ''}'></td>
+                    <td><input type='text' class='form-control' placeholder='Nombre del instructor' value='${datos.instructor || ''}'></td>
+                    <td><input type='text' class='form-control datepicker' value='${datos.fechaInicio || ''}'></td>
+                    <td><input type='text' class='form-control datepicker' value='${datos.fechaTermino || ''}'></td>
+                    <td>${crearSelectEstado()}</td>
+                    <td>${crearSelectEvaluacion()}</td>
+                    <td>${crearSelectEstado()}</td>
+                    <td>${crearSelectEvaluacion()}</td>
+                    <td>${crearSelectEvaluacion()}</td>
+                    <td>${crearSelectEstado()}</td>
+                    <td>${crearSelectEstado()}</td>
+                </tr>
+            `;
         }
 
         let estadosChart, carrerasChart, sedesChart;
@@ -198,15 +209,19 @@
             let conteoCarreras = {};
             carreras.forEach(carrera => conteoCarreras[carrera] = 0);
 
-            $('.carrera-input').each(function() {
+            $('.carrera-select').each(function() {
                 let carrera = $(this).val();
                 if (conteoCarreras[carrera] !== undefined) {
                     conteoCarreras[carrera]++;
                 }
             });
 
+            const datos = carreras.map(carrera => conteoCarreras[carrera]);
+            const colores = datos.map(() => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.7)`);
+
             if (carrerasChart) {
-                carrerasChart.data.datasets[0].data = carreras.map(carrera => conteoCarreras[carrera]);
+                carrerasChart.data.datasets[0].data = datos;
+                carrerasChart.data.datasets[0].backgroundColor = colores;
                 carrerasChart.update();
             } else {
                 const ctx = document.getElementById('carrerasChart').getContext('2d');
@@ -216,12 +231,13 @@
                         labels: carreras,
                         datasets: [{
                             label: 'Número de Estudiantes por Carrera',
-                            data: carreras.map(carrera => conteoCarreras[carrera]),
-                            backgroundColor: '#42A5F5'
+                            data: datos,
+                            backgroundColor: colores
                         }]
                     },
                     options: {
                         responsive: true,
+                        maintainAspectRatio: false,
                         plugins: {
                             legend: {
                                 display: false
@@ -244,7 +260,14 @@
                         scales: {
                             x: { 
                                 title: { display: true, text: 'Carreras' },
-                                ticks: { autoSkip: false, maxRotation: 90, minRotation: 45 }
+                                ticks: { 
+                                    autoSkip: false,
+                                    maxRotation: 90,
+                                    minRotation: 90,
+                                    callback: function(value, index) {
+                                        return this.getLabelForValue(value).split(' ').slice(0, 3).join(' ');
+                                    }
+                                }
                             },
                             y: { 
                                 title: { display: true, text: 'Número de Estudiantes' },
@@ -289,50 +312,83 @@
             }
         }
 
+        function guardarDatos() {
+            const datos = [];
+            $('#seguimientoPracticas tbody tr').each(function() {
+                const fila = $(this);
+                datos.push({
+                    nombre: fila.find('td:eq(0) input').val(),
+                    rut: fila.find('td:eq(1) input').val(),
+                    carrera: fila.find('td:eq(2) select').val(),
+                    sede: fila.find('td:eq(3) select').val(),
+                    centroPractica: fila.find('td:eq(4) input').val(),
+                    instructor: fila.find('td:eq(5) input').val(),
+                    fechaInicio: fila.find('td:eq(6) input').val(),
+                    fechaTermino: fila.find('td:eq(7) input').val(),
+                    seguimiento1: fila.find('td:eq(8) select').val(),
+                    evaluacionParcial: fila.find('td:eq(9) select').val(),
+                    seguimiento2: fila.find('td:eq(10) select').val(),
+                    revisionAvance: fila.find('td:eq(11) select').val(),
+                    evaluacionInstructor: fila.find('td:eq(12) select').val(),
+                    finalizacionPractica: fila.find('td:eq(13) select').val(),
+                    asignacionHoraExamen: fila.find('td:eq(14) select').val()
+                });
+            });
+            localStorage.setItem('datosPracticas', JSON.stringify(datos));
+            alert('Datos guardados correctamente');
+        }
+
+        function exportarExcel() {
+            const datos = [];
+            $('#seguimientoPracticas thead tr th').each(function() {
+                datos.push($(this).text());
+            });
+            const ws = XLSX.utils.aoa_to_sheet([datos]);
+            $('#seguimientoPracticas tbody tr').each(function() {
+                const fila = $(this);
+                const datosFila = [];
+                fila.find('td').each(function() {
+                    const celda = $(this);
+                    if (celda.find('input').length) {
+                        datosFila.push(celda.find('input').val());
+                    } else if (celda.find('select').length) {
+                        datosFila.push(celda.find('select option:selected').text());
+                    }
+                });
+                XLSX.utils.sheet_add_aoa(ws, [datosFila], {origin: -1});
+            });
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Seguimiento Prácticas");
+            XLSX.writeFile(wb, "seguimiento_practicas.xlsx");
+        }
+
         $(document).ready(function() {
             generarFilas();
+
             $('#seguimientoPracticas').DataTable({
-                'pageLength': 10,
-                dom: 'Bfrtip',
-                buttons: [
-                    {
-                        extend: 'excelHtml5',
-                        text: 'Exportar a Excel',
-                        filename: 'seguimiento_practicas',
-                        exportOptions: {
-                            columns: ':visible',
-                            format: {
-                                body: function ( data, row, column, node ) {
-                                    // Verifica si el contenido es un select o un input
-                                    if ($(node).find('select').length > 0) {
-                                        return $(node).find('select').val();
-                                    } else if ($(node).find('input').length > 0) {
-                                        return $(node).find('input').val();
-                                    }
-                                    return data;
-                                }
-                            }
-                        }
-                    }
-                ],
-                columnDefs: [
-                    { targets: [0, 1, 2], searchable: false }
-                ]
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json'
+                },
+                pageLength: 25
             });
 
-            $('.datepicker').flatpickr({
-                locale: 'es'
+            flatpickr(".datepicker", {
+                dateFormat: "d/m/Y",
+                locale: "es"
             });
 
-            $('.estado-select, .evaluacion-select, .sede-select, .carrera-input').on('change', actualizarGraficos);
+            $('#exportButton').on('click', exportarExcel);
+            $('#saveButton').on('click', guardarDatos);
+
+            $(document).on('change', 'select, input', function() {
+                actualizarGraficos();
+            });
 
             actualizarGraficos();
-
-            $('#saveButton').on('click', function() {
-                // Implementación de la lógica para guardar los datos.
-                alert('Cambios guardados con éxito');
-            });
         });
+    </script>
+</body>
+</html>
     </script>
 </body>
 </html>
