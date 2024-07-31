@@ -97,33 +97,33 @@
 
         const sedes = ['Ancud', 'Calama', 'Los Andes', 'San Felipe', 'Machali'];
 
-        function crearSelectCarrera() {
+        function crearSelectCarrera(valorSeleccionado = '') {
             return `<select class='form-select carrera-select'>
-                ${carreras.map(carrera => `<option value='${carrera}'>${carrera}</option>`).join('')}
+                ${carreras.map(carrera => `<option value='${carrera}' ${carrera === valorSeleccionado ? 'selected' : ''}>${carrera}</option>`).join('')}
             </select>`;
         }
 
-        function crearSelectEstado() {
+        function crearSelectEstado(valorSeleccionado = '') {
             return `<select class='form-select estado-select'>
-                <option value='no-comienza' class='estado-no-comienza'>No comienza</option>
-                <option value='en-proceso' class='estado-en-proceso'>En proceso</option>
-                <option value='completada' class='estado-completada'>Completada</option>
+                <option value='no-comienza' class='estado-no-comienza' ${valorSeleccionado === 'no-comienza' ? 'selected' : ''}>No comienza</option>
+                <option value='en-proceso' class='estado-en-proceso' ${valorSeleccionado === 'en-proceso' ? 'selected' : ''}>En proceso</option>
+                <option value='completada' class='estado-completada' ${valorSeleccionado === 'completada' ? 'selected' : ''}>Completada</option>
             </select>`;
         }
 
-        function crearSelectEvaluacion() {
+        function crearSelectEvaluacion(valorSeleccionado = '') {
             return `<select class='form-select evaluacion-select'>
-                <option value='excelente' class='evaluacion-excelente'>Excelente</option>
-                <option value='bien'>Bien</option>
-                <option value='suficiente'>Suficiente</option>
-                <option value='deficiente'>Deficiente</option>
-                <option value='malo' class='evaluacion-malo'>Malo</option>
+                <option value='excelente' class='evaluacion-excelente' ${valorSeleccionado === 'excelente' ? 'selected' : ''}>Excelente</option>
+                <option value='bien' ${valorSeleccionado === 'bien' ? 'selected' : ''}>Bien</option>
+                <option value='suficiente' ${valorSeleccionado === 'suficiente' ? 'selected' : ''}>Suficiente</option>
+                <option value='deficiente' ${valorSeleccionado === 'deficiente' ? 'selected' : ''}>Deficiente</option>
+                <option value='malo' class='evaluacion-malo' ${valorSeleccionado === 'malo' ? 'selected' : ''}>Malo</option>
             </select>`;
         }
 
-        function crearSelectSede() {
+        function crearSelectSede(valorSeleccionado = '') {
             return `<select class='form-select sede-select'>
-                ${sedes.map(sede => `<option value='${sede}'>${sede}</option>`).join('')}
+                ${sedes.map(sede => `<option value='${sede}' ${sede === valorSeleccionado ? 'selected' : ''}>${sede}</option>`).join('')}
             </select>`;
         }
 
@@ -147,19 +147,19 @@
                 <tr>
                     <td><input type='text' class='form-control' value='${datos.nombre || ''}'></td>
                     <td><input type='text' class='form-control' value='${datos.rut || ''}'></td>
-                    <td>${crearSelectCarrera()}</td>
-                    <td>${crearSelectSede()}</td>
+                    <td>${crearSelectCarrera(datos.carrera)}</td>
+                    <td>${crearSelectSede(datos.sede)}</td>
                     <td><input type='text' class='form-control' value='${datos.centroPractica || ''}'></td>
                     <td><input type='text' class='form-control' placeholder='Nombre del instructor' value='${datos.instructor || ''}'></td>
                     <td><input type='text' class='form-control datepicker' value='${datos.fechaInicio || ''}'></td>
                     <td><input type='text' class='form-control datepicker' value='${datos.fechaTermino || ''}'></td>
-                    <td>${crearSelectEstado()}</td>
-                    <td>${crearSelectEvaluacion()}</td>
-                    <td>${crearSelectEstado()}</td>
-                    <td>${crearSelectEvaluacion()}</td>
-                    <td>${crearSelectEvaluacion()}</td>
-                    <td>${crearSelectEstado()}</td>
-                    <td>${crearSelectEstado()}</td>
+                    <td>${crearSelectEstado(datos.seguimiento1)}</td>
+                    <td>${crearSelectEvaluacion(datos.evaluacionParcial)}</td>
+                    <td>${crearSelectEstado(datos.seguimiento2)}</td>
+                    <td>${crearSelectEvaluacion(datos.revisionAvance)}</td>
+                    <td>${crearSelectEvaluacion(datos.evaluacionInstructor)}</td>
+                    <td>${crearSelectEstado(datos.finalizacionPractica)}</td>
+                    <td>${crearSelectEstado(datos.asignacionHoraExamen)}</td>
                 </tr>
             `;
         }
@@ -386,9 +386,6 @@
 
             actualizarGraficos();
         });
-    </script>
-</body>
-</html>
     </script>
 </body>
 </html>
