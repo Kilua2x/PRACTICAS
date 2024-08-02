@@ -38,7 +38,9 @@
                     <th>Seguimiento 2</th>
                     <th>Revisión de avance</th>
                     <th>Evaluación instructor</th>
+                    <th>Documentación instructor</th>
                     <th>Finalización práctica</th>
+                    <th>Documentación finalización</th>
                     <th>Asignación hora examen título</th>
                 </tr>
             </thead>
@@ -158,7 +160,9 @@
                     <td>${crearSelectEstado(datos.seguimiento2)}</td>
                     <td>${crearSelectEvaluacion(datos.revisionAvance)}</td>
                     <td>${crearSelectEvaluacion(datos.evaluacionInstructor)}</td>
+                    <td><button class='btn btn-primary btn-sm adjuntar-doc'>Adjuntar documentación</button></td>
                     <td>${crearSelectEstado(datos.finalizacionPractica)}</td>
+                    <td><button class='btn btn-primary btn-sm adjuntar-doc'>Adjuntar documentación</button></td>
                     <td>${crearSelectEstado(datos.asignacionHoraExamen)}</td>
                 </tr>
             `;
@@ -296,70 +300,29 @@
             } else {
                 const ctx = document.getElementById('sedesChart').getContext('2d');
                 sedesChart = new Chart(ctx, {
-                    type: 'pie',
+                    type: 'doughnut',
                     data: {
                         labels: sedes,
                         datasets: [{
-                            label: 'Participación por Sede',
+                            label: 'Estudiantes por Sede',
                             data: sedes.map(sede => conteoSedes[sede]),
-                            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+                            backgroundColor: sedes.map(() => `hsl(${Math.random() * 360}, 70%, 70%)`)
                         }]
                     },
                     options: {
-                        responsive: true
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Distribución de Estudiantes por Sede'
+                            }
+                        }
                     }
                 });
             }
-        }
-
-        function guardarDatos() {
-            const datos = [];
-            $('#seguimientoPracticas tbody tr').each(function() {
-                const fila = $(this);
-                datos.push({
-                    nombre: fila.find('td:eq(0) input').val(),
-                    rut: fila.find('td:eq(1) input').val(),
-                    carrera: fila.find('td:eq(2) select').val(),
-                    sede: fila.find('td:eq(3) select').val(),
-                    centroPractica: fila.find('td:eq(4) input').val(),
-                    instructor: fila.find('td:eq(5) input').val(),
-                    fechaInicio: fila.find('td:eq(6) input').val(),
-                    fechaTermino: fila.find('td:eq(7) input').val(),
-                    seguimiento1: fila.find('td:eq(8) select').val(),
-                    evaluacionParcial: fila.find('td:eq(9) select').val(),
-                    seguimiento2: fila.find('td:eq(10) select').val(),
-                    revisionAvance: fila.find('td:eq(11) select').val(),
-                    evaluacionInstructor: fila.find('td:eq(12) select').val(),
-                    finalizacionPractica: fila.find('td:eq(13) select').val(),
-                    asignacionHoraExamen: fila.find('td:eq(14) select').val()
-                });
-            });
-            localStorage.setItem('datosPracticas', JSON.stringify(datos));
-            alert('Datos guardados correctamente');
-        }
-
-        function exportarExcel() {
-            const datos = [];
-            $('#seguimientoPracticas thead tr th').each(function() {
-                datos.push($(this).text());
-            });
-            const ws = XLSX.utils.aoa_to_sheet([datos]);
-            $('#seguimientoPracticas tbody tr').each(function() {
-                const fila = $(this);
-                const datosFila = [];
-                fila.find('td').each(function() {
-                    const celda = $(this);
-                    if (celda.find('input').length) {
-                        datosFila.push(celda.find('input').val());
-                    } else if (celda.find('select').length) {
-                        datosFila.push(celda.find('select option:selected').text());
-                    }
-                });
-                XLSX.utils.sheet_add_aoa(ws, [datosFila], {origin: -1});
-            });
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Seguimiento Prácticas");
-            XLSX.writeFile(wb, "seguimiento_practicas.xlsx");
         }
 
         $(document).ready(function() {
@@ -367,24 +330,79 @@
 
             $('#seguimientoPracticas').DataTable({
                 language: {
-                    url: 'https://cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json'
+                    url: '//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json'
                 },
                 pageLength: 25
             });
 
-            flatpickr(".datepicker", {
-                dateFormat: "d/m/Y",
-                locale: "es"
-            });
-
-            $('#exportButton').on('click', exportarExcel);
-            $('#saveButton').on('click', guardarDatos);
-
-            $(document).on('change', 'select, input', function() {
-                actualizarGraficos();
+            flatpickr('.datepicker', {
+                dateFormat: 'd-m-Y',
+                locale: 'es'
             });
 
             actualizarGraficos();
+
+            $('#seguimientoPracticas').on('change', 'select, input', function() {
+                actualizarGraficos();
+            });
+
+            $('#exportButton').click(function() {
+                let data = [];
+                $('#seguimientoPracticas tbody tr').each(function() {
+                    let row = [];
+                    $(this).find('input, select').each(function() {
+                        row.push($(this).val());
+                    });
+                    data.push(row);
+                });
+
+                let wb = XLSX.utils.book_new();
+                let ws = XLSX.utils.aoa_to_sheet([
+                    ['Nombre y Apellidos', 'RUT', 'Carrera', 'SEDE', 'Nombre Centro de práctica', 'Nombre instructor', 'Fecha de Inicio', 'Fecha de Término', 'Seguimiento 1', 'Evaluación parcial', 'Seguimiento 2', 'Revisión de avance', 'Evaluación instructor', 'Finalización práctica', 'Asignación hora examen título'],
+                    ...data
+                ]);
+                XLSX.utils.book_append_sheet(wb, ws, 'Seguimiento Prácticas');
+                XLSX.writeFile(wb, 'SeguimientoPracticas.xlsx');
+            });
+
+            $('#saveButton').click(function() {
+                let datos = [];
+                $('#seguimientoPracticas tbody tr').each(function() {
+                    let fila = {};
+                    fila.nombre = $(this).find('td:eq(0) input').val();
+                    fila.rut = $(this).find('td:eq(1) input').val();
+                    fila.carrera = $(this).find('td:eq(2) select').val();
+                    fila.sede = $(this).find('td:eq(3) select').val();
+                    fila.centroPractica = $(this).find('td:eq(4) input').val();
+                    fila.instructor = $(this).find('td:eq(5) input').val();
+                    fila.fechaInicio = $(this).find('td:eq(6) input').val();
+                    fila.fechaTermino = $(this).find('td:eq(7) input').val();
+                    fila.seguimiento1 = $(this).find('td:eq(8) select').val();
+                    fila.evaluacionParcial = $(this).find('td:eq(9) select').val();
+                    fila.seguimiento2 = $(this).find('td:eq(10) select').val();
+                    fila.revisionAvance = $(this).find('td:eq(11) select').val();
+                    fila.evaluacionInstructor = $(this).find('td:eq(12) select').val();
+                    fila.finalizacionPractica = $(this).find('td:eq(14) select').val();
+                    fila.asignacionHoraExamen = $(this).find('td:eq(16) select').val();
+                    datos.push(fila);
+                });
+                localStorage.setItem('datosPracticas', JSON.stringify(datos));
+                alert('Datos guardados con éxito');
+            });
+
+            $(document).on('click', '.adjuntar-doc', function() {
+                let input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.pdf,.doc,.docx';
+                input.onchange = e => {
+                    let file = e.target.files[0];
+                    let fileName = file.name;
+                    $(this).text(fileName);
+                    // Aquí puedes agregar la lógica para subir el archivo a un servidor
+                    alert(`Archivo "${fileName}" adjuntado. (Simulación: el archivo no se ha subido realmente)`);
+                };
+                input.click();
+            });
         });
     </script>
 </body>
