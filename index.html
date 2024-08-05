@@ -17,6 +17,7 @@
         .evaluacion-excelente { color: #009900; }
         .evaluacion-malo { color: #990000; }
         .chart-container { height: 400px; margin-bottom: 30px; }
+        .documento-adjuntado { background-color: #ccffcc; }
     </style>
 </head>
 <body>
@@ -53,19 +54,24 @@
             <button id='saveButton' class='btn btn-success'>Guardar</button>
         </div>
         <div class='row mt-4'>
-            <div class='col-md-4'>
+            <div class='col-md-3'>
                 <div class='chart-container'>
                     <canvas id='estadosPracticasChart'></canvas>
                 </div>
             </div>
-            <div class='col-md-4'>
+            <div class='col-md-3'>
                 <div class='chart-container'>
                     <canvas id='sedesChart'></canvas>
                 </div>
             </div>
-            <div class='col-md-4'>
+            <div class='col-md-3'>
                 <div class='chart-container'>
                     <canvas id='carrerasChart'></canvas>
+                </div>
+            </div>
+            <div class='col-md-3'>
+                <div class='chart-container'>
+                    <canvas id='asignacionHoraExamenChart'></canvas>
                 </div>
             </div>
         </div>
@@ -160,20 +166,31 @@
                     <td>${crearSelectEstado(datos.seguimiento2)}</td>
                     <td>${crearSelectEvaluacion(datos.revisionAvance)}</td>
                     <td>${crearSelectEvaluacion(datos.evaluacionInstructor)}</td>
-                    <td><button class='btn btn-primary btn-sm adjuntar-doc'>Adjuntar documentación</button></td>
+                    <td>
+                        <div class="documento-container">
+                            <button class='btn btn-primary btn-sm adjuntar-doc'>Adjuntar documentación</button>
+                            <a href="#" class="btn btn-success btn-sm descargar-doc" style="display: none;">Descargar</a>
+                        </div>
+                    </td>
                     <td>${crearSelectEstado(datos.finalizacionPractica)}</td>
-                    <td><button class='btn btn-primary btn-sm adjuntar-doc'>Adjuntar documentación</button></td>
+                    <td>
+                        <div class="documento-container">
+                            <button class='btn btn-primary btn-sm adjuntar-doc'>Adjuntar documentación</button>
+                            <a href="#" class="btn btn-success btn-sm descargar-doc" style="display: none;">Descargar</a>
+                        </div>
+                    </td>
                     <td>${crearSelectEstado(datos.asignacionHoraExamen)}</td>
                 </tr>
             `;
         }
 
-        let estadosChart, carrerasChart, sedesChart;
+        let estadosChart, carrerasChart, sedesChart, asignacionHoraExamenChart;
 
         function actualizarGraficos() {
             actualizarGraficoEstados();
             actualizarGraficoCarreras();
             actualizarGraficoSedes();
+            actualizarGraficoAsignacionHoraExamen();
         }
 
         function actualizarGraficoEstados() {
@@ -203,7 +220,13 @@
                         }]
                     },
                     options: {
-                        responsive: true
+                        responsive: true,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Estados de Prácticas'
+                            }
+                        }
                     }
                 });
             }
@@ -259,6 +282,10 @@
                                         return label;
                                     }
                                 }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Distribución de Estudiantes por Carrera'
                             }
                         },
                         scales: {
@@ -267,15 +294,12 @@
                                 ticks: { 
                                     autoSkip: false,
                                     maxRotation: 90,
-                                    minRotation: 90,
-                                    callback: function(value, index) {
-                                        return this.getLabelForValue(value).split(' ').slice(0, 3).join(' ');
-                                    }
+                                    minRotation: 90
                                 }
                             },
-                            y: { 
-                                title: { display: true, text: 'Número de Estudiantes' },
-                                beginAtZero: true
+                            y: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Número de Estudiantes' }
                             }
                         }
                     }
@@ -294,26 +318,30 @@
                 }
             });
 
+            const datos = sedes.map(sede => conteoSedes[sede]);
+            const colores = datos.map(() => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.7)`);
+
             if (sedesChart) {
-                sedesChart.data.datasets[0].data = sedes.map(sede => conteoSedes[sede]);
+                sedesChart.data.datasets[0].data = datos;
+                sedesChart.data.datasets[0].backgroundColor = colores;
                 sedesChart.update();
             } else {
                 const ctx = document.getElementById('sedesChart').getContext('2d');
                 sedesChart = new Chart(ctx, {
-                    type: 'doughnut',
+                    type: 'pie',
                     data: {
                         labels: sedes,
                         datasets: [{
-                            label: 'Estudiantes por Sede',
-                            data: sedes.map(sede => conteoSedes[sede]),
-                            backgroundColor: sedes.map(() => `hsl(${Math.random() * 360}, 70%, 70%)`)
+                            label: 'Número de Estudiantes por Sede',
+                            data: datos,
+                            backgroundColor: colores
                         }]
                     },
                     options: {
                         responsive: true,
                         plugins: {
                             legend: {
-                                position: 'right',
+                                position: 'top',
                             },
                             title: {
                                 display: true,
@@ -325,19 +353,69 @@
             }
         }
 
+        function actualizarGraficoAsignacionHoraExamen() {
+            let conteoAsignacion = {
+                'no-comienza': 0,
+                'en-proceso': 0,
+                'completada': 0
+            };
+
+            $('tr').each(function() {
+                let asignacionHoraExamen = $(this).find('td:last-child select').val();
+                if (conteoAsignacion[asignacionHoraExamen] !== undefined) {
+                    conteoAsignacion[asignacionHoraExamen]++;
+                }
+            });
+
+            const datos = [conteoAsignacion['no-comienza'], conteoAsignacion['en-proceso'], conteoAsignacion['completada']];
+            const colores = ['#ffcccc', '#ffffcc', '#ccffcc'];
+
+            if (asignacionHoraExamenChart) {
+                asignacionHoraExamenChart.data.datasets[0].data = datos;
+                asignacionHoraExamenChart.update();
+            } else {
+                const ctx = document.getElementById('asignacionHoraExamenChart').getContext('2d');
+                asignacionHoraExamenChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['No comienza', 'En proceso', 'Completada'],
+                        datasets: [{
+                            label: 'Asignación Hora Examen de Título',
+                            data: datos,
+                            backgroundColor: colores
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Asignación Hora Examen de Título'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
         $(document).ready(function() {
             generarFilas();
 
             $('#seguimientoPracticas').DataTable({
+                paging: false,
+                scrollY: '70vh',
+                scrollCollapse: true,
                 language: {
-                    url: '//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json'
-                },
-                pageLength: 25
+                    url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json'
+                }
             });
 
-            flatpickr('.datepicker', {
-                dateFormat: 'd-m-Y',
-                locale: 'es'
+            $('.datepicker').flatpickr({
+                dateFormat: "d/m/Y",
+                locale: "es"
             });
 
             actualizarGraficos();
@@ -346,48 +424,46 @@
                 actualizarGraficos();
             });
 
-            $('#exportButton').click(function() {
+            $('#exportButton').on('click', function() {
                 let data = [];
                 $('#seguimientoPracticas tbody tr').each(function() {
                     let row = [];
-                    $(this).find('input, select').each(function() {
-                        row.push($(this).val());
+                    $(this).find('td').each(function() {
+                        let cellValue = $(this).find('input').val() || $(this).find('select').val() || $(this).text();
+                        row.push(cellValue.trim());
                     });
                     data.push(row);
                 });
-
+                
+                let ws = XLSX.utils.aoa_to_sheet(data);
                 let wb = XLSX.utils.book_new();
-                let ws = XLSX.utils.aoa_to_sheet([
-                    ['Nombre y Apellidos', 'RUT', 'Carrera', 'SEDE', 'Nombre Centro de práctica', 'Nombre instructor', 'Fecha de Inicio', 'Fecha de Término', 'Seguimiento 1', 'Evaluación parcial', 'Seguimiento 2', 'Revisión de avance', 'Evaluación instructor', 'Finalización práctica', 'Asignación hora examen título'],
-                    ...data
-                ]);
-                XLSX.utils.book_append_sheet(wb, ws, 'Seguimiento Prácticas');
-                XLSX.writeFile(wb, 'SeguimientoPracticas.xlsx');
+                XLSX.utils.book_append_sheet(wb, ws, "Seguimiento Prácticas");
+                XLSX.writeFile(wb, "seguimiento_practicas.xlsx");
             });
 
-            $('#saveButton').click(function() {
-                let datos = [];
+            $('#saveButton').on('click', function() {
+                let data = [];
                 $('#seguimientoPracticas tbody tr').each(function() {
-                    let fila = {};
-                    fila.nombre = $(this).find('td:eq(0) input').val();
-                    fila.rut = $(this).find('td:eq(1) input').val();
-                    fila.carrera = $(this).find('td:eq(2) select').val();
-                    fila.sede = $(this).find('td:eq(3) select').val();
-                    fila.centroPractica = $(this).find('td:eq(4) input').val();
-                    fila.instructor = $(this).find('td:eq(5) input').val();
-                    fila.fechaInicio = $(this).find('td:eq(6) input').val();
-                    fila.fechaTermino = $(this).find('td:eq(7) input').val();
-                    fila.seguimiento1 = $(this).find('td:eq(8) select').val();
-                    fila.evaluacionParcial = $(this).find('td:eq(9) select').val();
-                    fila.seguimiento2 = $(this).find('td:eq(10) select').val();
-                    fila.revisionAvance = $(this).find('td:eq(11) select').val();
-                    fila.evaluacionInstructor = $(this).find('td:eq(12) select').val();
-                    fila.finalizacionPractica = $(this).find('td:eq(14) select').val();
-                    fila.asignacionHoraExamen = $(this).find('td:eq(16) select').val();
-                    datos.push(fila);
+                    let row = {};
+                    row.nombre = $(this).find('td:eq(0) input').val();
+                    row.rut = $(this).find('td:eq(1) input').val();
+                    row.carrera = $(this).find('td:eq(2) select').val();
+                    row.sede = $(this).find('td:eq(3) select').val();
+                    row.centroPractica = $(this).find('td:eq(4) input').val();
+                    row.instructor = $(this).find('td:eq(5) input').val();
+                    row.fechaInicio = $(this).find('td:eq(6) input').val();
+                    row.fechaTermino = $(this).find('td:eq(7) input').val();
+                    row.seguimiento1 = $(this).find('td:eq(8) select').val();
+                    row.evaluacionParcial = $(this).find('td:eq(9) select').val();
+                    row.seguimiento2 = $(this).find('td:eq(10) select').val();
+                    row.revisionAvance = $(this).find('td:eq(11) select').val();
+                    row.evaluacionInstructor = $(this).find('td:eq(12) select').val();
+                    row.finalizacionPractica = $(this).find('td:eq(15) select').val();
+                    row.asignacionHoraExamen = $(this).find('td:eq(16) select').val();
+                    data.push(row);
                 });
-                localStorage.setItem('datosPracticas', JSON.stringify(datos));
-                alert('Datos guardados con éxito');
+                localStorage.setItem('datosPracticas', JSON.stringify(data));
+                alert('Datos guardados exitosamente');
             });
 
             $(document).on('click', '.adjuntar-doc', function() {
@@ -396,12 +472,27 @@
                 input.accept = '.pdf,.doc,.docx';
                 input.onchange = e => {
                     let file = e.target.files[0];
-                    let fileName = file.name;
-                    $(this).text(fileName);
-                    // Aquí puedes agregar la lógica para subir el archivo a un servidor
-                    alert(`Archivo "${fileName}" adjuntado. (Simulación: el archivo no se ha subido realmente)`);
-                };
+                    let reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = readerEvent => {
+                        let content = readerEvent.target.result;
+                        $(this).closest('td').data('fileContent', content);
+                        $(this).closest('td').data('fileName', file.name);
+                        $(this).closest('td').addClass('documento-adjuntado');
+                        $(this).siblings('.descargar-doc').show();
+                    }
+                }
                 input.click();
+            });
+
+            $(document).on('click', '.descargar-doc', function(e) {
+                e.preventDefault();
+                let content = $(this).closest('td').data('fileContent');
+                let fileName = $(this).closest('td').data('fileName');
+                let link = document.createElement('a');
+                link.href = content;
+                link.download = fileName;
+                link.click();
             });
         });
     </script>
