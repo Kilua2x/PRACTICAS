@@ -30,6 +30,7 @@
                     <th>RUT</th>
                     <th>Carrera</th>
                     <th>SEDE</th>
+                    <th>Nombre encargado práctica UAC</th>
                     <th>Nombre Centro de práctica</th>
                     <th>Nombre instructor</th>
                     <th>Fecha de Inicio</th>
@@ -135,6 +136,27 @@
             </select>`;
         }
 
+        function obtenerEncargadoPractica(carrera, sede) {
+            if (carrera === 'Técnico De Nivel Superior En Agronomía' && sede === 'San Felipe') {
+                return 'Julio Guzmán';
+            } else if (carrera !== 'Técnico De Nivel Superior En Agronomía' && sede === 'Los Andes') {
+                return 'Arturo Montenegro';
+            } else if (carrera !== 'Técnico De Nivel Superior En Agronomía' && sede === 'Calama') {
+                return 'Director carrera Calama';
+            } else if (['Machali', 'Ancud'].includes(sede)) {
+                return 'Define director/a académica';
+            } else {
+                return '';
+            }
+        }
+
+        function actualizarEncargadoPractica(fila) {
+            const carrera = fila.find('.carrera-select').val();
+            const sede = fila.find('.sede-select').val();
+            const encargadoPractica = obtenerEncargadoPractica(carrera, sede);
+            fila.find('.encargado-practica').val(encargadoPractica);
+        }
+
         function generarFilas() {
             let tbody = $('#seguimientoPracticas tbody');
             const datosGuardados = JSON.parse(localStorage.getItem('datosPracticas')) || [];
@@ -157,6 +179,7 @@
                     <td><input type='text' class='form-control' value='${datos.rut || ''}'></td>
                     <td>${crearSelectCarrera(datos.carrera)}</td>
                     <td>${crearSelectSede(datos.sede)}</td>
+                    <td><input type='text' class='form-control encargado-practica' value='${obtenerEncargadoPractica(datos.carrera, datos.sede)}' readonly></td>
                     <td><input type='text' class='form-control' value='${datos.centroPractica || ''}'></td>
                     <td><input type='text' class='form-control' placeholder='Nombre del instructor' value='${datos.instructor || ''}'></td>
                     <td><input type='text' class='form-control datepicker' value='${datos.fechaInicio || ''}'></td>
@@ -408,6 +431,7 @@
                 paging: false,
                 scrollY: '70vh',
                 scrollCollapse: true,
+                scrollX: true, // Habilita el desplazamiento horizontal
                 language: {
                     url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json'
                 }
@@ -424,6 +448,11 @@
                 actualizarGraficos();
             });
 
+            $('#seguimientoPracticas').on('change', '.carrera-select, .sede-select', function() {
+                const fila = $(this).closest('tr');
+                actualizarEncargadoPractica(fila);
+            });
+
             $('#exportButton').on('click', function() {
                 let data = [];
                 $('#seguimientoPracticas tbody tr').each(function() {
@@ -434,7 +463,7 @@
                     });
                     data.push(row);
                 });
-                
+
                 let ws = XLSX.utils.aoa_to_sheet(data);
                 let wb = XLSX.utils.book_new();
                 XLSX.utils.book_append_sheet(wb, ws, "Seguimiento Prácticas");
@@ -449,17 +478,18 @@
                     row.rut = $(this).find('td:eq(1) input').val();
                     row.carrera = $(this).find('td:eq(2) select').val();
                     row.sede = $(this).find('td:eq(3) select').val();
-                    row.centroPractica = $(this).find('td:eq(4) input').val();
-                    row.instructor = $(this).find('td:eq(5) input').val();
-                    row.fechaInicio = $(this).find('td:eq(6) input').val();
-                    row.fechaTermino = $(this).find('td:eq(7) input').val();
-                    row.seguimiento1 = $(this).find('td:eq(8) select').val();
-                    row.evaluacionParcial = $(this).find('td:eq(9) select').val();
-                    row.seguimiento2 = $(this).find('td:eq(10) select').val();
-                    row.revisionAvance = $(this).find('td:eq(11) select').val();
-                    row.evaluacionInstructor = $(this).find('td:eq(12) select').val();
-                    row.finalizacionPractica = $(this).find('td:eq(15) select').val();
-                    row.asignacionHoraExamen = $(this).find('td:eq(16) select').val();
+                    row.encargadoPractica = $(this).find('td:eq(4) input').val();
+                    row.centroPractica = $(this).find('td:eq(5) input').val();
+                    row.instructor = $(this).find('td:eq(6) input').val();
+                    row.fechaInicio = $(this).find('td:eq(7) input').val();
+                    row.fechaTermino = $(this).find('td:eq(8) input').val();
+                    row.seguimiento1 = $(this).find('td:eq(9) select').val();
+                    row.evaluacionParcial = $(this).find('td:eq(10) select').val();
+                    row.seguimiento2 = $(this).find('td:eq(11) select').val();
+                    row.revisionAvance = $(this).find('td:eq(12) select').val();
+                    row.evaluacionInstructor = $(this).find('td:eq(13) select').val();
+                    row.finalizacionPractica = $(this).find('td:eq(16) select').val();
+                    row.asignacionHoraExamen = $(this).find('td:eq(17) select').val();
                     data.push(row);
                 });
                 localStorage.setItem('datosPracticas', JSON.stringify(data));
@@ -498,4 +528,5 @@
     </script>
 </body>
 </html>
+
 
