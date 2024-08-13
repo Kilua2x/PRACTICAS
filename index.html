@@ -158,19 +158,21 @@
         }
 
         function generarFilas() {
-            let tbody = $('#seguimientoPracticas tbody');
-            const datosGuardados = JSON.parse(localStorage.getItem('datosPracticas')) || [];
+    let tbody = $('#seguimientoPracticas tbody');
+    const datosGuardados = JSON.parse(localStorage.getItem('datosPracticas')) || [];
 
-            if (datosGuardados.length > 0) {
-                datosGuardados.forEach(fila => {
-                    tbody.append(crearFila(fila));
-                });
-            } else {
-                for (let i = 0; i < 100; i++) {
-                    tbody.append(crearFila());
-                }
-            }
+    // Limpiar tbody antes de agregar nuevas filas
+    tbody.empty();
+
+    // Generar 100 filas
+    for (let i = 0; i < 100; i++) {
+        if (i < datosGuardados.length) {
+            tbody.append(crearFila(datosGuardados[i]));
+        } else {
+            tbody.append(crearFila());
         }
+    }
+}
 
         function crearFila(datos = {}) {
             return `
@@ -428,15 +430,16 @@
             generarFilas();
 
             $('#seguimientoPracticas').DataTable({
-                paging: false,
-                scrollY: '70vh',
-                scrollCollapse: true,
-                scrollX: true, // Habilita el desplazamiento horizontal
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json'
-                }
-            });
-
+    paging: true,
+    pageLength: 100,
+    lengthMenu: [[25, 50, 100, -1], [25, 50, 100, "Todos"]],
+    scrollY: '70vh',
+    scrollCollapse: true,
+    scrollX: true,
+    language: {
+        url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json'
+    }
+});
             $('.datepicker').flatpickr({
                 dateFormat: "d/m/Y",
                 locale: "es"
@@ -528,5 +531,6 @@
     </script>
 </body>
 </html>
+
 
 
