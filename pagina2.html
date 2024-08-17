@@ -1,0 +1,474 @@
+<!-- pagina2.html -->
+<!DOCTYPE html>
+<html lang='es'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Seguimiento de Prácticas Profesionales - Facultad de Humanidades</title>
+    <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' rel='stylesheet'>
+    <link href='https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css' rel='stylesheet'>
+    <link href='https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css' rel='stylesheet'>
+    <style>
+        body { padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .dataTables_wrapper { padding: 20px 0; }
+        .container-fluid { max-width: 100%; overflow-x: auto; }
+        .estado-no-comienza { background-color: #ffcccc; color: #990000; }
+        .estado-en-proceso { background-color: #ffffcc; color: #999900; }
+        .estado-completada { background-color: #ccffcc; color: #009900; }
+        .evaluacion-excelente { color: #009900; }
+        .evaluacion-malo { color: #990000; }
+        .chart-container { height: 400px; margin-bottom: 30px; }
+        .documento-adjuntado { background-color: #ccffcc; }
+    </style>
+</head>
+<body>
+    <div class='container-fluid'>
+        <h1 class='text-center mb-4'>Seguimiento de Prácticas Profesionales - Facultad de Humanidades</h1>
+        <table id='seguimientoPracticas' class='table table-striped table-bordered'>
+            <thead>
+                <tr>
+                    <th>Nombre y Apellidos</th>
+                    <th>RUT</th>
+                    <th>Carrera</th>
+                    <th>SEDE</th>
+                    <th>Nivel de práctica</th>
+                    <th>Supervisor de práctica</th>
+                    <th>Centro de práctica</th>
+                    <th>Nombre instructor</th>
+                    <th>Fecha de Inicio</th>
+                    <th>Fecha de Término</th>
+                    <th>Seguimiento 1</th>
+                    <th>Seguimiento 2</th>
+                    <th>Evaluación instructor</th>
+                    <th>Documentación instructor</th>
+                    <th>Finalización práctica</th>
+                    <th>Documentación finalización</th>
+                    <th>Evaluación final de práctica intermedia o profesional</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Las filas se generarán dinámicamente aquí -->
+            </tbody>
+        </table>
+        <div class='text-center mt-3'>
+            <button id='exportButton' class='btn btn-primary'>Exportar a Excel</button>
+            <button id='saveButton' class='btn btn-success'>Guardar</button>
+        </div>
+        <div class='row mt-4'>
+            <div class='col-md-3'>
+                <div class='chart-container'>
+                    <canvas id='estadosPracticasChart'></canvas>
+                </div>
+            </div>
+            <div class='col-md-3'>
+                <div class='chart-container'>
+                    <canvas id='sedesChart'></canvas>
+                </div>
+            </div>
+            <div class='col-md-3'>
+                <div class='chart-container'>
+                    <canvas id='carrerasChart'></canvas>
+                </div>
+            </div>
+            <div class='col-md-3'>
+                <div class='chart-container'>
+                    <canvas id='evaluacionFinalChart'></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>
+    <script src='https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js'></script>
+    <script src='https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js'></script>
+    <script src='https://cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js'></script>
+    <script src='https://cdn.datatables.net/buttons/2.0.1/js/buttons.html5.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/flatpickr'></script>
+    <script src='https://npmcdn.com/flatpickr/dist/l10n/es.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/chart.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js'></script>
+
+    <script>
+        const carreras = [
+            'Psicología',
+            'Derecho',
+            'Trabajo Social'
+        ];
+
+        const sedes = ['Ancud', 'Calama', 'Los Andes', 'San Felipe', 'Machali'];
+
+        function crearSelectCarrera(valorSeleccionado = '') {
+            return `<select class='form-select carrera-select'>
+                ${carreras.map(carrera => `<option value='${carrera}' ${carrera === valorSeleccionado ? 'selected' : ''}>${carrera}</option>`).join('')}
+            </select>`;
+        }
+
+        function crearSelectEstado(valorSeleccionado = '') {
+            return `<select class='form-select estado-select'>
+                <option value='no-comienza' class='estado-no-comienza' ${valorSeleccionado === 'no-comienza' ? 'selected' : ''}>No comienza</option>
+                <option value='en-proceso' class='estado-en-proceso' ${valorSeleccionado === 'en-proceso' ? 'selected' : ''}>En proceso</option>
+                <option value='completada' class='estado-completada' ${valorSeleccionado === 'completada' ? 'selected' : ''}>Completada</option>
+            </select>`;
+        }
+
+        function crearSelectEvaluacion(valorSeleccionado = '') {
+            return `<select class='form-select evaluacion-select'>
+                <option value='excelente' class='evaluacion-excelente' ${valorSeleccionado === 'excelente' ? 'selected' : ''}>Excelente</option>
+                <option value='bien' ${valorSeleccionado === 'bien' ? 'selected' : ''}>Bien</option>
+                <option value='suficiente' ${valorSeleccionado === 'suficiente' ? 'selected' : ''}>Suficiente</option>
+                <option value='deficiente' ${valorSeleccionado === 'deficiente' ? 'selected' : ''}>Deficiente</option>
+                <option value='malo' class='evaluacion-malo' ${valorSeleccionado === 'malo' ? 'selected' : ''}>Malo</option>
+            </select>`;
+        }
+
+        function crearSelectSede(valorSeleccionado = '') {
+            return `<select class='form-select sede-select'>
+                ${sedes.map(sede => `<option value='${sede}' ${sede === valorSeleccionado ? 'selected' : ''}>${sede}</option>`).join('')}
+            </select>`;
+        }
+
+        function crearSelectNivelPractica(valorSeleccionado = '') {
+            return `<select class='form-select nivel-practica-select'>
+                <option value='practica-intermedia-1' ${valorSeleccionado === 'practica-intermedia-1' ? 'selected' : ''}>Práctica Intermedia 1</option>
+                <option value='practica-intermedia-2' ${valorSeleccionado === 'practica-intermedia-2' ? 'selected' : ''}>Práctica Intermedia 2</option>
+                <option value='practica-profesional' ${valorSeleccionado === 'practica-profesional' ? 'selected' : ''}>Práctica Profesional</option>
+            </select>`;
+        }
+
+        function generarFilas(start, end) {
+            let filas = [];
+            const datosGuardados = JSON.parse(localStorage.getItem('datosPracticas')) || [];
+
+            for (let i = start; i < end; i++) {
+                if (i < datosGuardados.length) {
+                    filas.push(crearFila(datosGuardados[i]));
+                } else {
+                    filas.push(crearFila());
+                }
+            }
+            return filas;
+        }
+
+        function crearFila(datos = {}) {
+            return `
+                <tr>
+                    <td><input type='text' class='form-control' value='${datos.nombre || ''}'></td>
+                    <td><input type='text' class='form-control' value='${datos.rut || ''}'></td>
+                    <td>${crearSelectCarrera(datos.carrera)}</td>
+                    <td>${crearSelectSede(datos.sede)}</td>
+                    <td>${crearSelectNivelPractica(datos.nivelPractica)}</td>
+                    <td><input type='text' class='form-control' value='${datos.supervisorPractica || ''}'></td>
+                    <td><input type='text' class='form-control' value='${datos.centroPractica || ''}'></td>
+                    <td><input type='text' class='form-control' placeholder='Nombre del instructor' value='${datos.instructor || ''}'></td>
+                    <td><input type='text' class='form-control datepicker' value='${datos.fechaInicio || ''}'></td>
+                    <td><input type='text' class='form-control datepicker' value='${datos.fechaTermino || ''}'></td>
+                    <td>${crearSelectEstado(datos.seguimiento1)}</td>
+                    <td>${crearSelectEstado(datos.seguimiento2)}</td>
+                    <td>${crearSelectEvaluacion(datos.evaluacionInstructor)}</td>
+                    <td>
+                        <div class="documento-container">
+                            <input type="file" class="form-control adjuntar-doc" style="display: none;">
+                            <button class='btn btn-primary btn-sm adjuntar-btn'>Adjuntar documentación</button>
+                            <a href="#" class="btn btn-success btn-sm descargar-doc" style="display: none;">Descargar</a>
+                        </div>
+                    </td>
+                    <td>${crearSelectEstado(datos.finalizacionPractica)}</td>
+                    <td>
+                        <div class="documento-container">
+                            <input type="file" class="form-control adjuntar-doc" style="display: none;">
+                            <button class='btn btn-primary btn-sm adjuntar-btn'>Adjuntar documentación</button>
+                            <a href="#" class="btn btn-success btn-sm descargar-doc" style="display: none;">Descargar</a>
+                        </div>
+                    </td>
+                    <td>${crearSelectEstado(datos.evaluacionFinal)}</td>
+                </tr>
+            `;
+        }
+
+        let estadosChart, carrerasChart, sedesChart, evaluacionFinalChart;
+
+        function actualizarGraficos() {
+            actualizarGraficoEstados();
+            actualizarGraficoCarreras();
+            actualizarGraficoSedes();
+            actualizarGraficoEvaluacionFinal();
+        }
+
+        function actualizarGraficoEstados() {
+            const estados = ['no-comienza', 'en-proceso', 'completada'];
+            const conteoEstados = estados.reduce((acc, estado) => {
+                acc[estado] = $(`#seguimientoPracticas .estado-select option[value="${estado}"]:selected`).length;
+                return acc;
+            }, {});
+
+            if (estadosChart) {
+                estadosChart.data.datasets[0].data = Object.values(conteoEstados);
+                estadosChart.update();
+            } else {
+                const ctx = document.getElementById('estadosPracticasChart').getContext('2d');
+                estadosChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['No comienza', 'En proceso', 'Completada'],
+                        datasets: [{
+                            data: Object.values(conteoEstados),
+                            backgroundColor: ['#ffcccc', '#ffffcc', '#ccffcc']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Estados de Prácticas'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function actualizarGraficoCarreras() {
+            const conteoCarreras = carreras.reduce((acc, carrera) => {
+                acc[carrera] = $(`#seguimientoPracticas .carrera-select option[value="${carrera}"]:selected`).length;
+                return acc;
+            }, {});
+
+            if (carrerasChart) {
+                carrerasChart.data.datasets[0].data = Object.values(conteoCarreras);
+                carrerasChart.update();
+            } else {
+                const ctx = document.getElementById('carrerasChart').getContext('2d');
+                carrerasChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: carreras,
+                        datasets: [{
+                            label: 'Número de estudiantes',
+                            data: Object.values(conteoCarreras),
+                            backgroundColor: 'rgba(75, 192, 192, 0.6)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Distribución por Carreras'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function actualizarGraficoSedes() {
+            const conteoSedes = sedes.reduce((acc, sede) => {
+                acc[sede] = $(`#seguimientoPracticas .sede-select option[value="${sede}"]:selected`).length;
+                return acc;
+            }, {});
+
+            if (sedesChart) {
+                sedesChart.data.datasets[0].data = Object.values(conteoSedes);
+                sedesChart.update();
+            } else {
+                const ctx = document.getElementById('sedesChart').getContext('2d');
+                sedesChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: sedes,
+                        datasets: [{
+                            data: Object.values(conteoSedes),
+                            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Distribución por Sedes'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function actualizarGraficoEvaluacionFinal() {
+            const evaluaciones = ['excelente', 'bien', 'suficiente', 'deficiente', 'malo'];
+            const conteoEvaluaciones = evaluaciones.reduce((acc, evaluacion) => {
+                acc[evaluacion] = $(`#seguimientoPracticas .evaluacion-select option[value="${evaluacion}"]:selected`).length;
+                return acc;
+            }, {});
+
+            if (evaluacionFinalChart) {
+                evaluacionFinalChart.data.datasets[0].data = Object.values(conteoEvaluaciones);
+                evaluacionFinalChart.update();
+            } else {
+                const ctx = document.getElementById('evaluacionFinalChart').getContext('2d');
+                evaluacionFinalChart = new Chart(ctx, {
+                    type: 'polarArea',
+                    data: {
+                        labels: ['Excelente', 'Bien', 'Suficiente', 'Deficiente', 'Malo'],
+                        datasets: [{
+                            data: Object.values(conteoEvaluaciones),
+                            backgroundColor: ['#4BC0C0', '#36A2EB', '#FFCE56', '#FF9F40', '#FF6384']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Evaluación Final'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        $(document).ready(function() {
+            let table = $('#seguimientoPracticas').DataTable({
+                scrollX: true,
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json'
+                },
+                dom: 'Bfrtip',
+                buttons: [],
+                pageLength: 25,
+                lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Todos"]],
+                processing: true,
+                serverSide: true,
+                ajax: function (data, callback, settings) {
+                    const start = data.start;
+                    const end = data.start + data.length;
+                    const filas = generarFilas(start, end);
+                    callback({
+                        draw: data.draw,
+                        recordsTotal: 500,
+                        recordsFiltered: 500,
+                        data: filas
+                    });
+                },
+                columns: [
+                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(0)').html(); } },
+                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(1)').html(); } },
+                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(2)').html(); } },
+                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(3)').html(); } },
+                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(4)').html(); } },
+                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(5)').html(); } },
+                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(6)').html(); } },
+                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(7)').html(); } },
+                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(8)').html(); } },
+                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(9)').html(); } },
+                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(10)').html(); } },
+                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(11)').html(); } },
+                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(12)').html(); } },
+                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(13)').html(); } },
+                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(14)').html(); } },
+                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(15)').html(); } },
+                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(16)').html(); } }
+                ],
+                drawCallback: function() {
+                    $('.datepicker').flatpickr({
+                        locale: 'es',
+                        dateFormat: 'd/m/Y'
+                    });
+                    actualizarGraficos();
+                }
+            });
+
+            $('#seguimientoPracticas').on('change', '.adjuntar-doc', function(e) {
+                const file = e.target.files[0];
+                const container = $(this).closest('.documento-container');
+                const descargarBtn = container.find('.descargar-doc');
+                
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const base64Data = e.target.result;
+                        container.data('file', { name: file.name, data: base64Data });
+                        descargarBtn.show().attr('href', base64Data).attr('download', file.name);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            $('#seguimientoPracticas').on('click', '.adjuntar-btn', function() {
+                $(this).siblings('.adjuntar-doc').click();
+            });
+
+            $('#exportButton').on('click', function() {
+                const workbook = XLSX.utils.book_new();
+                const worksheet = XLSX.utils.table_to_sheet(document.getElementById('seguimientoPracticas'));
+                
+                // Filtrar solo las filas modificadas por el usuario
+                const modifiedRows = [];
+                $('#seguimientoPracticas tbody tr').each(function(index) {
+                    const $row = $(this);
+                    const isModified = $row.find('input, select').toArray().some(el => el.value !== '');
+                    if (isModified) {
+                        const rowData = [];
+                        $row.find('td').each(function() {
+                            const $cell = $(this);
+                            const $input = $cell.find('input');
+                            const $select = $cell.find('select');
+                            if ($input.length) {
+                                rowData.push($input.val());
+                            } else if ($select.length) {
+                                rowData.push($select.val());
+                            } else {
+                                rowData.push($cell.text());
+                            }
+                        });
+                        modifiedRows.push(rowData);
+                    }
+                });
+
+                const modifiedWorksheet = XLSX.utils.aoa_to_sheet([
+                    ['Nombre y Apellidos', 'RUT', 'Carrera', 'SEDE', 'Nivel de práctica', 'Supervisor de práctica', 'Centro de práctica', 'Nombre instructor', 'Fecha de Inicio', 'Fecha de Término', 'Seguimiento 1', 'Seguimiento 2', 'Evaluación instructor', 'Documentación instructor', 'Finalización práctica', 'Documentación finalización', 'Evaluación final de práctica intermedia o profesional'],
+                    ...modifiedRows
+                ]);
+
+                XLSX.utils.book_append_sheet(workbook, modifiedWorksheet, 'Datos modificados');
+                XLSX.writeFile(workbook, 'seguimiento_practicas_modificados.xlsx');
+            });
+
+            $('#saveButton').on('click', function() {
+                const datos = [];
+                $('#seguimientoPracticas tbody tr').each(function() {
+                    const $row = $(this);
+                    const rowData = {
+                        nombre: $row.find('td:eq(0) input').val(),
+                        rut: $row.find('td:eq(1) input').val(),
+                        carrera: $row.find('td:eq(2) select').val(),
+                        sede: $row.find('td:eq(3) select').val(),
+                        nivelPractica: $row.find('td:eq(4) select').val(),
+                        supervisorPractica: $row.find('td:eq(5) input').val(),
+                        centroPractica: $row.find('td:eq(6) input').val(),
+                        instructor: $row.find('td:eq(7) input').val(),
+                        fechaInicio: $row.find('td:eq(8) input').val(),
+                        fechaTermino: $row.find('td:eq(9) input').val(),
+                        seguimiento1: $row.find('td:eq(10) select').val(),
+                        seguimiento2: $row.find('td:eq(11) select').val(),
+                        evaluacionInstructor: $row.find('td:eq(12) select').val(),
+                        documentacionInstructor: $row.find('td:eq(13) .documento-container').data('file'),
+                        finalizacionPractica: $row.find('td:eq(14) select').val(),
+                        documentacionFinalizacion: $row.find('td:eq(15) .documento-container').data('file'),
+                        evaluacionFinal: $row.find('td:eq(16) select').val()
+                    };
+                    datos.push(rowData);
+                });
+                localStorage.setItem('datosPracticas', JSON.stringify(datos));
+                alert('Datos guardados correctamente');
+            });
+
+            actualizarGraficos();
+        });
+    </script>
+</body>
+</html>
