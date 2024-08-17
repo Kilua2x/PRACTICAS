@@ -1,19 +1,101 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Sitio GitHub</title>
+    <title>Seguimiento Practicas UAC</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #00204e;
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+        }
+        header {
+            background-color: rgba(255, 255, 255, 0.1);
+            width: 100%;
+            padding: 20px 0;
+            text-align: center;
+        }
+        .logo {
+            max-width: 300px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+        }
+        nav {
+            margin-top: 30px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        li {
+            margin: 10px;
+        }
+        a {
+            color: white;
+            text-decoration: none;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+        a:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+    </style>
 </head>
 <body>
-    <h1>Seguimiento Practicas UAC</h1>
+    <header>
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZ8AAABcCAMAAAC/hNhgAAAACXBIWXMAAAsSAAALEgHS3X78AAAAglBMVEUUExP///8AAACOjo4QDw/8/PwNCwvz8/Pp6ens7Oz5+fn29vZmZmaqqqqGhoYXFha2trZ0dHRra2tgYGBHR0c9PT2YmJgcGxtXV1czMzN+fn7Kyspvb2+jo6OUlJTExMS9vb2xsbHX19c5ODgiIiJPT09EREQqKirV1dVbWlo0MzPj4+PgkVz5AAAQjUlEQVR4nO1dB3ujOhaOdVgAG2MbcMEdO3Hy///fI1VjmyTezbw3k3l7v7mbGEL1Xen0gDQaypQpU6ZMmTJlypQpU6ZMmTJlypQpU6ZMmTJlypT5KHmuPFOgHwDWmDwtPLfwcqfJrU7zmyxD8V9w3qryLnJbvVK+RFhgcvVZHcb7lXKfjaTz9UXHPVYnuXFGzxuLl4vWRtMnrdY8CvZJkvTNWZYddEQCY9RiVuKHvewmCIK9zw4bx+KXVHY0UqWUMO0tqvLurKNsU7P6k5RWV2SUnQr3vl+WdWQkafBIqWOMdAz2/v/pVxJCrj8dW00sFg4GaSpNRBNbWEXC0fQrSUlA7jLCmNUZ68NMpM1u0yrNXC3nSw/6yFcWjp4Kd95wZmnl+wgXJi6Kt/jKiOD6/ZGHDRHiHtXXbTiQ+q3hAr9B+r2EkPtTZjE0t+2Y+aEwG3FG6ZqkuCBnGr/mGbOi3lgv5HbMt+Uo55gE1bVD1RimUm+0pmlSxgq26MmKrqy0OuCdWEGUBWM7D7qV0i6U1Vo6ZlSzPMPBrOQBTaU18RRNkxeW8w3BcauwD6lw1SvVdBfS1WUfDVrtPb5aP41gSKuFx1/l8kj1ZoR7MgN7kWuNl8r14FOr1YYX8xdj6OfXNvWiRopMsz0V2bRRH+xo7tI4NKPBRvIWS19UDFkLB3Wo9bD82dNGf3YyIaW+4tqEvDgXh+vBT0SjWUQHDJmb1QrOdCpkW4bROLfcQUrwdoVEHsOMrM5+gX7s4ycDDEpkZ2pGF+4x/aW8CzaUlV3EHhwVHNk2EkNyWsN8TqZC7u8HjQvWcD9W/YRf5nYDkWQ4E2RWR7xwpyv8qVgJOKCp9LicU4xhD4OGjSyQx6jRvhQcNEX3lmUlPPyLhd2rn3yOjQzJ5BtNuS5nIwOBERsAn0Nzy7aJBq6pqR2w6B36xVNwcH7tHSqd2KG/FvD+hPSbo+cRXPpyW/xktOe9X7ycELuQIyP1sMp0Wy/LjEhMu/FYDJnc22PX2Eg8+GV92ZTrMZjILpqI9G/1SXDMM/UXbJ+t63nTM5ZqkYLHR6jKj9Xyn++o1KCKp0/u1mJGwQgvZp3lWjM6L3tKbodwYvEzFVBXfmbNqGYB5+V6LmMbIGqMtnAxMDnQZOdM6CZXNQtm3DsaRGZb1+GZc50kKX8MPRvxYTKlr5vSNNrGkbEPD9gDmJ3S0KNLRBYeZMdBL8eXOnRpxz31w2E/D03mLQlV/vMdvVwmGgf2pHLNOy4Ney3JxANrAcGdg59OVXzYiLGFnJsN7czSw53jZRu9APNP2qgBjrXwF3KTEh2MiDUnnNkpQS/3FqLxgDg1wNlcjbzxkdOgj3nTOJp6QhdGXGh2GYTK/5X/4gS8VaK3AQgkBRyvFXGBDK51MkZkjlYxCfEJGODlwVtpQCBxb8fO5p1AaMPOl7j5QIFvEMThEQp/+IvHR0qJSepOJKDIYMf4GZ1QPcKI8MkF0xlnLQrBm/JlY2CrGNbXr5wxYWTRlAoMOB+y1VaxhTLFg0cNW6HNCP+C+7IVxrgzI2OxlO/BI6y9PEzgY0QmOGtnq6Yqzgc9hVPwmXHG5FHYG3LsCBwGMVsQgYRWIjCdMcYpCUEb/Oi4uIuATd+EGsVlnzVP0OzADMsZTQAm5ZFG0KwdYmXqRpH7zI3kCmWJXHOeNb0r9eZMGZAzhXcWKtL+VSnLMXfBCT8bRCDJRRaB4V3uZPhOxSCNSASxLVgXNWKBlmjI+VBWZ6IrOD26qpwOILlOMkWOnRYOqjO6YkfBzwaMKhvO+7PpwXNCsNHKgpVLtXM7iCrh7+M4oL8pOMR0QF92TT5Eb95ZFRJ4hUTJ4CrVMFl5nTnZJjw9VdXcXQ2dQXg+d3OHOWZBTtUTnkrJkGSwZDkZu56nfCjw/uQajZmAFR2B+elBzONO6Sgg3U8wzm2oRiC5yMNxMZ0H7CbDgTUeBM2/QG0GYkjAxo1tHAq53MjznnzVowORxTQ4ZcPFNDDGsUFNY/MwdVP2vw2/5R7PBTjlhVzuQY9XCy6XEQgVbQqm4DEnROGnR/3lYmFnK26EzpL46gqJfV5N7U0nF7yk4rKGwSvSo6KcHEAPmDTKiUOBcWiPFlPwdMpWcQdD8LdWcA8cYWlwsYWpFLvXJ9jFmfJoUTKi4ZbxUzGwAHp3U6lIrK51WcP8PAhW1cE6xvNMxvHK/o8tJp8VZHMk9HJH2CFcYwwkVtwHrKLJmwjj5wJkYRFRuPpJ7fqMVvGUGz99Ykn3z1QrjhFoHFGY26VccGN6mEg/aTSmbq7kHGAa8bJN7qzpPOCDOOHaJXQmZF5m3DwDNT4KJcVWcQX8tIMpJz+9YGKtdKXYEEcWKyeN82DZ38kLWd3OPJ7MeZCBdErzSKiC/CQofLUhgRTVgPEjJVN8Fj/QZcGXUXTwPm/3QeXPUcV3GbABs4uDXHSF67RkJYs4SQ0TxuDBDtcxGfOL9T7nfvC9mNGa16WtFhFGYwwQCT9sE2gKKZCTiSRrxAUdjwZA/FpjPkk15IIxFgpSKBjq+HXjB8KxyfXjnZ1+n3aO43i2kw4Hx/Vd0LKT6TjRRv1BsrVZ3/PmwaSTD0bBZt53XA/bPYw1TbP3/ThAi8lxvPUggVITF44L7JqDzmzVmwbRaDYcxpq2HgbRMt1vOoNlkmjpKMjXXrSNg+nC1OWu/ijRY2J/mGOcHZlBJK5k0Xyj0Yh1tDhGrmlZYeRu+9Fs7QeDpWE9jl42JR8RPKDWgMqfX9ZLZ7WPE12zojE5nXu+52iOm+3nSRgY3oBEydBjYVKTB1POHgQEKXu+0Ry7kD0Sft3cg5sGQdAg9xuQCMmKMRWEvJZTwXWSPBh6PZgK4cDLM1VIu7SIlqEvhQbx1tfgWEQlOLZEIgVjMFYo2MEQMaLzQESl2DyXyWi0+gnMVxKKdZ3LGIWXkgr/0RSmUCmcO/kT6t/8LUaRHBlClMIKz6FwUK8/WkIQLg/x+b3kQi7wh6TjpzUG+F//FUKdXr8SV/t0FZOK5L+Gq5kQQpz+o0ykN1z+EzDyP8vFi/6mWqe3JZEHKBKLe+9Gj74lzgN9v2Fy8Hkqd+t+9xSUh5Mhbo/fj29BF9yFe+qJHLe3f1y2NF2fzK+fcr/tnYj0Yp9hM0H8hD+r0e3xhyWF+Nxnb0i05/EhlgTOVjU+hA+nE0nhKqGkXMTFj9zfK16Tt/ZXjW71wkn/mwMEH14OVyJMPsw65OcQmNRTI3NxfoTXGkrI31BW+HkQHxNT/JDw6fGO59VD1OsE8X5zD/0dkgjTfuWjDfDDk+Fj1fQDTMDTlNfkhZ/4xg8xZeOPhU+Fgp+m9tX5ESfNusP+X/0jZO2zWvfCfyrlRLb3qEjBz4O4tT4ZEOWlG70xqt3+sKnJMuMrpzqt/rV+Q1+1EcYTtEblMPDh8SrPFyv46TTqH26ztv4KiTx6a7ZxkdGvK3r/mPg1RfnL/Aja/uxWjH9AgvQOfVL3Z6vgSP8MN9S+G159RZh4NX+t7h3M8P9ZWfCzlP7n3fq5q8n3qP8Ufga/4WfTrPkK80qS9dLXsUX6fv0wWR/EqeMJpqeFGp8etxnzE/xc6x3J5TtU+Xv9EHn/HD+DBMI3QFJZlm9ynCNcP7gYavV7yMWDVeL4RbXNn+fHuMo6/UZ4aOc3/NzbLq/+t+FwbzNd5K+l6vfQ8j9bP6Ry39B7P4t7/bROHmvwqfbdO1xubcbPO/0QXd7H6fxrfqj/ZbTw/Waz1cLL+5evfofgfRnxs7jh+lL5YP5i+HxJ/yXOvyDYxkmrp+3nzBJPmQ1qGG8fZ/8OG4R/7n9bDZGXWqRZbyrOk/YTfvZfkt4yOZP6LduEo/mXD72OA/2XuOObRR+mDYLrLxdLK/K1w6vvIfVP/c8b8NPOT4+PW9v2jXMSbO97YyL+f4D/3f+Tdf+jwb//P/dyn/pjvQhG/Pt55+31vTW51xpkJ/GQn4RWe+78XO/zcqIm3qHTdx/fCsGz+03YH9Zcl2pEt6sC/k+yOSXuqLM5zLmfk8uadYHfDpLwOoJYb/uu9uIqQ/GHXNxNSjmNmhb99/JPOhqYpDjLMlWo2lS8KhdM3H6TOxN27+mJ/+fkp1O1TLhHFwNFzffLCDKlGxN67GStbXqK+f0SB0sMi1OO8XvL8eMGUcb+YKG3OZ3HzpIjKfSxP/p4/UDgNXeXU+7gHFWPDNqfdnXkTbjRl6Kfbqm8ynABp4XzM3Hs68qM4T1fCNy1Rz+r5Zd8uDNu0m/65zT8cLgRwOXPNYJ2/4Bk22ZsHl+dZ3Hpz7YWOeRD4FV6chZP0x2Xva7rD/6nQeSNj+ZFRPaXFkEQpHVdqEbpxlwc9Nge0RVs4tjgBtnlODfgfrxGFBjMNwOtexxtTLZPwvMiBnvR3jQ6vW4YjToDm2oj+JyHgxZ73eH5aJVMjlESaPMedByPNPsw9PapafAB3DT9RQDzO/lFTq2QlaPufFvlRF1t1F+Oo9CcGQvdj+BsNTOmSWDPzXUK+tFNv5j0/BjOdUxrNO/HFvqfzOsb6SL7tGWB1iFN9P5o3QmW/tJbZR0W9ue6riF+kqDrZkdtEcVbI8nGkE3UHg/RWWhrBl8k7DwNiT8dHNmq4imdgamTTgK2X5prczdLuyZ3gD3qf7LuaXGMltlmGg+XH9fNh7OxnzvBILH9vd3PUiwZD+Jz6A17jLaQYJ03D+HGQv1cZqehQ7pOsWKuZuL6OfKDzQXX+JlBYBXA3O+N7HA57Hbs+dEPBkGXGX7Yz4aDzuTAjb01RrfzobGtqiDqkYRkUYv4URwgOW90Tdf0+WCCGzD4mHgPnB/I+3b6Zp2fpCa+AzPQ+Yf5wf3XXgKnkCt4PPgXcRVcaePrzXf4wZOG9VaFfq4KnKaYs/ynKX14yqwCVLaqO5PhvPCrwk99a1KVT+/LqvLT/n6ofCHvHOXN+NFvQtX4qXwxCr6lrfNjmIqqVfiF5oqZfm39QFGMWgD1qwrMSp32qvLDb8RB0XZ1HemfQg+jzg97ZFmfn47yhkD5hQN4zUXhp1Wv9KGcn+qOOq9V+NGqd/Cq8COuFTmVlqrwo9xiVdcLfhRPIyX8PL/yvBo/38XPtqKnxk/1yvQVP7Xv6YrKdcMKP7ynXhc/uu/+nD/kxWc2VPhRfa+l4OeWZir4qahqxk9FL1V+bB6qOk6FH6X+1fhRq6rMj1L5Oj+Kv1b5qZ4ZF/woz+BU+VE0WYWfWv0KP7X5qfKjajL8nPtBvG1wbf5TvZVS/v9JN35Ud/2qmRD/1+7+VXhQtlJlypQpU6ZMmTJlypQpU6ZMmTJlyvw/5n81w10bqYtbjQAAAABJRU5ErkJggg==" alt="Universidad de Aconcagua Logo" class="logo">
+        <h1>Seguimiento Practicas UAC</h1>
+    </header>
     <nav>
         <ul>
-            <li><a href="pagina1.html">Seguimiento Ingenierias</a></li>
-            <li><a href="pagina2.html">Seguimiento Humanidades</a></li>
-            <li><a href="pagina3.html">Seguimiento Salud</a></li>
+            <li><a href="pagina1.html" id="link1">Seguimiento Ingenierias</a></li>
+            <li><a href="pagina2.html" id="link2">Seguimiento Humanidades</a></li>
+            <li><a href="pagina3.html" id="link3">Seguimiento Salud</a></li>
         </ul>
     </nav>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('nav a');
+            links.forEach(link => {
+                link.addEventListener('mouseover', function() {
+                    this.style.transform = 'scale(1.1)';
+                });
+                link.addEventListener('mouseout', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+
+            function animateLink(linkId) {
+                const link = document.getElementById(linkId);
+                link.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    link.style.transform = 'translateY(0)';
+                }, 500);
+            }
+
+            setInterval(() => {
+                animateLink('link' + (Math.floor(Math.random() * 3) + 1));
+            }, 2000);
+        });
+    </script>
 </body>
 </html>
