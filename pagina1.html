@@ -17,8 +17,11 @@
         .estado-completada { background-color: #ccffcc; color: #009900; }
         .evaluacion-excelente { color: #009900; }
         .evaluacion-malo { color: #990000; }
-        .chart-container { height: 400px; margin-bottom: 30px; }
+        .chart-container { height: 300px; margin-bottom: 30px; }
         .documento-adjuntado { background-color: #ccffcc; }
+        #dashboard { margin-top: 50px; }
+        .stat-card { background-color: #f8f9fa; border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+        .stat-card h3 { margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -55,25 +58,54 @@
             <button id='exportButton' class='btn btn-primary'>Exportar a Excel</button>
             <button id='saveButton' class='btn btn-success'>Guardar</button>
         </div>
-        <div class='row mt-4'>
+        
+        <!-- Nuevo Dashboard -->
+        <div id='dashboard' class='row mt-5'>
+            <h2 class='text-center mb-4'>Dashboard de Prácticas Laborales</h2>
+            
+            <!-- Estadísticas generales -->
             <div class='col-md-3'>
-                <div class='chart-container'>
-                    <canvas id='estadosPracticasChart'></canvas>
+                <div class='stat-card'>
+                    <h3>Estadísticas Generales</h3>
+                    <p id='totalPracticas'>Total de prácticas: </p>
+                    <p id='practicasEnProceso'>Prácticas en proceso: </p>
+                    <p id='practicasCompletadas'>Prácticas completadas: </p>
                 </div>
             </div>
-            <div class='col-md-3'>
-                <div class='chart-container'>
-                    <canvas id='sedesChart'></canvas>
-                </div>
-            </div>
-            <div class='col-md-3'>
-                <div class='chart-container'>
-                    <canvas id='carrerasChart'></canvas>
-                </div>
-            </div>
-            <div class='col-md-3'>
-                <div class='chart-container'>
-                    <canvas id='asignacionHoraExamenChart'></canvas>
+            
+            <!-- Gráficos -->
+            <div class='col-md-9'>
+                <div class='row'>
+                    <div class='col-md-6'>
+                        <div class='chart-container'>
+                            <canvas id='practicasPorCarreraChart'></canvas>
+                        </div>
+                    </div>
+                    <div class='col-md-6'>
+                        <div class='chart-container'>
+                            <canvas id='practicasPorSedeChart'></canvas>
+                        </div>
+                    </div>
+                    <div class='col-md-6'>
+                        <div class='chart-container'>
+                            <canvas id='duracionPromedioChart'></canvas>
+                        </div>
+                    </div>
+                    <div class='col-md-6'>
+                        <div class='chart-container'>
+                            <canvas id='evaluacionInstructorChart'></canvas>
+                        </div>
+                    </div>
+                    <div class='col-md-6'>
+                        <div class='chart-container'>
+                            <canvas id='finalizacionPracticaChart'></canvas>
+                        </div>
+                    </div>
+                    <div class='col-md-6'>
+                        <div class='chart-container'>
+                            <canvas id='asignacionHoraExamenChart'></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -159,21 +191,21 @@
         }
 
         function generarFilas() {
-    let tbody = $('#seguimientoPracticas tbody');
-    const datosGuardados = JSON.parse(localStorage.getItem('datosPracticas')) || [];
+            let tbody = $('#seguimientoPracticas tbody');
+            const datosGuardados = JSON.parse(localStorage.getItem('datosPracticas')) || [];
 
-    // Limpiar tbody antes de agregar nuevas filas
-    tbody.empty();
+            // Limpiar tbody antes de agregar nuevas filas
+            tbody.empty();
 
-    // Generar 100 filas
-    for (let i = 0; i < 100; i++) {
-        if (i < datosGuardados.length) {
-            tbody.append(crearFila(datosGuardados[i]));
-        } else {
-            tbody.append(crearFila());
+            // Generar 100 filas
+            for (let i = 0; i < 100; i++) {
+                if (i < datosGuardados.length) {
+                    tbody.append(crearFila(datosGuardados[i]));
+                } else {
+                    tbody.append(crearFila());
+                }
+            }
         }
-    }
-}
 
         function crearFila(datos = {}) {
             return `
@@ -210,80 +242,64 @@
             `;
         }
 
-        let estadosChart, carrerasChart, sedesChart, asignacionHoraExamenChart;
+        let practicasPorCarreraChart, practicasPorSedeChart, duracionPromedioChart, evaluacionInstructorChart, finalizacionPracticaChart, asignacionHoraExamenChart;
 
-        function actualizarGraficos() {
-            actualizarGraficoEstados();
-            actualizarGraficoCarreras();
-            actualizarGraficoSedes();
+        function actualizarDashboard() {
+            actualizarEstadisticasGenerales();
+            actualizarGraficoPracticasPorCarrera();
+            actualizarGraficoPracticasPorSede();
+            actualizarGraficoDuracionPromedio();
+            actualizarGraficoEvaluacionInstructor();
+            actualizarGraficoFinalizacionPractica();
             actualizarGraficoAsignacionHoraExamen();
         }
 
-        function actualizarGraficoEstados() {
-            let estados = {
-                'no-comienza': 0,
-                'en-proceso': 0,
-                'completada': 0
-            };
+        function actualizarEstadisticasGenerales() {
+            let totalPracticas = 0;
+            let practicasEnProceso = 0;
+            let practicasCompletadas = 0;
 
-            $('.estado-select').each(function() {
-                estados[$(this).val()]++;
+            $('#seguimientoPracticas tbody tr').each(function() {
+                let estado = $(this).find('td:eq(15) select').val();
+                if (estado === 'en-proceso') {
+                    practicasEnProceso++;
+                } else if (estado === 'completada') {
+                    practicasCompletadas++;
+                }
+                totalPracticas++;
             });
 
-            if (estadosChart) {
-                estadosChart.data.datasets[0].data = [estados['no-comienza'], estados['en-proceso'], estados['completada']];
-                estadosChart.update();
-            } else {
-                const ctx = document.getElementById('estadosPracticasChart').getContext('2d');
-                estadosChart = new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: ['No comienza', 'En proceso', 'Completada'],
-                        datasets: [{
-                            label: 'Estados de Prácticas',
-                            data: [estados['no-comienza'], estados['en-proceso'], estados['completada']],
-                            backgroundColor: ['#ffcccc', '#ffffcc', '#ccffcc']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: 'Estados de Prácticas'
-                            }
-                        }
-                    }
-                });
-            }
+            $('#totalPracticas').text(`Total de prácticas: ${totalPracticas}`);
+            $('#practicasEnProceso').text(`Prácticas en proceso: ${practicasEnProceso}`);
+            $('#practicasCompletadas').text(`Prácticas completadas: ${practicasCompletadas}`);
         }
 
-        function actualizarGraficoCarreras() {
-            let conteoCarreras = {};
-            carreras.forEach(carrera => conteoCarreras[carrera] = 0);
+        function actualizarGraficoPracticasPorCarrera() {
+            let conteoPracticas = {};
+            carreras.forEach(carrera => conteoPracticas[carrera] = 0);
 
-            $('.carrera-select').each(function() {
-                let carrera = $(this).val();
-                if (conteoCarreras[carrera] !== undefined) {
-                    conteoCarreras[carrera]++;
+            $('#seguimientoPracticas tbody tr').each(function() {
+                let carrera = $(this).find('td:eq(2) select').val();
+                if (conteoPracticas[carrera] !== undefined) {
+                    conteoPracticas[carrera]++;
                 }
             });
 
-            const datos = carreras.map(carrera => conteoCarreras[carrera]);
+            const datos = carreras.map(carrera => conteoPracticas[carrera]);
             const colores = datos.map(() => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.7)`);
 
-            if (carrerasChart) {
-                carrerasChart.data.datasets[0].data = datos;
-                carrerasChart.data.datasets[0].backgroundColor = colores;
-                carrerasChart.update();
+            if (practicasPorCarreraChart) {
+                practicasPorCarreraChart.data.datasets[0].data = datos;
+                practicasPorCarreraChart.data.datasets[0].backgroundColor = colores;
+                practicasPorCarreraChart.update();
             } else {
-                const ctx = document.getElementById('carrerasChart').getContext('2d');
-                carrerasChart = new Chart(ctx, {
+                const ctx = document.getElementById('practicasPorCarreraChart').getContext('2d');
+                practicasPorCarreraChart = new Chart(ctx, {
                     type: 'bar',
                     data: {
                         labels: carreras,
                         datasets: [{
-                            label: 'Número de Estudiantes por Carrera',
+                            label: 'Número de Prácticas por Carrera',
                             data: datos,
                             backgroundColor: colores
                         }]
@@ -292,40 +308,16 @@
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
-                            legend: {
-                                display: false
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.dataset.label || '';
-                                        if (label) {
-                                            label += ': ';
-                                        }
-                                        if (context.parsed.y !== null) {
-                                            label += context.parsed.y;
-                                        }
-                                        return label;
-                                    }
-                                }
-                            },
+                            legend: { display: false },
                             title: {
                                 display: true,
-                                text: 'Distribución de Estudiantes por Carrera'
+                                text: 'Prácticas por Carrera'
                             }
                         },
                         scales: {
-                            x: { 
-                                title: { display: true, text: 'Carreras' },
-                                ticks: { 
-                                    autoSkip: false,
-                                    maxRotation: 90,
-                                    minRotation: 90
-                                }
-                            },
                             y: {
                                 beginAtZero: true,
-                                title: { display: true, text: 'Número de Estudiantes' }
+                                title: { display: true, text: 'Número de Prácticas' }
                             }
                         }
                     }
@@ -333,32 +325,32 @@
             }
         }
 
-        function actualizarGraficoSedes() {
-            let conteoSedes = {};
-            sedes.forEach(sede => conteoSedes[sede] = 0);
+        function actualizarGraficoPracticasPorSede() {
+            let conteoPracticas = {};
+            sedes.forEach(sede => conteoPracticas[sede] = 0);
 
-            $('.sede-select').each(function() {
-                let sede = $(this).val();
-                if (conteoSedes[sede] !== undefined) {
-                    conteoSedes[sede]++;
+            $('#seguimientoPracticas tbody tr').each(function() {
+                let sede = $(this).find('td:eq(3) select').val();
+                if (conteoPracticas[sede] !== undefined) {
+                    conteoPracticas[sede]++;
                 }
             });
 
-            const datos = sedes.map(sede => conteoSedes[sede]);
+            const datos = sedes.map(sede => conteoPracticas[sede]);
             const colores = datos.map(() => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.7)`);
 
-            if (sedesChart) {
-                sedesChart.data.datasets[0].data = datos;
-                sedesChart.data.datasets[0].backgroundColor = colores;
-                sedesChart.update();
+            if (practicasPorSedeChart) {
+                practicasPorSedeChart.data.datasets[0].data = datos;
+                practicasPorSedeChart.data.datasets[0].backgroundColor = colores;
+                practicasPorSedeChart.update();
             } else {
-                const ctx = document.getElementById('sedesChart').getContext('2d');
-                sedesChart = new Chart(ctx, {
+                const ctx = document.getElementById('practicasPorSedeChart').getContext('2d');
+                practicasPorSedeChart = new Chart(ctx, {
                     type: 'pie',
                     data: {
                         labels: sedes,
                         datasets: [{
-                            label: 'Número de Estudiantes por Sede',
+                            label: 'Prácticas por Sede',
                             data: datos,
                             backgroundColor: colores
                         }]
@@ -366,12 +358,172 @@
                     options: {
                         responsive: true,
                         plugins: {
-                            legend: {
-                                position: 'top',
-                            },
+                            legend: { position: 'right' },
                             title: {
                                 display: true,
-                                text: 'Distribución de Estudiantes por Sede'
+                                text: 'Prácticas por Sede'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function actualizarGraficoDuracionPromedio() {
+            let duracionPorCarrera = {};
+            carreras.forEach(carrera => duracionPorCarrera[carrera] = []);
+
+            $('#seguimientoPracticas tbody tr').each(function() {
+                let carrera = $(this).find('td:eq(2) select').val();
+                let fechaInicio = $(this).find('td:eq(7) input').val();
+                let fechaTermino = $(this).find('td:eq(8) input').val();
+                
+                if (fechaInicio && fechaTermino) {
+                    let inicio = new Date(fechaInicio.split('/').reverse().join('-'));
+                    let termino = new Date(fechaTermino.split('/').reverse().join('-'));
+                    let duracion = (termino - inicio) / (1000 * 60 * 60 * 24); // Duración en días
+                    duracionPorCarrera[carrera].push(duracion);
+                }
+            });
+
+            let promedios = carreras.map(carrera => {
+                let duraciones = duracionPorCarrera[carrera];
+                return duraciones.length > 0 ? duraciones.reduce((a, b) => a + b) / duraciones.length : 0;
+            });
+
+            if (duracionPromedioChart) {
+                duracionPromedioChart.data.datasets[0].data = promedios;
+                duracionPromedioChart.update();
+            } else {
+                const ctx = document.getElementById('duracionPromedioChart').getContext('2d');
+                duracionPromedioChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: carreras,
+                        datasets: [{
+                            label: 'Duración Promedio de Prácticas (días)',
+                            data: promedios,
+                            backgroundColor: 'rgba(75, 192, 192, 0.6)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            title: {
+                                display: true,
+                                text: 'Duración Promedio de Prácticas por Carrera'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Días' }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function actualizarGraficoEvaluacionInstructor() {
+            let conteoEvaluaciones = {
+                'excelente': 0,
+                'bien': 0,
+                'suficiente': 0,
+                'deficiente': 0,
+                'malo': 0
+            };
+
+            $('#seguimientoPracticas tbody tr').each(function() {
+                let evaluacion = $(this).find('td:eq(13) select').val();
+                if (conteoEvaluaciones[evaluacion] !== undefined) {
+                    conteoEvaluaciones[evaluacion]++;
+                }
+            });
+
+            const datos = Object.values(conteoEvaluaciones);
+            const etiquetas = Object.keys(conteoEvaluaciones);
+
+            if (evaluacionInstructorChart) {
+                evaluacionInstructorChart.data.datasets[0].data = datos;
+                evaluacionInstructorChart.update();
+            } else {
+                const ctx = document.getElementById('evaluacionInstructorChart').getContext('2d');
+                evaluacionInstructorChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: etiquetas,
+                        datasets: [{
+                            label: 'Evaluación del Instructor',
+                            data: datos,
+                            backgroundColor: [
+                                'rgba(75, 192, 192, 0.6)',
+                                'rgba(54, 162, 235, 0.6)',
+                                'rgba(255, 206, 86, 0.6)',
+                                'rgba(255, 159, 64, 0.6)',
+                                'rgba(255, 99, 132, 0.6)'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'right' },
+                            title: {
+                                display: true,
+                                text: 'Evaluación del Instructor'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function actualizarGraficoFinalizacionPractica() {
+            let conteoFinalizacion = {
+                'no-comienza': 0,
+                'en-proceso': 0,
+                'completada': 0
+            };
+
+            $('#seguimientoPracticas tbody tr').each(function() {
+                let finalizacion = $(this).find('td:eq(15) select').val();
+                if (conteoFinalizacion[finalizacion] !== undefined) {
+                    conteoFinalizacion[finalizacion]++;
+                }
+            });
+
+            const datos = Object.values(conteoFinalizacion);
+            const etiquetas = ['No comienza', 'En proceso', 'Completada'];
+
+            if (finalizacionPracticaChart) {
+                finalizacionPracticaChart.data.datasets[0].data = datos;
+                finalizacionPracticaChart.update();
+            } else {
+                const ctx = document.getElementById('finalizacionPracticaChart').getContext('2d');
+                finalizacionPracticaChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: etiquetas,
+                        datasets: [{
+                            label: 'Estado de Finalización de Prácticas',
+                            data: datos,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.6)',
+                                'rgba(255, 206, 86, 0.6)',
+                                'rgba(75, 192, 192, 0.6)'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'right' },
+                            title: {
+                                display: true,
+                                text: 'Estado de Finalización de Prácticas'
                             }
                         }
                     }
@@ -386,15 +538,15 @@
                 'completada': 0
             };
 
-            $('tr').each(function() {
-                let asignacionHoraExamen = $(this).find('td:last-child select').val();
-                if (conteoAsignacion[asignacionHoraExamen] !== undefined) {
-                    conteoAsignacion[asignacionHoraExamen]++;
+            $('#seguimientoPracticas tbody tr').each(function() {
+                let asignacion = $(this).find('td:eq(17) select').val();
+                if (conteoAsignacion[asignacion] !== undefined) {
+                    conteoAsignacion[asignacion]++;
                 }
             });
 
-            const datos = [conteoAsignacion['no-comienza'], conteoAsignacion['en-proceso'], conteoAsignacion['completada']];
-            const colores = ['#ffcccc', '#ffffcc', '#ccffcc'];
+            const datos = Object.values(conteoAsignacion);
+            const etiquetas = ['No comienza', 'En proceso', 'Completada'];
 
             if (asignacionHoraExamenChart) {
                 asignacionHoraExamenChart.data.datasets[0].data = datos;
@@ -402,24 +554,32 @@
             } else {
                 const ctx = document.getElementById('asignacionHoraExamenChart').getContext('2d');
                 asignacionHoraExamenChart = new Chart(ctx, {
-                    type: 'pie',
+                    type: 'bar',
                     data: {
-                        labels: ['No comienza', 'En proceso', 'Completada'],
+                        labels: etiquetas,
                         datasets: [{
-                            label: 'Asignación Hora Examen de Título',
+                            label: 'Asignación de Hora de Examen',
                             data: datos,
-                            backgroundColor: colores
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.6)',
+                                'rgba(255, 206, 86, 0.6)',
+                                'rgba(75, 192, 192, 0.6)'
+                            ]
                         }]
                     },
                     options: {
                         responsive: true,
                         plugins: {
-                            legend: {
-                                position: 'top',
-                            },
+                            legend: { display: false },
                             title: {
                                 display: true,
-                                text: 'Asignación Hora Examen de Título'
+                                text: 'Asignación de Hora de Examen'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Número de Prácticas' }
                             }
                         }
                     }
@@ -431,25 +591,26 @@
             generarFilas();
 
             $('#seguimientoPracticas').DataTable({
-    paging: true,
-    pageLength: 100,
-    lengthMenu: [[25, 50, 100, -1], [25, 50, 100, "Todos"]],
-    scrollY: '70vh',
-    scrollCollapse: true,
-    scrollX: true,
-    language: {
-        url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json'
-    }
-});
+                paging: true,
+                pageLength: 100,
+                lengthMenu: [[25, 50, 100, -1], [25, 50, 100, "Todos"]],
+                scrollY: '70vh',
+                scrollCollapse: true,
+                scrollX: true,
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json'
+                }
+            });
+
             $('.datepicker').flatpickr({
                 dateFormat: "d/m/Y",
                 locale: "es"
             });
 
-            actualizarGraficos();
+            actualizarDashboard();
 
             $('#seguimientoPracticas').on('change', 'select, input', function() {
-                actualizarGraficos();
+                actualizarDashboard();
             });
 
             $('#seguimientoPracticas').on('change', '.carrera-select, .sede-select', function() {
@@ -492,7 +653,7 @@
                     row.seguimiento2 = $(this).find('td:eq(11) select').val();
                     row.revisionAvance = $(this).find('td:eq(12) select').val();
                     row.evaluacionInstructor = $(this).find('td:eq(13) select').val();
-                    row.finalizacionPractica = $(this).find('td:eq(16) select').val();
+                    row.finalizacionPractica = $(this).find('td:eq(15) select').val();
                     row.asignacionHoraExamen = $(this).find('td:eq(17) select').val();
                     data.push(row);
                 });
