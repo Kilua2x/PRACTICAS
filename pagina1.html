@@ -20,8 +20,7 @@
         .chart-container { height: 300px; margin-bottom: 30px; }
         .documento-adjuntado { background-color: #ccffcc; }
         #dashboard { margin-top: 50px; }
-        .stat-card { background-color: #f8f9fa; border-radius: 10px; padding: 20px; margin-bottom: 20px; }
-        .stat-card h3 { margin-bottom: 10px; }
+        .dashboard-card { background-color: #f8f9fa; border-radius: 10px; padding: 20px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -59,53 +58,68 @@
             <button id='saveButton' class='btn btn-success'>Guardar</button>
         </div>
         
-        <!-- Nuevo Dashboard -->
+        <!-- Dashboard -->
         <div id='dashboard' class='row mt-5'>
             <h2 class='text-center mb-4'>Dashboard de Prácticas Laborales</h2>
             
-            <!-- Estadísticas generales -->
-            <div class='col-md-3'>
-                <div class='stat-card'>
-                    <h3>Estadísticas Generales</h3>
-                    <p id='totalPracticas'>Total de prácticas: </p>
-                    <p id='practicasEnProceso'>Prácticas en proceso: </p>
-                    <p id='practicasCompletadas'>Prácticas completadas: </p>
+            <div class='col-md-4'>
+                <div class='dashboard-card'>
+                    <h4>Distribución por Carreras</h4>
+                    <div class='chart-container'>
+                        <canvas id='practicasPorCarreraChart'></canvas>
+                    </div>
                 </div>
             </div>
             
-            <!-- Gráficos -->
-            <div class='col-md-9'>
-                <div class='row'>
-                    <div class='col-md-6'>
-                        <div class='chart-container'>
-                            <canvas id='practicasPorCarreraChart'></canvas>
-                        </div>
+            <div class='col-md-4'>
+                <div class='dashboard-card'>
+                    <h4>Distribución por Sedes</h4>
+                    <div class='chart-container'>
+                        <canvas id='practicasPorSedeChart'></canvas>
                     </div>
-                    <div class='col-md-6'>
-                        <div class='chart-container'>
-                            <canvas id='practicasPorSedeChart'></canvas>
-                        </div>
+                </div>
+            </div>
+            
+            <div class='col-md-4'>
+                <div class='dashboard-card'>
+                    <h4>Estados de Prácticas</h4>
+                    <div class='chart-container'>
+                        <canvas id='finalizacionPracticaChart'></canvas>
                     </div>
-                    <div class='col-md-6'>
-                        <div class='chart-container'>
-                            <canvas id='duracionPromedioChart'></canvas>
-                        </div>
+                </div>
+            </div>
+            
+            <div class='col-md-4'>
+                <div class='dashboard-card'>
+                    <h4>Evaluación del Instructor</h4>
+                    <div class='chart-container'>
+                        <canvas id='evaluacionInstructorChart'></canvas>
                     </div>
-                    <div class='col-md-6'>
-                        <div class='chart-container'>
-                            <canvas id='evaluacionInstructorChart'></canvas>
-                        </div>
+                </div>
+            </div>
+            
+            <div class='col-md-4'>
+                <div class='dashboard-card'>
+                    <h4>Duración Promedio por Carrera</h4>
+                    <div class='chart-container'>
+                        <canvas id='duracionPromedioChart'></canvas>
                     </div>
-                    <div class='col-md-6'>
-                        <div class='chart-container'>
-                            <canvas id='finalizacionPracticaChart'></canvas>
-                        </div>
+                </div>
+            </div>
+            
+            <div class='col-md-4'>
+                <div class='dashboard-card'>
+                    <h4>Asignación Hora Examen</h4>
+                    <div class='chart-container'>
+                        <canvas id='asignacionHoraExamenChart'></canvas>
                     </div>
-                    <div class='col-md-6'>
-                        <div class='chart-container'>
-                            <canvas id='asignacionHoraExamenChart'></canvas>
-                        </div>
-                    </div>
+                </div>
+            </div>
+            
+            <div class='col-md-12'>
+                <div class='dashboard-card'>
+                    <h4>Estadísticas Generales</h4>
+                    <div id='estadisticasGenerales'></div>
                 </div>
             </div>
         </div>
@@ -269,9 +283,13 @@
                 totalPracticas++;
             });
 
-            $('#totalPracticas').text(`Total de prácticas: ${totalPracticas}`);
-            $('#practicasEnProceso').text(`Prácticas en proceso: ${practicasEnProceso}`);
-            $('#practicasCompletadas').text(`Prácticas completadas: ${practicasCompletadas}`);
+            let estadisticasHTML = `
+                <p><strong>Total de prácticas:</strong> ${totalPracticas}</p>
+                <p><strong>Prácticas en proceso:</strong> ${practicasEnProceso}</p>
+                <p><strong>Prácticas completadas:</strong> ${practicasCompletadas}</p>
+            `;
+
+            $('#estadisticasGenerales').html(estadisticasHTML);
         }
 
         function actualizarGraficoPracticasPorCarrera() {
@@ -635,7 +653,7 @@
                 XLSX.writeFile(wb, "seguimiento_practicas.xlsx");
             });
 
-            $('#saveButton').on('click', function() {
+           $('#saveButton').on('click', function() {
                 let data = [];
                 $('#seguimientoPracticas tbody tr').each(function() {
                     let row = {};
@@ -658,7 +676,7 @@
                     data.push(row);
                 });
                 localStorage.setItem('datosPracticas', JSON.stringify(data));
-                alert('Datos guardados exitosamente');
+                alert('Datos guardados exitosamente en el almacenamiento local');
             });
 
             $(document).on('click', '.adjuntar-doc', function() {
@@ -690,6 +708,63 @@
                 link.click();
             });
         });
+
+        // Función para calcular la moda
+        function calcularModa(arr) {
+            return arr.sort((a,b) =>
+                arr.filter(v => v===a).length - arr.filter(v => v===b).length
+            ).pop();
+        }
+
+        // Función para calcular el promedio
+        function calcularPromedio(arr) {
+            return arr.reduce((a, b) => a + b, 0) / arr.length;
+        }
+
+        // Función para actualizar las estadísticas de prácticas por carrera
+        function actualizarEstadisticasPorCarrera() {
+            const estadisticasPorCarrera = carreras.reduce((acc, carrera) => {
+                const practicas = $(`#seguimientoPracticas .carrera-select option[value="${carrera}"]:selected`).closest('tr');
+                const duraciones = [];
+                
+                practicas.each(function() {
+                    const fechaInicio = $(this).find('td:eq(7) input').val();
+                    const fechaTermino = $(this).find('td:eq(8) input').val();
+                    if (fechaInicio && fechaTermino) {
+                        const inicio = new Date(fechaInicio.split('/').reverse().join('-'));
+                        const termino = new Date(fechaTermino.split('/').reverse().join('-'));
+                        const duracion = (termino - inicio) / (1000 * 60 * 60 * 24);
+                        duraciones.push(duracion);
+                    }
+                });
+                
+                acc[carrera] = {
+                    promedio: duraciones.length > 0 ? Math.round(calcularPromedio(duraciones)) : 0,
+                    moda: duraciones.length > 0 ? calcularModa(duraciones) : 0
+                };
+                return acc;
+            }, {});
+
+            // Actualizar la tabla de estadísticas por carrera
+            let estadisticasHTML = '<table class="table table-striped"><thead><tr><th>Carrera</th><th>Duración Promedio (días)</th><th>Duración Moda (días)</th></tr></thead><tbody>';
+            for (const [carrera, stats] of Object.entries(estadisticasPorCarrera)) {
+                estadisticasHTML += `<tr><td>${carrera}</td><td>${stats.promedio}</td><td>${stats.moda}</td></tr>`;
+            }
+            estadisticasHTML += '</tbody></table>';
+            $('#estadisticasPorCarrera').html(estadisticasHTML);
+        }
+
+        // Actualizar el dashboard para incluir las nuevas estadísticas
+        function actualizarDashboard() {
+            actualizarGraficoPracticasPorCarrera();
+            actualizarGraficoPracticasPorSede();
+            actualizarGraficoDuracionPromedio();
+            actualizarGraficoEvaluacionInstructor();
+            actualizarGraficoFinalizacionPractica();
+            actualizarGraficoAsignacionHoraExamen();
+            actualizarEstadisticasGenerales();
+            actualizarEstadisticasPorCarrera();
+        }
     </script>
 </body>
 </html>
