@@ -67,6 +67,39 @@
         tr:hover {
             background-color: #f5f5f5;
         }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        #modoSeleccion {
+            margin-bottom: 20px;
+        }
         @media screen and (max-width: 600px) {
             form {
                 padding: 10px;
@@ -85,9 +118,25 @@
 </head>
 <body>
     <h1>Registro de Prácticas Estudiantiles</h1>
+
+    <div id="modoSeleccion">
+        <label for="modo">Seleccione el modo de registro:</label>
+        <select id="modo">
+            <option value="individual">Individual</option>
+            <option value="grupal">Grupal</option>
+        </select>
+    </div>
+
     <form id="practicaForm">
-        <label for="numEstudiantes">Número de estudiantes por prácticas:</label>
-        <input type="number" id="numEstudiantes" required>
+        <div id="datosIndividuales">
+            <label for="nombreEstudiante">Nombre del Estudiante:</label>
+            <input type="text" id="nombreEstudiante">
+        </div>
+
+        <div id="datosGrupales" style="display:none;">
+            <label for="numEstudiantes">Número de estudiantes en el grupo:</label>
+            <input type="number" id="numEstudiantes" min="1">
+        </div>
 
         <label for="fechaInduccion">Fecha de Inducción Obligatoria:</label>
         <input type="date" id="fechaInduccion" required>
@@ -146,7 +195,7 @@
     <table id="registrosTabla">
         <thead>
             <tr>
-                <th>N° Estudiantes</th>
+                <th>Nombre/Grupo</th>
                 <th>Fecha Inducción</th>
                 <th>Cohorte</th>
                 <th>Tipo Práctica</th>
@@ -163,6 +212,7 @@
                 <th>Eval. Final</th>
                 <th>Plan Mejora</th>
                 <th>Práctica y Caso Clínico</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -170,21 +220,114 @@
         </tbody>
     </table>
 
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Editar Registro</h2>
+            <form id="editForm">
+                <!-- Los campos de edición se generarán dinámicamente aquí -->
+            </form>
+        </div>
+    </div>
+
     <script>
-        document.getElementById('practicaForm').addEventListener('submit', function(e) {
+        const modoSelect = document.getElementById('modo');
+        const datosIndividuales = document.getElementById('datosIndividuales');
+        const datosGrupales = document.getElementById('datosGrupales');
+        const practicaForm = document.getElementById('practicaForm');
+        const registrosTabla = document.getElementById('registrosTabla');
+        const editModal = document.getElementById('editModal');
+        const editForm = document.getElementById('editForm');
+        const closeBtn = document.getElementsByClassName('close')[0];
+
+        modoSelect.addEventListener('change', function() {
+            if (this.value === 'individual') {
+                datosIndividuales.style.display = 'block';
+                datosGrupales.style.display = 'none';
+            } else {
+                datosIndividuales.style.display = 'none';
+                datosGrupales.style.display = 'block';
+            }
+        });
+
+        practicaForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            var tbody = document.querySelector('#registrosTabla tbody');
-            var newRow = tbody.insertRow();
+            const tbody = registrosTabla.querySelector('tbody');
+            const newRow = tbody.insertRow();
 
-            var formData = new FormData(this);
-            for (var pair of formData.entries()) {
-                var cell = newRow.insertCell();
-                cell.textContent = pair[1];
+            const formData = new FormData(this);
+            const cells = [];
+
+            if (modoSelect.value === 'individual') {
+                cells.push(formData.get('nombreEstudiante'));
+            } else {
+                cells.push(`Grupo de ${formData.get('numEstudiantes')} estudiantes`);
             }
+
+            for (let pair of formData.entries()) {
+                if (pair[0] !== 'nombreEstudiante' && pair[0] !== 'numEstudiantes') {
+                    cells.push(pair[1]);
+                }
+            }
+
+            cells.forEach(cellData => {
+                const cell = newRow.insertCell();
+                cell.textContent = cellData;
+            });
+
+            const actionsCell = newRow.insertCell();
+            const editBtn = document.createElement('button');
+            editBtn.textContent = 'Editar';
+            editBtn.onclick = function() { editarRegistro(newRow); };
+            actionsCell.appendChild(editBtn);
 
             this.reset();
         });
+
+        function editarRegistro(row) {
+            editForm.innerHTML = '';
+
+            const cells = row.cells;
+            const headers = registrosTabla.querySelectorAll('th');
+
+            for (let i = 0; i < cells.length - 1; i++) {
+                const label = document.createElement('label');
+                label.textContent = headers[i].textContent;
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.value = cells[i].textContent;
+                input.name = `campo${i}`;
+                editForm.appendChild(label);
+                editForm.appendChild(input);
+            }
+
+            const submitBtn = document.createElement('button');
+            submitBtn.type = 'submit';
+            submitBtn.textContent = 'Guardar Cambios';
+            editForm.appendChild(submitBtn);
+
+            editModal.style.display = 'block';
+
+            editForm.onsubmit = function(e) {
+                e.preventDefault();
+                const formData = new FormData(editForm);
+                for (let i = 0; i < cells.length - 1; i++) {
+                    cells[i].textContent = formData.get(`campo${i}`);
+                }
+                editModal.style.display = 'none';
+            };
+        }
+
+        closeBtn.onclick = function() {
+            editModal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == editModal) {
+                editModal.style.display = 'none';
+            }
+        }
     </script>
 </body>
 </html>
