@@ -1,1 +1,575 @@
+<!DOCTYPE html>
+<html lang='es'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Seguimiento de Prácticas Profesionales - Facultad de Salud</title>
+    <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' rel='stylesheet'>
+    <link href='https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css' rel='stylesheet'>
+    <link href='https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css' rel='stylesheet'>
+    <style>
+        body { padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .dataTables_wrapper { padding: 20px 0; }
+        .container-fluid { max-width: 100%; overflow-x: auto; }
+        .estado-no-comienza { background-color: #ffcccc; color: #990000; }
+        .estado-en-proceso { background-color: #ffffcc; color: #999900; }
+        .estado-completada { background-color: #ccffcc; color: #009900; }
+        .evaluacion-excelente { color: #009900; }
+        .evaluacion-malo { color: #990000; }
+        .chart-container { height: 400px; margin-bottom: 30px; }
+        .documento-adjuntado { background-color: #ccffcc; }
+        .search-container { margin-bottom: 20px; }
+        .search-container input { margin-right: 10px; margin-bottom: 10px; }
+        .table-container { overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <div class='container-fluid'>
+        <h1 class='text-center mb-4'>Seguimiento de Prácticas Profesionales - Facultad de Salud</h1>
+        
+        <div class='search-container'>
+            <input type='text' id='searchEstudiante' class='form-control d-inline-block w-auto' placeholder='Buscar por estudiante'>
+            <input type='text' id='searchCODCLI' class='form-control d-inline-block w-auto' placeholder='Buscar por CODCLI'>
+            <input type='text' id='searchCentroPracticas' class='form-control d-inline-block w-auto' placeholder='Buscar por centro de prácticas'>
+            <input type='text' id='searchDocenteSupervisor' class='form-control d-inline-block w-auto' placeholder='Buscar por docente supervisor'>
+            <button id='aplicarFiltros' class='btn btn-primary'>Aplicar Filtros</button>
+            <button id='limpiarFiltros' class='btn btn-secondary'>Limpiar Filtros</button>
+        </div>
 
+        <div class='table-container'>
+            <table id='seguimientoPracticas' class='table table-striped table-bordered'>
+                <thead>
+                    <tr>
+                        <th>Nombre y Apellidos</th>
+                        <th>RUT</th>
+                        <th>CODCLI</th>
+                        <th>Carrera</th>
+                        <th>SEDE</th>
+                        <th>Nivel de práctica</th>
+                        <th>Supervisor de práctica</th>
+                        <th>Campo Clínico</th>
+                        <th>Servicio y complejidad</th>
+                        <th>Nombre instructor</th>
+                        <th>Fecha de Inicio</th>
+                        <th>Fecha de Término</th>
+                        <th>Seguimiento 1</th>
+                        <th>Seguimiento 2</th>
+                        <th>Evaluación instructor</th>
+                        <th>Documentación instructor</th>
+                        <th>Finalización práctica</th>
+                        <th>Documentación finalización</th>
+                        <th>Evaluación final de práctica profesional</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Las filas se generarán dinámicamente aquí -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class='text-center mt-3'>
+            <button id='exportButton' class='btn btn-primary'>Exportar a Excel</button>
+            <button id='importButton' class='btn btn-success'>Importar desde Excel</button>
+            <input type='file' id='fileInput' style='display: none;' accept='.xlsx, .xls'>
+            <button id='saveButton' class='btn btn-info'>Guardar</button>
+        </div>
+
+        <div class='row mt-4'>
+            <div class='col-md-3'>
+                <div class='chart-container'>
+                    <canvas id='estadosPracticasChart'></canvas>
+                </div>
+            </div>
+            <div class='col-md-3'>
+                <div class='chart-container'>
+                    <canvas id='sedesChart'></canvas>
+                </div>
+            </div>
+            <div class='col-md-3'>
+                <div class='chart-container'>
+                    <canvas id='carrerasChart'></canvas>
+                </div>
+            </div>
+            <div class='col-md-3'>
+                <div class='chart-container'>
+                    <canvas id='evaluacionFinalChart'></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>
+    <script src='https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js'></script>
+    <script src='https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js'></script>
+    <script src='https://cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js'></script>
+    <script src='https://cdn.datatables.net/buttons/2.0.1/js/buttons.html5.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/flatpickr'></script>
+    <script src='https://npmcdn.com/flatpickr/dist/l10n/es.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/chart.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js'></script>
+
+    <script>
+        const carreras = [
+            'Enfermería',
+            'Kinesiología',
+            'Técnico Nivel Superior en Enfermería',
+            'Terapia Ocupacional'
+        ];
+
+        const sedes = ['Ancud', 'Calama', 'Los Andes', 'San Felipe', 'Machali'];
+
+        function crearSelectCarrera(valorSeleccionado = '') {
+            return `<select class='form-select carrera-select'>
+                ${carreras.map(carrera => `<option value='${carrera}' ${carrera === valorSeleccionado ? 'selected' : ''}>${carrera}</option>`).join('')}
+            </select>`;
+        }
+
+        function crearSelectEstado(valorSeleccionado = '') {
+            return `<select class='form-select estado-select'>
+                <option value='no-comienza' class='estado-no-comienza' ${valorSeleccionado === 'no-comienza' ? 'selected' : ''}>No comienza</option>
+                <option value='en-proceso' class='estado-en-proceso' ${valorSeleccionado === 'en-proceso' ? 'selected' : ''}>En proceso</option>
+                <option value='completada' class='estado-completada' ${valorSeleccionado === 'completada' ? 'selected' : ''}>Completada</option>
+            </select>`;
+        }
+
+        function crearSelectEvaluacion(valorSeleccionado = '') {
+            return `<select class='form-select evaluacion-select'>
+                <option value='excelente' class='evaluacion-excelente' ${valorSeleccionado === 'excelente' ? 'selected' : ''}>Excelente</option>
+                <option value='bien' ${valorSeleccionado === 'bien' ? 'selected' : ''}>Bien</option>
+                <option value='suficiente' ${valorSeleccionado === 'suficiente' ? 'selected' : ''}>Suficiente</option>
+                <option value='deficiente' ${valorSeleccionado === 'deficiente' ? 'selected' : ''}>Deficiente</option>
+                <option value='malo' class='evaluacion-malo' ${valorSeleccionado === 'malo' ? 'selected' : ''}>Malo</option>
+            </select>`;
+        }
+
+        function crearSelectSede(valorSeleccionado = '') {
+            return `<select class='form-select sede-select'>
+                ${sedes.map(sede => `<option value='${sede}' ${sede === valorSeleccionado ? 'selected' : ''}>${sede}</option>`).join('')}
+            </select>`;
+        }
+
+        function crearSelectNivelPractica(valorSeleccionado = '') {
+            return `<select class='form-select nivel-practica-select'>
+                ${[1, 2, 3, 4, 5].map(nivel => `<option value='${nivel}' ${nivel == valorSeleccionado ? 'selected' : ''}>${nivel}</option>`).join('')}
+            </select>`;
+        }
+
+        let estadosChart, carrerasChart, sedesChart, evaluacionFinalChart;
+
+        function actualizarGraficos() {
+            actualizarGraficoEstados();
+            actualizarGraficoCarreras();
+            actualizarGraficoSedes();
+            actualizarGraficoEvaluacionFinal();
+        }
+
+        function actualizarGraficoEstados() {
+            let conteoEstados = {
+                'no-comienza': 0,
+                'en-proceso': 0,
+                'completada': 0
+            };
+
+            $('#seguimientoPracticas tbody tr').each(function() {
+                let estado = $(this).find('td:eq(12) select').val();
+                conteoEstados[estado]++;
+            });
+
+            const datos = Object.values(conteoEstados);
+            const colores = ['#ffcccc', '#ffffcc', '#ccffcc'];
+
+            if (estadosChart) {
+                estadosChart.data.datasets[0].data = datos;
+                estadosChart.update();
+            } else {
+                const ctx = document.getElementById('estadosPracticasChart').getContext('2d');
+                estadosChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['No comienza', 'En proceso', 'Completada'],
+                        datasets: [{
+                            data: datos,
+                            backgroundColor: colores
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Estados de las Prácticas'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function actualizarGraficoCarreras() {
+            let conteoCarreras = {};
+            carreras.forEach(carrera => conteoCarreras[carrera] = 0);
+
+            $('#seguimientoPracticas tbody tr').each(function() {
+                let carrera = $(this).find('td:eq(3) select').val();
+                if (conteoCarreras[carrera] !== undefined) {
+                    conteoCarreras[carrera]++;
+                }
+            });
+
+            const datos = carreras.map(carrera => conteoCarreras[carrera]);
+            const colores = datos.map(() => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.7)`);
+
+            if (carrerasChart) {
+                carrerasChart.data.datasets[0].data = datos;
+                carrerasChart.data.datasets[0].backgroundColor = colores;
+                carrerasChart.update();
+            } else {
+                const ctx = document.getElementById('carrerasChart').getContext('2d');
+                carrerasChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: carreras,
+                        datasets: [{
+                            label: 'Número de Estudiantes por Carrera',
+                            data: datos,
+                            backgroundColor: colores
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            title: {
+                                display: true,
+                                text: 'Distribución de Estudiantes por Carrera'
+                            }
+                        },
+                        scales: {
+                            x: { 
+                                title: { display: true, text: 'Carreras' },
+                                ticks: { 
+                                    autoSkip: false,
+                                    maxRotation: 90,
+                                    minRotation: 90
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Número de Estudiantes' }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function actualizarGraficoSedes() {
+            let conteoSedes = {};
+            sedes.forEach(sede => conteoSedes[sede] = 0);
+
+            $('#seguimientoPracticas tbody tr').each(function() {
+                let sede = $(this).find('td:eq(4) select').val();
+                if (conteoSedes[sede] !== undefined) {
+                    conteoSedes[sede]++;
+                }
+            });
+
+            const datos = sedes.map(sede => conteoSedes[sede]);
+            const colores = datos.map(() => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.7)`);
+
+            if (sedesChart) {
+                sedesChart.data.datasets[0].data = datos;
+                sedesChart.data.datasets[0].backgroundColor = colores;
+                sedesChart.update();
+            } else {
+                const ctx = document.getElementById('sedesChart').getContext('2d');
+                sedesChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: sedes,
+                        datasets: [{
+                            data: datos,
+                            backgroundColor: colores
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Distribución por Sedes'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function actualizarGraficoEvaluacionFinal() {
+            let conteoEvaluacion = {
+                'no-comienza': 0,
+                'en-proceso': 0,
+                'completada': 0
+            };
+
+            $('#seguimientoPracticas tbody tr').each(function() {
+                let evaluacionFinal = $(this).find('td:last-child select').val();
+                if (conteoEvaluacion[evaluacionFinal] !== undefined) {
+                    conteoEvaluacion[evaluacionFinal]++;
+                }
+            });
+
+            const datos = [conteoEvaluacion['no-comienza'], conteoEvaluacion['en-proceso'], conteoEvaluacion['completada']];
+            const colores = ['#ffcccc', '#ffffcc', '#ccffcc'];
+
+            if (evaluacionFinalChart) {
+                evaluacionFinalChart.data.datasets[0].data = datos;
+                evaluacionFinalChart.update();
+            } else {
+                const ctx = document.getElementById('evaluacionFinalChart').getContext('2d');
+                evaluacionFinalChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['No comienza', 'En proceso', 'Completada'],
+                        datasets: [{
+                            label: 'Evaluación Final de Práctica Profesional',
+                            data: datos,
+                            backgroundColor: colores
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Evaluación Final de Práctica Profesional'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        $(document).ready(function() {
+            let table = $('#seguimientoPracticas').DataTable({
+                scrollX: true,
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json'
+                },
+                dom: 'Bfrtip',
+                buttons: [],
+                pageLength: 25,
+                lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Todos"]],
+                processing: true,
+                data: [], // Inicializamos con un array vacío
+                columns: [
+                    { data: 'nombre' },
+                    { data: 'rut' },
+                    { data: 'codcli' },
+                    { data: 'carrera' },
+                    { data: 'sede' },
+                    { data: 'nivelPractica' },
+                    { data: 'supervisorPractica' },
+                    { data: 'campoClinico' },
+                    { data: 'servicioComplejidad' },
+                    { data: 'instructor' },
+                    { data: 'fechaInicio' },
+                    { data: 'fechaTermino' },
+                    { data: 'seguimiento1' },
+                    { data: 'seguimiento2' },
+                    { data: 'evaluacionInstructor' },
+                    { data: 'documentacionInstructor' },
+                    { data: 'finalizacionPractica' },
+                    { data: 'documentacionFinalizacion' },
+                    { data: 'evaluacionFinal' }
+                ],
+                columnDefs: [
+                    {
+                        targets: '_all',
+                        render: function (data, type, row, meta) {
+                            if (meta.col === 3) { // Carrera
+                                return crearSelectCarrera(data);
+                            } else if (meta.col === 4) { // SEDE
+                                return crearSelectSede(data);
+                            } else if (meta.col === 5) { // Nivel de práctica
+                                return crearSelectNivelPractica(data);
+                            } else if ([12, 13, 16, 18].includes(meta.col)) { // Campos de estado
+                                return crearSelectEstado(data);
+                            } else if (meta.col === 14) { // Evaluación instructor
+                                return crearSelectEvaluacion(data);
+                            } else if ([15, 17].includes(meta.col)) { // Campos de documentación
+                                return `
+                                    <div class="documento-container">
+                                        <input type="file" class="form-control adjuntar-doc" style="display: none;">
+                                        <button class='btn btn-primary btn-sm adjuntar-btn'>Adjuntar documentación</button>
+                                        <a href="#" class="btn btn-success btn-sm descargar-doc" style="display: none;">Descargar</a>
+                                    </div>
+                                `;
+                            } else if ([10, 11].includes(meta.col)) { // Fechas
+                                return `<input type='text' class='form-control datepicker' value='${data || ''}'>`;
+                            } else {
+                                return `<input type='text' class='form-control' value='${data || ''}'>`;
+                            }
+                        }
+                    }
+                ],
+                drawCallback: function() {
+                    $('.datepicker').flatpickr({
+                        locale: 'es',
+                        dateFormat: 'd/m/Y'
+                    });
+
+                    $('.adjuntar-btn').off('click').on('click', function() {
+                        $(this).siblings('.adjuntar-doc').click();
+                    });
+
+                    $('.adjuntar-doc').off('change').on('change', function() {
+                        if (this.files && this.files[0]) {
+                            $(this).closest('.documento-container').addClass('documento-adjuntado');
+                            $(this).siblings('.descargar-doc').show();
+                            $(this).siblings('.adjuntar-btn').text('Cambiar documento');
+                        }
+                    });
+
+                    $('.descargar-doc').off('click').on('click', function(e) {
+                        e.preventDefault();
+                        alert('Función de descarga no implementada en este ejemplo.');
+                    });
+
+                    actualizarGraficos();
+                }
+            });
+
+            // Cargar datos iniciales
+            cargarDatosIniciales();
+
+            function cargarDatosIniciales() {
+                const datosGuardados = JSON.parse(localStorage.getItem('datosPracticas')) || [];
+                if (datosGuardados.length > 0) {
+                    table.clear().rows.add(datosGuardados).draw();
+                } else {
+                    // Si no hay datos guardados, generamos algunos datos de ejemplo
+                    const datosEjemplo = generarDatosEjemplo(10);
+                    table.clear().rows.add(datosEjemplo).draw();
+                }
+            }
+
+            function generarDatosEjemplo(cantidad) {
+                const datos = [];
+                for (let i = 0; i < cantidad; i++) {
+                    datos.push({
+                        nombre: `Estudiante ${i + 1}`,
+                        rut: `${10000000 + i}-${i % 10}`,
+                        codcli: `COD${1000 + i}`,
+                        carrera: carreras[i % carreras.length],
+                        sede: sedes[i % sedes.length],
+                        nivelPractica: (i % 5) + 1,
+                        supervisorPractica: `Supervisor ${i + 1}`,
+                        campoClinico: `Campo Clínico ${i + 1}`,
+                        servicioComplejidad: `Servicio ${i + 1}`,
+                        instructor: `Instructor ${i + 1}`,
+                        fechaInicio: '01/01/2024',
+                        fechaTermino: '30/06/2024',
+                        seguimiento1: 'no-comienza',
+                        seguimiento2: 'no-comienza',
+                        evaluacionInstructor: 'bien',
+                        documentacionInstructor: '',
+                        finalizacionPractica: 'no-comienza',
+                        documentacionFinalizacion: '',
+                        evaluacionFinal: 'no-comienza'
+                    });
+                }
+                return datos;
+            }
+
+            // Función para aplicar los filtros de búsqueda
+            function aplicarFiltros() {
+                table.columns().every(function() {
+                    var column = this;
+                    var searchValue = '';
+
+                    switch(column.index()) {
+                        case 0: // Nombre y Apellidos
+                            searchValue = $('#searchEstudiante').val();
+                            break;
+                        case 2: // CODCLI
+                            searchValue = $('#searchCODCLI').val();
+                            break;
+                        case 7: // Campo Clínico
+                            searchValue = $('#searchCentroPracticas').val();
+                            break;
+                        case 6: // Supervisor de práctica
+                            searchValue = $('#searchDocenteSupervisor').val();
+                            break;
+                    }
+
+                    if (searchValue) {
+                        column.search(searchValue).draw();
+                    }
+                });
+            }
+
+            // Event listener para el botón de aplicar filtros
+            $('#aplicarFiltros').on('click', function() {
+                aplicarFiltros();
+            });
+
+            // Event listener para el botón de limpiar filtros
+            $('#limpiarFiltros').on('click', function() {
+                $('#searchEstudiante, #searchCODCLI, #searchCentroPracticas, #searchDocenteSupervisor').val('');
+                table.search('').columns().search('').draw();
+            });
+
+            // Función para exportar a Excel
+            $('#exportButton').on('click', function() {
+                let data = table.data().toArray();
+                let ws = XLSX.utils.json_to_sheet(data);
+                let wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Practicas");
+                XLSX.writeFile(wb, "Seguimiento_Practicas.xlsx");
+            });
+
+            // Función para importar desde Excel
+            $('#importButton').on('click', function() {
+                $('#fileInput').click();
+            });
+
+            $('#fileInput').on('change', function(e) {
+                let file = e.target.files[0];
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    let data = new Uint8Array(e.target.result);
+                    let workbook = XLSX.read(data, {type: 'array'});
+                    let firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    let jsonData = XLSX.utils.sheet_to_json(firstSheet);
+
+                    // Limpiar la tabla actual y añadir los nuevos datos
+                    table.clear().rows.add(jsonData).draw();
+                    actualizarGraficos();
+                };
+                reader.readAsArrayBuffer(file);
+            });
+
+            $('#saveButton').on('click', function() {
+                let data = table.data().toArray();
+                localStorage.setItem('datosPracticas', JSON.stringify(data));
+                alert('Datos guardados correctamente');
+            });
+        });
+    </script>
+</body>
+</html>
