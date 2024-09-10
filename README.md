@@ -45,4 +45,4 @@ Las contribuciones son bienvenidas. Por favor, abra un issue o realice un pull r
 
 ## Licencia
 
-© [2024] [Universidad de Aconcagua]. [Coordinación de Centros de Practicas e Inserción], Todos los derechos reservados.
+© [2024] [Universidad de Aconcagua]. [Coordinación de Centros de Practicas e Inserción Laboral], Todos los derechos reservados.
