@@ -36,6 +36,8 @@ La página de la Facultad de Salud se subdivide en 4 carreras:
 8. **Documentación**: Ampliar la documentación del proyecto, incluyendo guías de contribución y estándares de código.
 9. **Pruebas**: Implementar pruebas automatizadas para asegurar la funcionalidad del sitio.
 10. **Optimización de Rendimiento**: Minimizar y comprimir archivos CSS y JavaScript para mejorar los tiempos de carga.
+11. **Considerar desarrollo de Backend, hosting e integración a sistema integrado**: Generar proceso de finalizacion para integracion en sistema intregrado.
+12. **Desarrollo de integracion de datos desde sistema U+ a nuevo sistema**: Generar una integracion para que el sistema se vuelva mas intuitivo de cara al usuario.
 
 ## Contribución
 
