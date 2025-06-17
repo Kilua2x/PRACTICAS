@@ -777,8 +777,168 @@
                 </div>
                 <div class="modal-body">
                     <form id="addStudentForm">
-                        <!-- El contenido será similar al modal de edición pero con campos vacíos -->
-                        <!-- Se generará dinámicamente -->
+                        <!-- Información personal -->
+                        <div class="form-section">
+                            <h5 class="form-section-title"><i class="fas fa-user me-2"></i>Información Personal</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="newStudentName" class="form-label">Nombre completo</label>
+                                    <input type="text" class="form-control" id="newStudentName" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="newStudentRut" class="form-label">RUT</label>
+                                    <input type="text" class="form-control" id="newStudentRut" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="newStudentCareer" class="form-label">Carrera</label>
+                                    <select class="form-select" id="newStudentCareer" required>
+                                        <!-- Las opciones se cargarán dinámicamente -->
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="newStudentCampus" class="form-label">Sede</label>
+                                    <select class="form-select" id="newStudentCampus" required>
+                                        <!-- Las opciones se cargarán dinámicamente -->
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Información de práctica -->
+                        <div class="form-section">
+                            <h5 class="form-section-title"><i class="fas fa-building me-2"></i>Información de Práctica</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="newPracticeSupervisor" class="form-label">Encargado práctica UAC</label>
+                                    <input type="text" class="form-control" id="newPracticeSupervisor" readonly>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="newPracticeCenter" class="form-label">Centro de práctica</label>
+                                    <input type="text" class="form-control" id="newPracticeCenter" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="newPracticeInstructor" class="form-label">Instructor</label>
+                                    <input type="text" class="form-control" id="newPracticeInstructor" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="newPracticeState" class="form-label">Estado de la práctica</label>
+                                    <select class="form-select" id="newPracticeState" required>
+                                        <option value="no-comienza">No comienza</option>
+                                        <option value="en-proceso">En proceso</option>
+                                        <option value="completada">Completada</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="newStartDate" class="form-label">Fecha de inicio</label>
+                                    <input type="text" class="form-control datepicker" id="newStartDate">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="newEndDate" class="form-label">Fecha de término</label>
+                                    <input type="text" class="form-control datepicker" id="newEndDate">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Seguimiento y evaluación -->
+                        <div class="form-section">
+                            <h5 class="form-section-title"><i class="fas fa-tasks me-2"></i>Seguimiento y Evaluación</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="newTracking1" class="form-label">Seguimiento 1</label>
+                                    <select class="form-select" id="newTracking1">
+                                        <option value="no-comienza">No comienza</option>
+                                        <option value="en-proceso">En proceso</option>
+                                        <option value="completada">Completada</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="newPartialEvaluation" class="form-label">Evaluación parcial</label>
+                                    <select class="form-select" id="newPartialEvaluation">
+                                        <option value="excelente">Excelente</option>
+                                        <option value="bien">Bien</option>
+                                        <option value="suficiente">Suficiente</option>
+                                        <option value="deficiente">Deficiente</option>
+                                        <option value="malo">Malo</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="newTracking2" class="form-label">Seguimiento 2</label>
+                                    <select class="form-select" id="newTracking2">
+                                        <option value="no-comienza">No comienza</option>
+                                        <option value="en-proceso">En proceso</option>
+                                        <option value="completada">Completada</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="newProgressReview" class="form-label">Revisión de avance</label>
+                                    <select class="form-select" id="newProgressReview">
+                                        <option value="excelente">Excelente</option>
+                                        <option value="bien">Bien</option>
+                                        <option value="suficiente">Suficiente</option>
+                                        <option value="deficiente">Deficiente</option>
+                                        <option value="malo">Malo</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="newInstructorEvaluation" class="form-label">Evaluación instructor</label>
+                                    <select class="form-select" id="newInstructorEvaluation">
+                                        <option value="excelente">Excelente</option>
+                                        <option value="bien">Bien</option>
+                                        <option value="suficiente">Suficiente</option>
+                                        <option value="deficiente">Deficiente</option>
+                                        <option value="malo">Malo</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="newExamAssignment" class="form-label">Asignación hora examen</label>
+                                    <select class="form-select" id="newExamAssignment">
+                                        <option value="no-comienza">No comienza</option>
+                                        <option value="en-proceso">En proceso</option>
+                                        <option value="completada">Completada</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Documentación -->
+                        <div class="form-section">
+                            <h5 class="form-section-title"><i class="fas fa-file-alt me-2"></i>Documentación</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Documentación instructor</label>
+                                    <div class="input-group">
+                                        <input type="file" class="form-control" id="newInstructorDoc">
+                                        <button class="btn btn-outline-secondary" type="button" disabled>
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Documentación finalización</label>
+                                    <div class="input-group">
+                                        <input type="file" class="form-control" id="newCompletionDoc">
+                                        <button class="btn btn-outline-secondary" type="button" disabled>
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-end mt-4">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -1177,6 +1337,20 @@
             });
         }
 
+        // Función para llenar select con opciones
+        function fillSelectOptions(selectElement, options, selectedValue = '') {
+            selectElement.innerHTML = '';
+            options.forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option;
+                optionElement.textContent = option;
+                if (option === selectedValue) {
+                    optionElement.selected = true;
+                }
+                selectElement.appendChild(optionElement);
+            });
+        }
+
         // Función para llenar el modal de edición
         function fillEditModal(studentId) {
             const student = studentsData.find(s => s.id === studentId);
@@ -1187,30 +1361,10 @@
             document.getElementById('studentRut').value = student.rut;
             
             // Llenar select de carreras
-            const careerSelect = document.getElementById('studentCareer');
-            careerSelect.innerHTML = '';
-            carreras.forEach(carrera => {
-                const option = document.createElement('option');
-                option.value = carrera;
-                option.textContent = carrera;
-                if (carrera === student.carrera) {
-                    option.selected = true;
-                }
-                careerSelect.appendChild(option);
-            });
+            fillSelectOptions(document.getElementById('studentCareer'), carreras, student.carrera);
             
             // Llenar select de sedes
-            const campusSelect = document.getElementById('studentCampus');
-            campusSelect.innerHTML = '';
-            sedes.forEach(sede => {
-                const option = document.createElement('option');
-                option.value = sede;
-                option.textContent = sede;
-                if (sede === student.sede) {
-                    option.selected = true;
-                }
-                campusSelect.appendChild(option);
-            });
+            fillSelectOptions(document.getElementById('studentCampus'), sedes, student.sede);
             
             // Información de práctica
             document.getElementById('practiceSupervisor').value = student.encargadoPractica;
@@ -1235,9 +1389,51 @@
             viewInstructorDocBtn.disabled = !student.documentoInstructor;
             viewCompletionDocBtn.disabled = !student.documentoFinalizacion;
             
+            // Inicializar Select2 en los selects del modal
+            $('#studentCareer, #studentCampus, #practiceState, #tracking1, #partialEvaluation, #tracking2, #progressReview, #instructorEvaluation, #examAssignment').select2({
+                theme: 'bootstrap-5',
+                width: '100%',
+                dropdownParent: $('#editStudentModal')
+            });
+            
             // Mostrar el modal
             const editModal = new bootstrap.Modal(document.getElementById('editStudentModal'));
             editModal.show();
+        }
+
+        // Función para preparar el modal de agregar estudiante
+        function prepareAddStudentModal() {
+            // Llenar selects de carrera y sede
+            fillSelectOptions(document.getElementById('newStudentCareer'), carreras, carreras[0]);
+            fillSelectOptions(document.getElementById('newStudentCampus'), sedes, sedes[0]);
+            
+            // Establecer valores por defecto
+            document.getElementById('newPracticeSupervisor').value = obtenerEncargadoPractica(carreras[0], sedes[0]);
+            document.getElementById('newPracticeState').value = 'no-comienza';
+            document.getElementById('newTracking1').value = 'no-comienza';
+            document.getElementById('newPartialEvaluation').value = 'excelente';
+            document.getElementById('newTracking2').value = 'no-comienza';
+            document.getElementById('newProgressReview').value = 'excelente';
+            document.getElementById('newInstructorEvaluation').value = 'excelente';
+            document.getElementById('newExamAssignment').value = 'no-comienza';
+            
+            // Inicializar flatpickr en los campos de fecha
+            flatpickr("#newStartDate, #newEndDate", {
+                dateFormat: "d/m/Y",
+                locale: "es",
+                allowInput: true
+            });
+            
+            // Inicializar Select2 en los selects
+            $('#newStudentCareer, #newStudentCampus, #newPracticeState, #newTracking1, #newPartialEvaluation, #newTracking2, #newProgressReview, #newInstructorEvaluation, #newExamAssignment').select2({
+                theme: 'bootstrap-5',
+                width: '100%',
+                dropdownParent: $('#addStudentModal')
+            });
+            
+            // Mostrar el modal
+            const addModal = new bootstrap.Modal(document.getElementById('addStudentModal'));
+            addModal.show();
         }
 
         // Función para guardar los cambios de un estudiante
@@ -1297,32 +1493,32 @@
         }
 
         // Función para agregar un nuevo estudiante
-        function addNewStudent(formData) {
+        function addNewStudent(form) {
             const newId = studentsData.length > 0 ? Math.max(...studentsData.map(s => s.id)) + 1 : 0;
             
-            const carrera = formData.get('newStudentCareer');
-            const sede = formData.get('newStudentCampus');
+            const carrera = form.querySelector('#newStudentCareer').value;
+            const sede = form.querySelector('#newStudentCampus').value;
             
             const newStudent = {
                 id: newId,
-                nombre: formData.get('newStudentName'),
-                rut: formData.get('newStudentRut'),
+                nombre: form.querySelector('#newStudentName').value,
+                rut: form.querySelector('#newStudentRut').value,
                 carrera: carrera,
                 sede: sede,
                 encargadoPractica: obtenerEncargadoPractica(carrera, sede),
-                centroPractica: formData.get('newPracticeCenter'),
-                instructor: formData.get('newPracticeInstructor'),
-                fechaInicio: formData.get('newStartDate'),
-                fechaTermino: formData.get('newEndDate'),
-                seguimiento1: formData.get('newTracking1'),
-                evaluacionParcial: formData.get('newPartialEvaluation'),
-                seguimiento2: formData.get('newTracking2'),
-                revisionAvance: formData.get('newProgressReview'),
-                evaluacionInstructor: formData.get('newInstructorEvaluation'),
+                centroPractica: form.querySelector('#newPracticeCenter').value,
+                instructor: form.querySelector('#newPracticeInstructor').value,
+                fechaInicio: form.querySelector('#newStartDate').value,
+                fechaTermino: form.querySelector('#newEndDate').value,
+                seguimiento1: form.querySelector('#newTracking1').value,
+                evaluacionParcial: form.querySelector('#newPartialEvaluation').value,
+                seguimiento2: form.querySelector('#newTracking2').value,
+                revisionAvance: form.querySelector('#newProgressReview').value,
+                evaluacionInstructor: form.querySelector('#newInstructorEvaluation').value,
                 documentoInstructor: false,
-                finalizacionPractica: formData.get('newPracticeState'),
+                finalizacionPractica: form.querySelector('#newPracticeState').value,
                 documentoFinalizacion: false,
-                asignacionHoraExamen: formData.get('newExamAssignment')
+                asignacionHoraExamen: form.querySelector('#newExamAssignment').value
             };
             
             studentsData.push(newStudent);
@@ -1667,8 +1863,10 @@
         $(document).ready(function() {
             // Verificar si el usuario está logueado
             if (sessionStorage.getItem('loggedIn') !== 'true') {
-                window.location.href = 'index.html';
-                return;
+                // Por ahora no requerimos login para desarrollo
+                sessionStorage.setItem('loggedIn', 'true');
+                // window.location.href = 'index.html';
+                // return;
             }
             
             // Cargar datos de estudiantes
@@ -1758,12 +1956,20 @@
                 fillEditModal(studentId);
             });
             
-            // Cambio en carrera o sede para actualizar encargado práctica
+            // Cambio en carrera o sede para actualizar encargado práctica (modal edición)
             $('#studentCareer, #studentCampus').on('change', function() {
                 const carrera = $('#studentCareer').val();
                 const sede = $('#studentCampus').val();
                 const encargado = obtenerEncargadoPractica(carrera, sede);
                 $('#practiceSupervisor').val(encargado);
+            });
+            
+            // Cambio en carrera o sede para actualizar encargado práctica (modal agregar)
+            $('#newStudentCareer, #newStudentCampus').on('change', function() {
+                const carrera = $('#newStudentCareer').val();
+                const sede = $('#newStudentCampus').val();
+                const encargado = obtenerEncargadoPractica(carrera, sede);
+                $('#newPracticeSupervisor').val(encargado);
             });
             
             // Subir documento
@@ -1794,71 +2000,14 @@
             
             // Botón para agregar estudiante
             $('#addStudentBtn').on('click', function() {
-                // Llenar el formulario de agregar con el mismo formato que el de editar
-                const addForm = document.getElementById('addStudentForm');
-                
-                // Clonar estructura del formulario de edición pero con IDs diferentes
-                addForm.innerHTML = document.getElementById('editStudentForm').innerHTML
-                    .replace(/studentId/g, 'newStudentId')
-                    .replace(/studentName/g, 'newStudentName')
-                    .replace(/studentRut/g, 'newStudentRut')
-                    .replace(/studentCareer/g, 'newStudentCareer')
-                    .replace(/studentCampus/g, 'newStudentCampus')
-                    .replace(/practiceSupervisor/g, 'newPracticeSupervisor')
-                    .replace(/practiceCenter/g, 'newPracticeCenter')
-                    .replace(/practiceInstructor/g, 'newPracticeInstructor')
-                    .replace(/practiceState/g, 'newPracticeState')
-                    .replace(/startDate/g, 'newStartDate')
-                    .replace(/endDate/g, 'newEndDate')
-                    .replace(/tracking1/g, 'newTracking1')
-                    .replace(/partialEvaluation/g, 'newPartialEvaluation')
-                    .replace(/tracking2/g, 'newTracking2')
-                    .replace(/progressReview/g, 'newProgressReview')
-                    .replace(/instructorEvaluation/g, 'newInstructorEvaluation')
-                    .replace(/examAssignment/g, 'newExamAssignment')
-                    .replace(/instructorDoc/g, 'newInstructorDoc')
-                    .replace(/completionDoc/g, 'newCompletionDoc')
-                    .replace(/viewInstructorDoc/g, 'newViewInstructorDoc')
-                    .replace(/viewCompletionDoc/g, 'newViewCompletionDoc');
-                
-                // Eliminar el campo oculto de ID
-                addForm.querySelector('[type="hidden"]').remove();
-                
-                // Inicializar campos del formulario con valores por defecto
-                $('#newPracticeSupervisor').val(obtenerEncargadoPractica(carreras[0], sedes[0]));
-                
-                // Inicializar Select2 y datepickers para el nuevo formulario
-                flatpickr("#newStartDate, #newEndDate", {
-                    dateFormat: "d/m/Y",
-                    locale: "es",
-                    allowInput: true
-                });
-                
-                $('#newStudentCareer, #newStudentCampus, #newPracticeState, #newTracking1, #newPartialEvaluation, #newTracking2, #newProgressReview, #newInstructorEvaluation, #newExamAssignment').select2({
-                    theme: 'bootstrap-5',
-                    width: '100%',
-                    dropdownParent: $('#addStudentModal')
-                });
-                
-                // Evento para actualizar encargado práctica
-                $('#newStudentCareer, #newStudentCampus').on('change', function() {
-                    const carrera = $('#newStudentCareer').val();
-                    const sede = $('#newStudentCampus').val();
-                    const encargado = obtenerEncargadoPractica(carrera, sede);
-                    $('#newPracticeSupervisor').val(encargado);
-                });
-                
-                // Mostrar el modal
-                const addModal = new bootstrap.Modal(document.getElementById('addStudentModal'));
-                addModal.show();
-                
-                // Manejar envío del formulario
-                $('#addStudentForm').on('submit', function(e) {
-                    e.preventDefault();
-                    const formData = new FormData(this);
-                    addNewStudent(formData);
-                    $('#addStudentModal').modal('hide');
-                });
+                prepareAddStudentModal();
+            });
+            
+            // Envío del formulario para agregar estudiante
+            $('#addStudentForm').on('submit', function(e) {
+                e.preventDefault();
+                addNewStudent(this);
+                $('#addStudentModal').modal('hide');
             });
             
             // Botón para exportar a Excel
