@@ -8,205 +8,359 @@
     <title>Seguimiento de Prácticas - Facultad de Ingenierías | UAC</title>
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- DataTables -->
-    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" rel="stylesheet">
-    <!-- Flatpickr -->
-    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Flatpickr -->
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <!-- Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
     <!-- Estilos personalizados -->
     <style>
         :root {
             --primary-color: #00204e;
+            --primary-light: #173b6c;
             --secondary-color: #FFA500;
             --accent-color: #ff8c00;
-            --light-bg: rgba(255, 255, 255, 0.1);
-            --text-color: #ffffff;
-            --error-color: #ff6b6b;
+            --light-bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --muted-text: #6c757d;
             
-            --success-bg: #ccffcc;
-            --success-text: #009900;
-            --warning-bg: #ffffcc;
-            --warning-text: #999900;
-            --danger-bg: #ffcccc;
-            --danger-text: #990000;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            
+            --border-radius: 10px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
         }
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f7fa;
-            color: #333;
+            background-color: var(--light-bg);
+            color: var(--text-color);
             padding: 0;
             margin: 0;
         }
         
         .navbar {
             background-color: var(--primary-color);
-        }
-        
-        .navbar-brand {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         
         .page-header {
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
             color: white;
-            padding: 2rem 0;
+            padding: 2.5rem 0;
             margin-bottom: 2rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
         
         .content-wrapper {
             margin: 2rem auto;
         }
         
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-        
-        .btn-primary:hover {
-            background-color: #001a3c;
-            border-color: #001a3c;
-        }
-        
-        .btn-secondary {
-            background-color: var(--secondary-color);
-            border-color: var(--secondary-color);
-            color: white;
-        }
-        
-        .btn-secondary:hover {
-            background-color: var(--accent-color);
-            border-color: var(--accent-color);
-            color: white;
-        }
-        
-        .estado-no-comienza { 
-            background-color: var(--danger-bg); 
-            color: var(--danger-text); 
-        }
-        
-        .estado-en-proceso { 
-            background-color: var(--warning-bg); 
-            color: var(--warning-text); 
-        }
-        
-        .estado-completada { 
-            background-color: var(--success-bg); 
-            color: var(--success-text); 
-        }
-        
-        .evaluacion-excelente { 
-            color: var(--success-text); 
-        }
-        
-        .evaluacion-malo { 
-            color: var(--danger-text); 
-        }
-        
-        .chart-container {
-            height: 300px;
-            margin-bottom: 2rem;
-            position: relative;
-        }
-        
-        .dashboard-card {
-            background-color: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-        }
-        
-        .dashboard-card:hover {
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transform: translateY(-5px);
-        }
-        
-        .dashboard-card h4 {
-            color: var(--primary-color);
+        /* Card de estudiante */
+        .student-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
             margin-bottom: 1.5rem;
+            overflow: hidden;
+            transition: var(--transition);
+            border: none;
+        }
+        
+        .student-card:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            transform: translateY(-3px);
+        }
+        
+        .student-card .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.25rem;
             font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .student-card .card-body {
+            padding: 1.5rem;
+        }
+        
+        .student-info {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .student-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+        }
+        
+        .student-details {
+            flex: 1;
+        }
+        
+        .student-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--primary-color);
+        }
+        
+        .student-id {
+            font-size: 1rem;
+            color: var(--muted-text);
+            margin-bottom: 0.5rem;
+        }
+        
+        .student-career, .student-campus {
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .progress-section {
+            margin-top: 1.5rem;
+        }
+        
+        .progress-title {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--primary-color);
             border-bottom: 2px solid var(--secondary-color);
             padding-bottom: 0.5rem;
+            display: inline-block;
         }
         
-        .dataTables_wrapper {
-            margin-bottom: 2rem;
-        }
-        
-        .dataTables_filter input, 
-        .dataTables_length select {
+        .progress-bar {
+            height: 10px;
             border-radius: 5px;
-            padding: 0.5rem;
-            border: 1px solid #ced4da;
         }
         
-        .documento-adjuntado {
-            background-color: var(--success-bg);
+        .stage-badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
         }
         
-        .form-control, .form-select {
-            border-radius: 5px;
-            padding: 0.5rem;
+        .stage-not-started {
+            background-color: #f8d7da;
+            color: var(--danger-color);
         }
         
-        .table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
+        .stage-in-progress {
+            background-color: #fff3cd;
+            color: #856404;
         }
         
-        .table th {
-            background-color: var(--primary-color);
-            color: white;
-            position: sticky;
-            top: 0;
-            z-index: 10;
+        .stage-completed {
+            background-color: #d4edda;
+            color: var(--success-color);
         }
+        
+        .status-not-started { color: var(--danger-color); }
+        .status-in-progress { color: var(--warning-color); }
+        .status-completed { color: var(--success-color); }
         
         .action-buttons {
             display: flex;
-            gap: 0.5rem;
-            justify-content: center;
-            margin: 1rem 0;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
         }
         
         .action-buttons .btn {
-            padding: 0.5rem 1rem;
-            font-weight: 500;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: var(--transition);
         }
         
-        .table-responsive {
-            overflow-x: auto;
-            max-width: 100%;
-        }
-        
-        .btn-add-student {
-            background-color: var(--success-text);
+        .btn-edit {
+            background-color: var(--primary-color);
             color: white;
             border: none;
         }
         
-        .btn-add-student:hover {
-            background-color: #00800f;
+        .btn-edit:hover {
+            background-color: var(--primary-light);
             color: white;
         }
         
+        .btn-document {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+        }
+        
+        .btn-document:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        /* Filtros y búsqueda */
+        .filters-section {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box .form-control {
+            padding-left: 40px;
+            height: 45px;
+            border-radius: 50px;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted-text);
+        }
+        
+        .filter-tag {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .filter-tag .close {
+            margin-left: 0.5rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        
+        /* Stats cards */
+        .stats-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+            text-align: center;
+            height: 100%;
+            transition: var(--transition);
+            border: none;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .stats-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .stats-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .stats-label {
+            font-size: 1rem;
+            color: var(--muted-text);
+            margin-bottom: 0.75rem;
+        }
+        
+        .stats-progress {
+            height: 8px;
+            margin-top: 1rem;
+            border-radius: 4px;
+        }
+        
+        /* Modal de edición */
+        .modal-header {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .modal-body {
+            padding: 2rem;
+        }
+        
+        .form-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-section-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 0.5rem;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Pagination */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .pagination .page-link {
+            color: var(--primary-color);
+            border-radius: 5px;
+            margin: 0 3px;
+        }
+        
+        .pagination .page-item.active .page-link {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        /* Footer */
         .footer {
             background-color: var(--primary-color);
             color: white;
             padding: 1.5rem 0;
-            margin-top: 2rem;
+            margin-top: 3rem;
+        }
+        
+        /* Tooltip y Popovers */
+        .tooltip-inner {
+            max-width: 250px;
+            padding: 0.5rem 1rem;
+            background-color: var(--primary-color);
+            font-size: 0.875rem;
         }
         
         /* Animaciones */
@@ -219,10 +373,20 @@
             animation: fadeIn 0.5s ease forwards;
         }
         
-        /* Responsive adjustments */
+        /* Ajustes responsivos */
         @media (max-width: 992px) {
-            .dataTables_wrapper {
-                overflow-x: auto;
+            .student-card .card-body {
+                padding: 1.25rem;
+            }
+            
+            .student-photo {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+            }
+            
+            .student-name {
+                font-size: 1.3rem;
             }
             
             .action-buttons {
@@ -231,7 +395,29 @@
             
             .action-buttons .btn {
                 width: 100%;
+                justify-content: center;
                 margin-bottom: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .student-info {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .student-details {
+                width: 100%;
+            }
+            
+            .filters-section .row {
+                flex-direction: column;
+            }
+            
+            .filter-dropdown {
+                margin-bottom: 1rem;
             }
         }
     </style>
@@ -240,7 +426,9 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="index.html">Seguimiento Prácticas UAC</a>
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-university me-2"></i>Seguimiento Prácticas UAC
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -266,12 +454,12 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-8">
-                    <h1><i class="fas fa-cogs me-2"></i> Seguimiento de Prácticas Laborales</h1>
+                    <h1><i class="fas fa-cogs me-2"></i> Seguimiento de Prácticas</h1>
                     <p class="lead">Facultad de Ingenierías, Tecnologías e Innovación</p>
                 </div>
                 <div class="col-md-4 text-md-end">
                     <a href="index.html" id="volverPrincipal" class="btn btn-light">
-                        <i class="fas fa-arrow-left me-1"></i> Volver al Menú Principal
+                        <i class="fas fa-arrow-left me-1"></i> Volver al Menú
                     </a>
                 </div>
             </div>
@@ -280,151 +468,345 @@
 
     <!-- Main Content -->
     <main class="container content-wrapper">
-        <!-- Tabla de Seguimiento -->
-        <div class="card dashboard-card mb-4">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2><i class="fas fa-clipboard-list me-2"></i> Registro de Estudiantes</h2>
-                    <button class="btn btn-add-student" id="addStudentBtn">
-                        <i class="fas fa-user-plus me-1"></i> Agregar Estudiante
-                    </button>
+        <!-- Estadísticas generales -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="mb-4"><i class="fas fa-chart-simple me-2"></i> Estadísticas Generales</h2>
+            </div>
+            
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="stats-card">
+                    <div class="stats-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stats-value" id="totalStudentsValue">0</div>
+                    <div class="stats-label">Estudiantes en Prácticas</div>
                 </div>
-                
-                <div class="table-responsive">
-                    <table id="seguimientoPracticas" class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Nombre y Apellidos</th>
-                                <th>RUT</th>
-                                <th>Carrera</th>
-                                <th>SEDE</th>
-                                <th>Encargado práctica UAC</th>
-                                <th>Centro de práctica</th>
-                                <th>Instructor</th>
-                                <th>Fecha Inicio</th>
-                                <th>Fecha Término</th>
-                                <th>Seguimiento 1</th>
-                                <th>Evaluación parcial</th>
-                                <th>Seguimiento 2</th>
-                                <th>Revisión de avance</th>
-                                <th>Evaluación instructor</th>
-                                <th>Documentación instructor</th>
-                                <th>Finalización práctica</th>
-                                <th>Documentación finalización</th>
-                                <th>Asignación hora examen</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Las filas se generarán dinámicamente -->
-                        </tbody>
-                    </table>
+            </div>
+            
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="stats-card">
+                    <div class="stats-icon text-warning">
+                        <i class="fas fa-spinner"></i>
+                    </div>
+                    <div class="stats-value text-warning" id="inProgressValue">0</div>
+                    <div class="stats-label">En Proceso</div>
+                    <div class="progress stats-progress">
+                        <div class="progress-bar bg-warning" id="inProgressBar" style="width: 0%"></div>
+                    </div>
                 </div>
-                
-                <div class="action-buttons">
-                    <button id="exportButton" class="btn btn-primary">
-                        <i class="fas fa-file-excel me-1"></i> Exportar a Excel
-                    </button>
-                    <button id="saveButton" class="btn btn-success">
-                        <i class="fas fa-save me-1"></i> Guardar Cambios
-                    </button>
-                    <button id="downloadDashboardPDF" class="btn btn-info">
-                        <i class="fas fa-file-pdf me-1"></i> Descargar Dashboard PDF
-                    </button>
+            </div>
+            
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="stats-card">
+                    <div class="stats-icon text-success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stats-value text-success" id="completedValue">0</div>
+                    <div class="stats-label">Completadas</div>
+                    <div class="progress stats-progress">
+                        <div class="progress-bar bg-success" id="completedBar" style="width: 0%"></div>
+                    </div>
                 </div>
+            </div>
+            
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="stats-card">
+                    <div class="stats-icon text-danger">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stats-value text-danger" id="pendingValue">0</div>
+                    <div class="stats-label">Pendientes</div>
+                    <div class="progress stats-progress">
+                        <div class="progress-bar bg-danger" id="pendingBar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Botones de acción generales -->
+            <div class="col-12 text-center mt-2 mb-4">
+                <button id="generateReportBtn" class="btn btn-primary me-2">
+                    <i class="fas fa-file-pdf me-1"></i> Generar Informe Completo
+                </button>
+                <button id="exportExcelBtn" class="btn btn-success me-2">
+                    <i class="fas fa-file-excel me-1"></i> Exportar a Excel
+                </button>
+                <button id="addStudentBtn" class="btn btn-secondary">
+                    <i class="fas fa-user-plus me-1"></i> Agregar Estudiante
+                </button>
             </div>
         </div>
         
-        <!-- Dashboard -->
-        <div id="dashboard" class="row">
-            <div class="col-12 mb-4">
-                <div class="dashboard-card">
-                    <h2 class="text-center mb-4"><i class="fas fa-chart-line me-2"></i> Dashboard de Prácticas Laborales</h2>
-                    
+        <!-- Filtros y búsqueda -->
+        <div class="filters-section">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="searchStudent" class="form-control" placeholder="Buscar por nombre, RUT o centro de práctica...">
+                    </div>
+                </div>
+                <div class="col-md-6">
                     <div class="row">
-                        <!-- Distribución por Carreras -->
-                        <div class="col-md-4 mb-4">
-                            <div class="dashboard-card">
-                                <h4><i class="fas fa-graduation-cap me-2"></i> Distribución por Carreras</h4>
-                                <div class="chart-container">
-                                    <canvas id="practicasPorCarreraChart"></canvas>
-                                </div>
-                            </div>
+                        <div class="col-md-6 mb-2 mb-md-0">
+                            <select id="filterCareer" class="form-select filter-dropdown">
+                                <option value="">Todas las carreras</option>
+                                <!-- Las opciones se cargarán dinámicamente -->
+                            </select>
                         </div>
-                        
-                        <!-- Distribución por Sedes -->
-                        <div class="col-md-4 mb-4">
-                            <div class="dashboard-card">
-                                <h4><i class="fas fa-building me-2"></i> Distribución por Sedes</h4>
-                                <div class="chart-container">
-                                    <canvas id="practicasPorSedeChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Estados de Prácticas -->
-                        <div class="col-md-4 mb-4">
-                            <div class="dashboard-card">
-                                <h4><i class="fas fa-tasks me-2"></i> Estados de Prácticas</h4>
-                                <div class="chart-container">
-                                    <canvas id="finalizacionPracticaChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Evaluación del Instructor -->
-                        <div class="col-md-4 mb-4">
-                            <div class="dashboard-card">
-                                <h4><i class="fas fa-star me-2"></i> Evaluación del Instructor</h4>
-                                <div class="chart-container">
-                                    <canvas id="evaluacionInstructorChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Duración Promedio por Carrera -->
-                        <div class="col-md-4 mb-4">
-                            <div class="dashboard-card">
-                                <h4><i class="fas fa-clock me-2"></i> Duración Promedio</h4>
-                                <div class="chart-container">
-                                    <canvas id="duracionPromedioChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Asignación Hora Examen -->
-                        <div class="col-md-4 mb-4">
-                            <div class="dashboard-card">
-                                <h4><i class="fas fa-calendar-check me-2"></i> Asignación Hora Examen</h4>
-                                <div class="chart-container">
-                                    <canvas id="asignacionHoraExamenChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Estadísticas Generales -->
-                        <div class="col-md-12">
-                            <div class="dashboard-card">
-                                <h4><i class="fas fa-chart-pie me-2"></i> Estadísticas Generales</h4>
-                                <div id="estadisticasGenerales" class="row">
-                                    <!-- Se llenará dinámicamente -->
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Estadísticas por Carrera -->
-                        <div class="col-md-12 mt-4">
-                            <div class="dashboard-card">
-                                <h4><i class="fas fa-chart-bar me-2"></i> Estadísticas por Carrera</h4>
-                                <div id="estadisticasPorCarrera">
-                                    <!-- Se llenará dinámicamente -->
-                                </div>
-                            </div>
+                        <div class="col-md-6">
+                            <select id="filterStatus" class="form-select filter-dropdown">
+                                <option value="">Todos los estados</option>
+                                <option value="no-comienza">Pendiente</option>
+                                <option value="en-proceso">En proceso</option>
+                                <option value="completada">Completada</option>
+                            </select>
                         </div>
                     </div>
                 </div>
             </div>
+            
+            <div class="mt-3" id="activeFilters">
+                <!-- Etiquetas de filtros activos se cargarán aquí -->
+                <!-- <span class="filter-tag">Carrera: Técnico en Minas <i class="fas fa-times close"></i></span> -->
+            </div>
+        </div>
+        
+        <!-- Listado de estudiantes -->
+        <div id="studentsList" class="mt-4">
+            <!-- Las tarjetas se generarán dinámicamente -->
+        </div>
+        
+        <!-- Paginación -->
+        <div class="pagination-container">
+            <nav aria-label="Navegación de páginas">
+                <ul class="pagination" id="pagination">
+                    <!-- La paginación se generará dinámicamente -->
+                </ul>
+            </nav>
         </div>
     </main>
+
+    <!-- Modal para editar estudiante -->
+    <div class="modal fade" id="editStudentModal" tabindex="-1" aria-labelledby="editStudentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editStudentModalLabel">Editar Información del Estudiante</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editStudentForm">
+                        <input type="hidden" id="studentId">
+                        
+                        <!-- Información personal -->
+                        <div class="form-section">
+                            <h5 class="form-section-title"><i class="fas fa-user me-2"></i>Información Personal</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="studentName" class="form-label">Nombre completo</label>
+                                    <input type="text" class="form-control" id="studentName" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="studentRut" class="form-label">RUT</label>
+                                    <input type="text" class="form-control" id="studentRut" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="studentCareer" class="form-label">Carrera</label>
+                                    <select class="form-select" id="studentCareer" required>
+                                        <!-- Las opciones se cargarán dinámicamente -->
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="studentCampus" class="form-label">Sede</label>
+                                    <select class="form-select" id="studentCampus" required>
+                                        <!-- Las opciones se cargarán dinámicamente -->
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Información de práctica -->
+                        <div class="form-section">
+                            <h5 class="form-section-title"><i class="fas fa-building me-2"></i>Información de Práctica</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="practiceSupervisor" class="form-label">Encargado práctica UAC</label>
+                                    <input type="text" class="form-control" id="practiceSupervisor" readonly>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="practiceCenter" class="form-label">Centro de práctica</label>
+                                    <input type="text" class="form-control" id="practiceCenter" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="practiceInstructor" class="form-label">Instructor</label>
+                                    <input type="text" class="form-control" id="practiceInstructor" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="practiceState" class="form-label">Estado de la práctica</label>
+                                    <select class="form-select" id="practiceState" required>
+                                        <option value="no-comienza">No comienza</option>
+                                        <option value="en-proceso">En proceso</option>
+                                        <option value="completada">Completada</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="startDate" class="form-label">Fecha de inicio</label>
+                                    <input type="text" class="form-control datepicker" id="startDate">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="endDate" class="form-label">Fecha de término</label>
+                                    <input type="text" class="form-control datepicker" id="endDate">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Seguimiento y evaluación -->
+                        <div class="form-section">
+                            <h5 class="form-section-title"><i class="fas fa-tasks me-2"></i>Seguimiento y Evaluación</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="tracking1" class="form-label">Seguimiento 1</label>
+                                    <select class="form-select" id="tracking1">
+                                        <option value="no-comienza">No comienza</option>
+                                        <option value="en-proceso">En proceso</option>
+                                        <option value="completada">Completada</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="partialEvaluation" class="form-label">Evaluación parcial</label>
+                                    <select class="form-select" id="partialEvaluation">
+                                        <option value="excelente">Excelente</option>
+                                        <option value="bien">Bien</option>
+                                        <option value="suficiente">Suficiente</option>
+                                        <option value="deficiente">Deficiente</option>
+                                        <option value="malo">Malo</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="tracking2" class="form-label">Seguimiento 2</label>
+                                    <select class="form-select" id="tracking2">
+                                        <option value="no-comienza">No comienza</option>
+                                        <option value="en-proceso">En proceso</option>
+                                        <option value="completada">Completada</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="progressReview" class="form-label">Revisión de avance</label>
+                                    <select class="form-select" id="progressReview">
+                                        <option value="excelente">Excelente</option>
+                                        <option value="bien">Bien</option>
+                                        <option value="suficiente">Suficiente</option>
+                                        <option value="deficiente">Deficiente</option>
+                                        <option value="malo">Malo</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="instructorEvaluation" class="form-label">Evaluación instructor</label>
+                                    <select class="form-select" id="instructorEvaluation">
+                                        <option value="excelente">Excelente</option>
+                                        <option value="bien">Bien</option>
+                                        <option value="suficiente">Suficiente</option>
+                                        <option value="deficiente">Deficiente</option>
+                                        <option value="malo">Malo</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="examAssignment" class="form-label">Asignación hora examen</label>
+                                    <select class="form-select" id="examAssignment">
+                                        <option value="no-comienza">No comienza</option>
+                                        <option value="en-proceso">En proceso</option>
+                                        <option value="completada">Completada</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Documentación -->
+                        <div class="form-section">
+                            <h5 class="form-section-title"><i class="fas fa-file-alt me-2"></i>Documentación</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Documentación instructor</label>
+                                    <div class="input-group">
+                                        <input type="file" class="form-control" id="instructorDoc">
+                                        <button class="btn btn-outline-secondary" type="button" id="viewInstructorDoc" disabled>
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Documentación finalización</label>
+                                    <div class="input-group">
+                                        <input type="file" class="form-control" id="completionDoc">
+                                        <button class="btn btn-outline-secondary" type="button" id="viewCompletionDoc" disabled>
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-end mt-4">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para agregar estudiante -->
+    <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addStudentModalLabel">Agregar Nuevo Estudiante</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addStudentForm">
+                        <!-- El contenido será similar al modal de edición pero con campos vacíos -->
+                        <!-- Se generará dinámicamente -->
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para documentos -->
+    <div class="modal fade" id="documentModal" tabindex="-1" aria-labelledby="documentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="documentModalLabel">Documentación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="documentViewer" class="text-center">
+                        <!-- El contenido se generará dinámicamente -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <a id="downloadDocumentBtn" href="#" class="btn btn-primary">
+                        <i class="fas fa-download me-1"></i> Descargar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -443,22 +825,17 @@
     <!-- Libraries -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
+    
     <!-- Custom JavaScript -->
     <script>
+        // Datos de carreras y sedes
         const carreras = [
             'Técnico De Nivel Superior En Administración De Empresas',
             'Técnico De Nivel Superior En Agronomía',
@@ -473,37 +850,19 @@
         ];
 
         const sedes = ['Ancud', 'Calama', 'Los Andes', 'San Felipe', 'Machali'];
+        
+        // Datos de estudiantes y estado global
+        let studentsData = [];
+        let currentPage = 1;
+        const studentsPerPage = 5;
+        let totalPages = 0;
+        let activeFilters = {
+            search: '',
+            career: '',
+            status: ''
+        };
 
-        function crearSelectCarrera(valorSeleccionado = '') {
-            return `<select class='form-select carrera-select' data-bs-toggle="tooltip" title="Seleccione la carrera del estudiante">
-                ${carreras.map(carrera => `<option value='${carrera}' ${carrera === valorSeleccionado ? 'selected' : ''}>${carrera}</option>`).join('')}
-            </select>`;
-        }
-
-        function crearSelectEstado(valorSeleccionado = '') {
-            return `<select class='form-select estado-select' data-bs-toggle="tooltip" title="Seleccione el estado actual">
-                <option value='no-comienza' class='estado-no-comienza' ${valorSeleccionado === 'no-comienza' ? 'selected' : ''}>No comienza</option>
-                <option value='en-proceso' class='estado-en-proceso' ${valorSeleccionado === 'en-proceso' ? 'selected' : ''}>En proceso</option>
-                <option value='completada' class='estado-completada' ${valorSeleccionado === 'completada' ? 'selected' : ''}>Completada</option>
-            </select>`;
-        }
-
-        function crearSelectEvaluacion(valorSeleccionado = '') {
-            return `<select class='form-select evaluacion-select' data-bs-toggle="tooltip" title="Seleccione la evaluación">
-                <option value='excelente' class='evaluacion-excelente' ${valorSeleccionado === 'excelente' ? 'selected' : ''}>Excelente</option>
-                <option value='bien' ${valorSeleccionado === 'bien' ? 'selected' : ''}>Bien</option>
-                <option value='suficiente' ${valorSeleccionado === 'suficiente' ? 'selected' : ''}>Suficiente</option>
-                <option value='deficiente' ${valorSeleccionado === 'deficiente' ? 'selected' : ''}>Deficiente</option>
-                <option value='malo' class='evaluacion-malo' ${valorSeleccionado === 'malo' ? 'selected' : ''}>Malo</option>
-            </select>`;
-        }
-
-        function crearSelectSede(valorSeleccionado = '') {
-            return `<select class='form-select sede-select' data-bs-toggle="tooltip" title="Seleccione la sede">
-                ${sedes.map(sede => `<option value='${sede}' ${sede === valorSeleccionado ? 'selected' : ''}>${sede}</option>`).join('')}
-            </select>`;
-        }
-
+        // Función para obtener el encargado de práctica según carrera y sede
         function obtenerEncargadoPractica(carrera, sede) {
             if (carrera === 'Técnico De Nivel Superior En Agronomía' && sede === 'San Felipe') {
                 return 'Julio Guzmán';
@@ -518,568 +877,793 @@
             }
         }
 
-        function actualizarEncargadoPractica(fila) {
-            const carrera = fila.find('.carrera-select').val();
-            const sede = fila.find('.sede-select').val();
-            const encargadoPractica = obtenerEncargadoPractica(carrera, sede);
-            fila.find('.encargado-practica').val(encargadoPractica);
+        // Función para cargar los datos de estudiantes
+        function loadStudentsData() {
+            const savedData = JSON.parse(localStorage.getItem('datosPracticas')) || [];
+            studentsData = savedData.map((student, index) => {
+                return {
+                    id: index,
+                    nombre: student.nombre || '',
+                    rut: student.rut || '',
+                    carrera: student.carrera || carreras[0],
+                    sede: student.sede || sedes[0],
+                    encargadoPractica: student.encargadoPractica || obtenerEncargadoPractica(student.carrera, student.sede),
+                    centroPractica: student.centroPractica || '',
+                    instructor: student.instructor || '',
+                    fechaInicio: student.fechaInicio || '',
+                    fechaTermino: student.fechaTermino || '',
+                    seguimiento1: student.seguimiento1 || 'no-comienza',
+                    evaluacionParcial: student.evaluacionParcial || 'excelente',
+                    seguimiento2: student.seguimiento2 || 'no-comienza',
+                    revisionAvance: student.revisionAvance || 'excelente',
+                    evaluacionInstructor: student.evaluacionInstructor || 'excelente',
+                    documentoInstructor: false, // Este campo requeriría almacenamiento de archivos real
+                    finalizacionPractica: student.finalizacionPractica || 'no-comienza',
+                    documentoFinalizacion: false, // Este campo requeriría almacenamiento de archivos real
+                    asignacionHoraExamen: student.asignacionHoraExamen || 'no-comienza'
+                };
+            }).filter(student => student.nombre.trim() !== ''); // Filtrar estudiantes sin nombre
+            
+            updateStatistics();
+            renderStudentsList();
         }
 
-        function generarFilas() {
-            let tbody = $('#seguimientoPracticas tbody');
-            const datosGuardados = JSON.parse(localStorage.getItem('datosPracticas')) || [];
+        // Función para filtrar estudiantes según los criterios activos
+        function filterStudents() {
+            return studentsData.filter(student => {
+                // Filtro por búsqueda
+                const searchMatch = !activeFilters.search || 
+                    student.nombre.toLowerCase().includes(activeFilters.search.toLowerCase()) ||
+                    student.rut.toLowerCase().includes(activeFilters.search.toLowerCase()) ||
+                    student.centroPractica.toLowerCase().includes(activeFilters.search.toLowerCase());
+                
+                // Filtro por carrera
+                const careerMatch = !activeFilters.career || student.carrera === activeFilters.career;
+                
+                // Filtro por estado
+                const statusMatch = !activeFilters.status || student.finalizacionPractica === activeFilters.status;
+                
+                return searchMatch && careerMatch && statusMatch;
+            });
+        }
 
-            // Limpiar tbody antes de agregar nuevas filas
-            tbody.empty();
-
-            // Generar 100 filas
-            for (let i = 0; i < 100; i++) {
-                if (i < datosGuardados.length) {
-                    tbody.append(crearFila(datosGuardados[i]));
+        // Función para renderizar la lista de estudiantes con paginación
+        function renderStudentsList() {
+            const filteredStudents = filterStudents();
+            totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
+            
+            // Asegurar que la página actual es válida
+            if (currentPage > totalPages) {
+                currentPage = totalPages > 0 ? totalPages : 1;
+            }
+            
+            const startIndex = (currentPage - 1) * studentsPerPage;
+            const endIndex = startIndex + studentsPerPage;
+            const currentStudents = filteredStudents.slice(startIndex, endIndex);
+            
+            const studentsList = document.getElementById('studentsList');
+            studentsList.innerHTML = '';
+            
+            if (currentStudents.length === 0) {
+                studentsList.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                        <h4 class="text-muted">No se encontraron estudiantes</h4>
+                        <p>Intenta con otros criterios de búsqueda o agrega nuevos estudiantes.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            currentStudents.forEach(student => {
+                // Calcular progreso
+                const stagesCompleted = [
+                    student.seguimiento1 === 'completada',
+                    student.evaluacionParcial !== '',
+                    student.seguimiento2 === 'completada',
+                    student.revisionAvance !== '',
+                    student.evaluacionInstructor !== '',
+                    student.documentoInstructor,
+                    student.finalizacionPractica === 'completada',
+                    student.documentoFinalizacion,
+                    student.asignacionHoraExamen === 'completada'
+                ].filter(Boolean).length;
+                
+                const progress = Math.round((stagesCompleted / 9) * 100);
+                
+                // Determinar estado global para color de progreso
+                let statusClass = 'bg-danger';
+                if (student.finalizacionPractica === 'completada') {
+                    statusClass = 'bg-success';
+                } else if (student.finalizacionPractica === 'en-proceso') {
+                    statusClass = 'bg-warning';
+                }
+                
+                // Crear etiqueta de estado
+                let statusBadge = '';
+                if (student.finalizacionPractica === 'no-comienza') {
+                    statusBadge = `<span class="stage-badge stage-not-started">Pendiente</span>`;
+                } else if (student.finalizacionPractica === 'en-proceso') {
+                    statusBadge = `<span class="stage-badge stage-in-progress">En proceso</span>`;
                 } else {
-                    tbody.append(crearFila());
+                    statusBadge = `<span class="stage-badge stage-completed">Completada</span>`;
                 }
+                
+                // Crear iniciales para foto
+                const initials = student.nombre
+                    .split(' ')
+                    .map(name => name.charAt(0))
+                    .join('')
+                    .substring(0, 2)
+                    .toUpperCase();
+                
+                // Renderizar tarjeta
+                const card = document.createElement('div');
+                card.className = 'student-card';
+                card.innerHTML = `
+                    <div class="card-header">
+                        <span>Estudiante #${student.id + 1}</span>
+                        ${statusBadge}
+                    </div>
+                    <div class="card-body">
+                        <div class="student-info">
+                            <div class="student-photo">
+                                ${initials}
+                            </div>
+                            <div class="student-details">
+                                <div class="student-name">${student.nombre}</div>
+                                <div class="student-id">RUT: ${student.rut}</div>
+                                <div class="student-career"><strong>Carrera:</strong> ${student.carrera}</div>
+                                <div class="student-campus"><strong>Sede:</strong> ${student.sede}</div>
+                                <div class="mt-2">
+                                    <strong>Centro de práctica:</strong> ${student.centroPractica || 'No asignado'}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="progress-section">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="progress-title">Progreso de la práctica</span>
+                                <span>${progress}%</span>
+                            </div>
+                            <div class="progress mb-3">
+                                <div class="progress-bar ${statusClass}" role="progressbar" style="width: ${progress}%" 
+                                    aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-4 mb-2">
+                                    <small>Seguimiento 1: <span class="status-${student.seguimiento1}">
+                                        ${student.seguimiento1 === 'no-comienza' ? 'Pendiente' : 
+                                          student.seguimiento1 === 'en-proceso' ? 'En proceso' : 'Completado'}
+                                    </span></small>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <small>Seguimiento 2: <span class="status-${student.seguimiento2}">
+                                        ${student.seguimiento2 === 'no-comienza' ? 'Pendiente' : 
+                                          student.seguimiento2 === 'en-proceso' ? 'En proceso' : 'Completado'}
+                                    </span></small>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <small>Evaluación: <strong>${student.evaluacionInstructor.charAt(0).toUpperCase() + student.evaluacionInstructor.slice(1)}</strong></small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-edit edit-student" data-id="${student.id}">
+                                <i class="fas fa-edit"></i> Editar información
+                            </button>
+                            <button class="btn btn-document upload-document" data-id="${student.id}" data-type="instructor">
+                                <i class="fas fa-file-upload"></i> Documentación instructor
+                            </button>
+                            <button class="btn btn-document upload-document" data-id="${student.id}" data-type="completion">
+                                <i class="fas fa-file-upload"></i> Documentación finalización
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                studentsList.appendChild(card);
+            });
+            
+            renderPagination();
+        }
+
+        // Función para renderizar la paginación
+        function renderPagination() {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+            
+            if (totalPages <= 1) {
+                return;
             }
-        }
-
-        function crearFila(datos = {}) {
-            return `
-                <tr>
-                    <td><input type='text' class='form-control' value='${datos.nombre || ''}' data-bs-toggle="tooltip" title="Ingrese el nombre y apellidos del estudiante"></td>
-                    <td><input type='text' class='form-control' value='${datos.rut || ''}' data-bs-toggle="tooltip" title="Ingrese el RUT del estudiante"></td>
-                    <td>${crearSelectCarrera(datos.carrera)}</td>
-                    <td>${crearSelectSede(datos.sede)}</td>
-                    <td><input type='text' class='form-control encargado-practica' value='${obtenerEncargadoPractica(datos.carrera, datos.sede)}' readonly data-bs-toggle="tooltip" title="Nombre del encargado de práctica"></td>
-                    <td><input type='text' class='form-control' value='${datos.centroPractica || ''}' data-bs-toggle="tooltip" title="Ingrese el nombre del centro de práctica"></td>
-                    <td><input type='text' class='form-control' placeholder='Nombre del instructor' value='${datos.instructor || ''}' data-bs-toggle="tooltip" title="Ingrese el nombre del instructor"></td>
-                    <td><input type='text' class='form-control datepicker' value='${datos.fechaInicio || ''}' data-bs-toggle="tooltip" title="Seleccione la fecha de inicio"></td>
-                    <td><input type='text' class='form-control datepicker' value='${datos.fechaTermino || ''}' data-bs-toggle="tooltip" title="Seleccione la fecha de término"></td>
-                    <td>${crearSelectEstado(datos.seguimiento1)}</td>
-                    <td>${crearSelectEvaluacion(datos.evaluacionParcial)}</td>
-                    <td>${crearSelectEstado(datos.seguimiento2)}</td>
-                    <td>${crearSelectEvaluacion(datos.revisionAvance)}</td>
-                    <td>${crearSelectEvaluacion(datos.evaluacionInstructor)}</td>
-                    <td>
-                        <div class="documento-container">
-                            <button class='btn btn-primary btn-sm adjuntar-doc' data-bs-toggle="tooltip" title="Adjuntar documentación del instructor">
-                                <i class="fas fa-paperclip me-1"></i> Adjuntar
-                            </button>
-                            <a href="#" class="btn btn-success btn-sm descargar-doc" style="display: none;" data-bs-toggle="tooltip" title="Descargar documentación del instructor">
-                                <i class="fas fa-download me-1"></i> Descargar
-                            </a>
-                        </div>
-                    </td>
-                    <td>${crearSelectEstado(datos.finalizacionPractica)}</td>
-                    <td>
-                        <div class="documento-container">
-                            <button class='btn btn-primary btn-sm adjuntar-doc' data-bs-toggle="tooltip" title="Adjuntar documentación de finalización">
-                                <i class="fas fa-paperclip me-1"></i> Adjuntar
-                            </button>
-                            <a href="#" class="btn btn-success btn-sm descargar-doc" style="display: none;" data-bs-toggle="tooltip" title="Descargar documentación de finalización">
-                                <i class="fas fa-download me-1"></i> Descargar
-                            </a>
-                        </div>
-                    </td>
-                    <td>${crearSelectEstado(datos.asignacionHoraExamen)}</td>
-                </tr>
+            
+            // Botón anterior
+            const prevLi = document.createElement('li');
+            prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+            prevLi.innerHTML = `
+                <a class="page-link" href="#" aria-label="Anterior">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
             `;
-        }
-
-        let practicasPorCarreraChart, practicasPorSedeChart, duracionPromedioChart, evaluacionInstructorChart, finalizacionPracticaChart, asignacionHoraExamenChart;
-
-        function actualizarDashboard() {
-            actualizarEstadisticasGenerales();
-            actualizarGraficoPracticasPorCarrera();
-            actualizarGraficoPracticasPorSede();
-            actualizarGraficoDuracionPromedio();
-            actualizarGraficoEvaluacionInstructor();
-            actualizarGraficoFinalizacionPractica();
-            actualizarGraficoAsignacionHoraExamen();
-            actualizarEstadisticasPorCarrera();
-        }
-
-        function actualizarEstadisticasGenerales() {
-            let totalPracticas = 0;
-            let practicasEnProceso = 0;
-            let practicasCompletadas = 0;
-            let practicasPendientes = 0;
-
-            $('#seguimientoPracticas tbody tr').each(function() {
-                const nombre = $(this).find('td:eq(0) input').val();
-                if (nombre) { // Solo contar filas con nombre
-                    const estado = $(this).find('td:eq(15) select').val();
-                    if (estado === 'en-proceso') {
-                        practicasEnProceso++;
-                    } else if (estado === 'completada') {
-                        practicasCompletadas++;
-                    } else if (estado === 'no-comienza') {
-                        practicasPendientes++;
-                    }
-                    totalPracticas++;
-                }
-            });
-
-            let estadisticasHTML = `
-                <div class="col-md-3 col-sm-6 mb-3">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h5 class="card-title">Total Prácticas</h5>
-                            <p class="card-text fs-1 fw-bold">${totalPracticas}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-6 mb-3">
-                    <div class="card text-center bg-warning bg-opacity-25">
-                        <div class="card-body">
-                            <h5 class="card-title">En Proceso</h5>
-                            <p class="card-text fs-1 fw-bold">${practicasEnProceso}</p>
-                            <p class="card-text text-muted">${Math.round((practicasEnProceso/totalPracticas || 0) * 100)}%</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-6 mb-3">
-                    <div class="card text-center bg-success bg-opacity-25">
-                        <div class="card-body">
-                            <h5 class="card-title">Completadas</h5>
-                            <p class="card-text fs-1 fw-bold">${practicasCompletadas}</p>
-                            <p class="card-text text-muted">${Math.round((practicasCompletadas/totalPracticas || 0) * 100)}%</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-6 mb-3">
-                    <div class="card text-center bg-danger bg-opacity-25">
-                        <div class="card-body">
-                            <h5 class="card-title">Pendientes</h5>
-                            <p class="card-text fs-1 fw-bold">${practicasPendientes}</p>
-                            <p class="card-text text-muted">${Math.round((practicasPendientes/totalPracticas || 0) * 100)}%</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            $('#estadisticasGenerales').html(estadisticasHTML);
-        }
-
-        function actualizarGraficoPracticasPorCarrera() {
-            let conteoPracticas = {};
-            carreras.forEach(carrera => conteoPracticas[carrera] = 0);
-
-            $('#seguimientoPracticas tbody tr').each(function() {
-                const nombre = $(this).find('td:eq(0) input').val();
-                if (nombre) { // Solo contar filas con nombre
-                    let carrera = $(this).find('td:eq(2) select').val();
-                    if (conteoPracticas[carrera] !== undefined) {
-                        conteoPracticas[carrera]++;
-                    }
-                }
-            });
-
-            const datos = carreras.map(carrera => conteoPracticas[carrera]);
-            const colores = datos.map(() => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.7)`);
-
-            if (practicasPorCarreraChart) {
-                practicasPorCarreraChart.data.datasets[0].data = datos;
-                practicasPorCarreraChart.data.datasets[0].backgroundColor = colores;
-                practicasPorCarreraChart.update();
-            } else {
-                const ctx = document.getElementById('practicasPorCarreraChart').getContext('2d');
-                practicasPorCarreraChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: carreras,
-                        datasets: [{
-                            label: 'Número de Prácticas por Carrera',
-                            data: datos,
-                            backgroundColor: colores
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false },
-                            title: {
-                                display: true,
-                                text: 'Prácticas por Carrera'
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                title: { display: true, text: 'Número de Prácticas' }
-                            }
-                        }
-                    }
+            if (currentPage > 1) {
+                prevLi.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    currentPage--;
+                    renderStudentsList();
                 });
             }
+            pagination.appendChild(prevLi);
+            
+            // Páginas
+            const maxPagesToShow = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+            const endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+            
+            if (endPage - startPage + 1 < maxPagesToShow) {
+                startPage = Math.max(1, endPage - maxPagesToShow + 1);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const pageLi = document.createElement('li');
+                pageLi.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                pageLi.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                pageLi.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    currentPage = i;
+                    renderStudentsList();
+                });
+                pagination.appendChild(pageLi);
+            }
+            
+            // Botón siguiente
+            const nextLi = document.createElement('li');
+            nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+            nextLi.innerHTML = `
+                <a class="page-link" href="#" aria-label="Siguiente">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            `;
+            if (currentPage < totalPages) {
+                nextLi.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    currentPage++;
+                    renderStudentsList();
+                });
+            }
+            pagination.appendChild(nextLi);
         }
 
-        function actualizarGraficoPracticasPorSede() {
-            let conteoPracticas = {};
-            sedes.forEach(sede => conteoPracticas[sede] = 0);
-
-            $('#seguimientoPracticas tbody tr').each(function() {
-                const nombre = $(this).find('td:eq(0) input').val();
-                if (nombre) { // Solo contar filas con nombre
-                    let sede = $(this).find('td:eq(3) select').val();
-                    if (conteoPracticas[sede] !== undefined) {
-                        conteoPracticas[sede]++;
-                    }
+        // Función para actualizar las estadísticas
+        function updateStatistics() {
+            let totalStudents = studentsData.length;
+            let inProgress = 0;
+            let completed = 0;
+            let pending = 0;
+            
+            studentsData.forEach(student => {
+                if (student.finalizacionPractica === 'en-proceso') {
+                    inProgress++;
+                } else if (student.finalizacionPractica === 'completada') {
+                    completed++;
+                } else {
+                    pending++;
                 }
             });
+            
+            // Actualizar números
+            document.getElementById('totalStudentsValue').textContent = totalStudents;
+            document.getElementById('inProgressValue').textContent = inProgress;
+            document.getElementById('completedValue').textContent = completed;
+            document.getElementById('pendingValue').textContent = pending;
+            
+            // Actualizar barras de progreso
+            document.getElementById('inProgressBar').style.width = totalStudents ? `${(inProgress / totalStudents) * 100}%` : '0%';
+            document.getElementById('completedBar').style.width = totalStudents ? `${(completed / totalStudents) * 100}%` : '0%';
+            document.getElementById('pendingBar').style.width = totalStudents ? `${(pending / totalStudents) * 100}%` : '0%';
+            
+            // Actualizar opciones de filtro
+            const filterCareer = document.getElementById('filterCareer');
+            filterCareer.innerHTML = '<option value="">Todas las carreras</option>';
+            
+            // Crear un conjunto de carreras únicas
+            const uniqueCareers = [...new Set(studentsData.map(student => student.carrera))];
+            uniqueCareers.forEach(career => {
+                const option = document.createElement('option');
+                option.value = career;
+                option.textContent = career;
+                filterCareer.appendChild(option);
+            });
+        }
 
-            const datos = sedes.map(sede => conteoPracticas[sede]);
-            const colores = [
-                'rgba(255, 99, 132, 0.7)',
-                'rgba(54, 162, 235, 0.7)',
-                'rgba(255, 206, 86, 0.7)',
-                'rgba(75, 192, 192, 0.7)',
-                'rgba(153, 102, 255, 0.7)'
+        // Función para llenar el modal de edición
+        function fillEditModal(studentId) {
+            const student = studentsData.find(s => s.id === studentId);
+            if (!student) return;
+            
+            document.getElementById('studentId').value = student.id;
+            document.getElementById('studentName').value = student.nombre;
+            document.getElementById('studentRut').value = student.rut;
+            
+            // Llenar select de carreras
+            const careerSelect = document.getElementById('studentCareer');
+            careerSelect.innerHTML = '';
+            carreras.forEach(carrera => {
+                const option = document.createElement('option');
+                option.value = carrera;
+                option.textContent = carrera;
+                if (carrera === student.carrera) {
+                    option.selected = true;
+                }
+                careerSelect.appendChild(option);
+            });
+            
+            // Llenar select de sedes
+            const campusSelect = document.getElementById('studentCampus');
+            campusSelect.innerHTML = '';
+            sedes.forEach(sede => {
+                const option = document.createElement('option');
+                option.value = sede;
+                option.textContent = sede;
+                if (sede === student.sede) {
+                    option.selected = true;
+                }
+                campusSelect.appendChild(option);
+            });
+            
+            // Información de práctica
+            document.getElementById('practiceSupervisor').value = student.encargadoPractica;
+            document.getElementById('practiceCenter').value = student.centroPractica;
+            document.getElementById('practiceInstructor').value = student.instructor;
+            document.getElementById('practiceState').value = student.finalizacionPractica;
+            document.getElementById('startDate').value = student.fechaInicio;
+            document.getElementById('endDate').value = student.fechaTermino;
+            
+            // Seguimiento y evaluación
+            document.getElementById('tracking1').value = student.seguimiento1;
+            document.getElementById('partialEvaluation').value = student.evaluacionParcial;
+            document.getElementById('tracking2').value = student.seguimiento2;
+            document.getElementById('progressReview').value = student.revisionAvance;
+            document.getElementById('instructorEvaluation').value = student.evaluacionInstructor;
+            document.getElementById('examAssignment').value = student.asignacionHoraExamen;
+            
+            // Documentación - Aquí se manejaría la visualización de archivos existentes
+            const viewInstructorDocBtn = document.getElementById('viewInstructorDoc');
+            const viewCompletionDocBtn = document.getElementById('viewCompletionDoc');
+            
+            viewInstructorDocBtn.disabled = !student.documentoInstructor;
+            viewCompletionDocBtn.disabled = !student.documentoFinalizacion;
+            
+            // Mostrar el modal
+            const editModal = new bootstrap.Modal(document.getElementById('editStudentModal'));
+            editModal.show();
+        }
+
+        // Función para guardar los cambios de un estudiante
+        function saveStudentChanges(formData) {
+            const studentId = parseInt(formData.get('studentId'));
+            const studentIndex = studentsData.findIndex(s => s.id === studentId);
+            
+            if (studentIndex !== -1) {
+                // Actualizar datos del estudiante
+                studentsData[studentIndex] = {
+                    ...studentsData[studentIndex],
+                    nombre: formData.get('studentName'),
+                    rut: formData.get('studentRut'),
+                    carrera: formData.get('studentCareer'),
+                    sede: formData.get('studentCampus'),
+                    encargadoPractica: obtenerEncargadoPractica(
+                        formData.get('studentCareer'),
+                        formData.get('studentCampus')
+                    ),
+                    centroPractica: formData.get('practiceCenter'),
+                    instructor: formData.get('practiceInstructor'),
+                    fechaInicio: formData.get('startDate'),
+                    fechaTermino: formData.get('endDate'),
+                    seguimiento1: formData.get('tracking1'),
+                    evaluacionParcial: formData.get('partialEvaluation'),
+                    seguimiento2: formData.get('tracking2'),
+                    revisionAvance: formData.get('progressReview'),
+                    evaluacionInstructor: formData.get('instructorEvaluation'),
+                    finalizacionPractica: formData.get('practiceState'),
+                    asignacionHoraExamen: formData.get('examAssignment')
+                };
+                
+                // Aquí manejaríamos la lógica para guardar archivos
+                const instructorDoc = document.getElementById('instructorDoc').files[0];
+                const completionDoc = document.getElementById('completionDoc').files[0];
+                
+                if (instructorDoc) {
+                    studentsData[studentIndex].documentoInstructor = true;
+                }
+                
+                if (completionDoc) {
+                    studentsData[studentIndex].documentoFinalizacion = true;
+                }
+                
+                // Guardar en localStorage
+                saveToLocalStorage();
+                
+                // Actualizar interfaz
+                updateStatistics();
+                renderStudentsList();
+                
+                // Mostrar mensaje de éxito
+                showAlert('Información del estudiante actualizada correctamente', 'success');
+            } else {
+                showAlert('Error al actualizar la información del estudiante', 'danger');
+            }
+        }
+
+        // Función para agregar un nuevo estudiante
+        function addNewStudent(formData) {
+            const newId = studentsData.length > 0 ? Math.max(...studentsData.map(s => s.id)) + 1 : 0;
+            
+            const carrera = formData.get('newStudentCareer');
+            const sede = formData.get('newStudentCampus');
+            
+            const newStudent = {
+                id: newId,
+                nombre: formData.get('newStudentName'),
+                rut: formData.get('newStudentRut'),
+                carrera: carrera,
+                sede: sede,
+                encargadoPractica: obtenerEncargadoPractica(carrera, sede),
+                centroPractica: formData.get('newPracticeCenter'),
+                instructor: formData.get('newPracticeInstructor'),
+                fechaInicio: formData.get('newStartDate'),
+                fechaTermino: formData.get('newEndDate'),
+                seguimiento1: formData.get('newTracking1'),
+                evaluacionParcial: formData.get('newPartialEvaluation'),
+                seguimiento2: formData.get('newTracking2'),
+                revisionAvance: formData.get('newProgressReview'),
+                evaluacionInstructor: formData.get('newInstructorEvaluation'),
+                documentoInstructor: false,
+                finalizacionPractica: formData.get('newPracticeState'),
+                documentoFinalizacion: false,
+                asignacionHoraExamen: formData.get('newExamAssignment')
+            };
+            
+            studentsData.push(newStudent);
+            
+            // Guardar en localStorage
+            saveToLocalStorage();
+            
+            // Actualizar interfaz
+            updateStatistics();
+            renderStudentsList();
+            
+            // Mostrar mensaje de éxito
+            showAlert('Estudiante agregado correctamente', 'success');
+        }
+
+        // Función para guardar en localStorage
+        function saveToLocalStorage() {
+            const dataToSave = studentsData.map(student => ({
+                nombre: student.nombre,
+                rut: student.rut,
+                carrera: student.carrera,
+                sede: student.sede,
+                encargadoPractica: student.encargadoPractica,
+                centroPractica: student.centroPractica,
+                instructor: student.instructor,
+                fechaInicio: student.fechaInicio,
+                fechaTermino: student.fechaTermino,
+                seguimiento1: student.seguimiento1,
+                evaluacionParcial: student.evaluacionParcial,
+                seguimiento2: student.seguimiento2,
+                revisionAvance: student.revisionAvance,
+                evaluacionInstructor: student.evaluacionInstructor,
+                finalizacionPractica: student.finalizacionPractica,
+                asignacionHoraExamen: student.asignacionHoraExamen
+            }));
+            
+            localStorage.setItem('datosPracticas', JSON.stringify(dataToSave));
+        }
+
+        // Función para exportar a Excel
+        function exportToExcel() {
+            // Crear un array con los datos a exportar
+            const exportData = [
+                ['Nombre', 'RUT', 'Carrera', 'Sede', 'Encargado práctica', 'Centro de práctica', 
+                'Instructor', 'Fecha Inicio', 'Fecha Término', 'Seguimiento 1', 'Evaluación parcial', 
+                'Seguimiento 2', 'Revisión avance', 'Evaluación instructor', 'Finalización práctica', 
+                'Asignación hora examen']
             ];
-
-            if (practicasPorSedeChart) {
-                practicasPorSedeChart.data.datasets[0].data = datos;
-                practicasPorSedeChart.update();
-            } else {
-                const ctx = document.getElementById('practicasPorSedeChart').getContext('2d');
-                practicasPorSedeChart = new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: sedes,
-                        datasets: [{
-                            label: 'Prácticas por Sede',
-                            data: datos,
-                            backgroundColor: colores
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { position: 'right' },
-                            title: {
-                                display: true,
-                                text: 'Prácticas por Sede'
-                            }
-                        }
-                    }
-                });
-            }
+            
+            studentsData.forEach(student => {
+                exportData.push([
+                    student.nombre,
+                    student.rut,
+                    student.carrera,
+                    student.sede,
+                    student.encargadoPractica,
+                    student.centroPractica,
+                    student.instructor,
+                    student.fechaInicio,
+                    student.fechaTermino,
+                    student.seguimiento1 === 'no-comienza' ? 'Pendiente' : 
+                        student.seguimiento1 === 'en-proceso' ? 'En proceso' : 'Completado',
+                    student.evaluacionParcial.charAt(0).toUpperCase() + student.evaluacionParcial.slice(1),
+                    student.seguimiento2 === 'no-comienza' ? 'Pendiente' : 
+                        student.seguimiento2 === 'en-proceso' ? 'En proceso' : 'Completado',
+                    student.revisionAvance.charAt(0).toUpperCase() + student.revisionAvance.slice(1),
+                    student.evaluacionInstructor.charAt(0).toUpperCase() + student.evaluacionInstructor.slice(1),
+                    student.finalizacionPractica === 'no-comienza' ? 'Pendiente' : 
+                        student.finalizacionPractica === 'en-proceso' ? 'En proceso' : 'Completado',
+                    student.asignacionHoraExamen === 'no-comienza' ? 'Pendiente' : 
+                        student.asignacionHoraExamen === 'en-proceso' ? 'En proceso' : 'Completado'
+                ]);
+            });
+            
+            // Crear workbook y worksheet
+            const ws = XLSX.utils.aoa_to_sheet(exportData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Seguimiento Prácticas");
+            
+            // Guardar archivo
+            XLSX.writeFile(wb, "seguimiento_practicas_ingenieria.xlsx");
+            
+            showAlert('Datos exportados correctamente a Excel', 'success');
         }
 
-        function actualizarGraficoDuracionPromedio() {
-            let duracionPorCarrera = {};
-            carreras.forEach(carrera => duracionPorCarrera[carrera] = []);
-
-            $('#seguimientoPracticas tbody tr').each(function() {
-                const nombre = $(this).find('td:eq(0) input').val();
-                if (nombre) { // Solo contar filas con nombre
-                    let carrera = $(this).find('td:eq(2) select').val();
-                    let fechaInicio = $(this).find('td:eq(7) input').val();
-                    let fechaTermino = $(this).find('td:eq(8) input').val();
-                    
-                    if (fechaInicio && fechaTermino) {
-                        let inicio = new Date(fechaInicio.split('/').reverse().join('-'));
-                        let termino = new Date(fechaTermino.split('/').reverse().join('-'));
-                        let duracion = (termino - inicio) / (1000 * 60 * 60 * 24); // Duración en días
-                        duracionPorCarrera[carrera].push(duracion);
-                    }
+        // Función para generar el informe PDF
+        function generateReport() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
+            
+            // Datos para estadísticas
+            let totalStudents = studentsData.length;
+            let inProgress = 0;
+            let completed = 0;
+            let pending = 0;
+            
+            studentsData.forEach(student => {
+                if (student.finalizacionPractica === 'en-proceso') {
+                    inProgress++;
+                } else if (student.finalizacionPractica === 'completada') {
+                    completed++;
+                } else {
+                    pending++;
                 }
             });
-
-            let promedios = carreras.map(carrera => {
-                let duraciones = duracionPorCarrera[carrera];
-                return duraciones.length > 0 ? duraciones.reduce((a, b) => a + b) / duraciones.length : 0;
+            
+            // Título
+            doc.setFontSize(20);
+            doc.setTextColor(0, 32, 78); // Color primario
+            doc.text('Informe de Seguimiento de Prácticas', 105, 20, { align: 'center' });
+            
+            doc.setFontSize(16);
+            doc.text('Facultad de Ingenierías, Tecnologías e Innovación', 105, 30, { align: 'center' });
+            
+            doc.setFontSize(12);
+            doc.setTextColor(100, 100, 100);
+            doc.text(`Generado: ${new Date().toLocaleDateString('es-ES')}`, 105, 40, { align: 'center' });
+            
+            // Estadísticas generales
+            doc.setFontSize(14);
+            doc.setTextColor(0, 32, 78);
+            doc.text('Estadísticas Generales', 20, 55);
+            
+            doc.setFontSize(11);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Total de estudiantes en prácticas: ${totalStudents}`, 20, 65);
+            doc.text(`Prácticas en proceso: ${inProgress} (${Math.round((inProgress/totalStudents || 0) * 100)}%)`, 20, 71);
+            doc.text(`Prácticas completadas: ${completed} (${Math.round((completed/totalStudents || 0) * 100)}%)`, 20, 77);
+            doc.text(`Prácticas pendientes: ${pending} (${Math.round((pending/totalStudents || 0) * 100)}%)`, 20, 83);
+            
+            // Distribución por carreras
+            doc.setFontSize(14);
+            doc.setTextColor(0, 32, 78);
+            doc.text('Distribución por Carreras', 20, 95);
+            
+            // Contar estudiantes por carrera
+            const careerDistribution = {};
+            carreras.forEach(carrera => careerDistribution[carrera] = 0);
+            studentsData.forEach(student => {
+                if (careerDistribution[student.carrera] !== undefined) {
+                    careerDistribution[student.carrera]++;
+                }
             });
-
-            if (duracionPromedioChart) {
-                duracionPromedioChart.data.datasets[0].data = promedios;
-                duracionPromedioChart.update();
-            } else {
-                const ctx = document.getElementById('duracionPromedioChart').getContext('2d');
-                duracionPromedioChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: carreras,
-                        datasets: [{
-                            label: 'Duración Promedio de Prácticas (días)',
-                            data: promedios,
-                            backgroundColor: 'rgba(75, 192, 192, 0.6)'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false },
-                            title: {
-                                display: true,
-                                text: 'Duración Promedio de Prácticas por Carrera'
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                title: { display: true, text: 'Días' }
-                            }
-                        }
-                    }
-                });
-            }
-        }
-
-        function actualizarGraficoEvaluacionInstructor() {
-            let conteoEvaluaciones = {
+            
+            // Imprimir distribución
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            let yPos = 105;
+            Object.entries(careerDistribution).forEach(([carrera, count]) => {
+                if (count > 0) {
+                    const shortName = carrera.length > 60 ? carrera.substring(0, 60) + '...' : carrera;
+                    doc.text(`${shortName}: ${count}`, 20, yPos);
+                    yPos += 6;
+                }
+            });
+            
+            // Distribución por sedes
+            doc.setFontSize(14);
+            doc.setTextColor(0, 32, 78);
+            doc.text('Distribución por Sedes', 20, yPos + 10);
+            
+            // Contar estudiantes por sede
+            const campusDistribution = {};
+            sedes.forEach(sede => campusDistribution[sede] = 0);
+            studentsData.forEach(student => {
+                if (campusDistribution[student.sede] !== undefined) {
+                    campusDistribution[student.sede]++;
+                }
+            });
+            
+            // Imprimir distribución
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            yPos += 20;
+            Object.entries(campusDistribution).forEach(([sede, count]) => {
+                if (count > 0) {
+                    doc.text(`${sede}: ${count}`, 20, yPos);
+                    yPos += 6;
+                }
+            });
+            
+            // Avance promedio
+            doc.setFontSize(14);
+            doc.setTextColor(0, 32, 78);
+            doc.text('Avance Promedio de Prácticas', 20, yPos + 10);
+            
+            // Calcular avance promedio
+            let totalProgress = 0;
+            studentsData.forEach(student => {
+                const stagesCompleted = [
+                    student.seguimiento1 === 'completada',
+                    student.evaluacionParcial !== '',
+                    student.seguimiento2 === 'completada',
+                    student.revisionAvance !== '',
+                    student.evaluacionInstructor !== '',
+                    student.documentoInstructor,
+                    student.finalizacionPractica === 'completada',
+                    student.documentoFinalizacion,
+                    student.asignacionHoraExamen === 'completada'
+                ].filter(Boolean).length;
+                
+                totalProgress += (stagesCompleted / 9) * 100;
+            });
+            
+            const averageProgress = totalStudents > 0 ? Math.round(totalProgress / totalStudents) : 0;
+            
+            // Imprimir avance promedio
+            doc.setFontSize(11);
+            doc.setTextColor(0, 0, 0);
+            yPos += 20;
+            doc.text(`Avance promedio: ${averageProgress}%`, 20, yPos);
+            
+            // Evaluaciones
+            doc.setFontSize(14);
+            doc.setTextColor(0, 32, 78);
+            doc.text('Distribución de Evaluaciones', 20, yPos + 15);
+            
+            // Contar evaluaciones
+            const evaluationDistribution = {
                 'excelente': 0,
                 'bien': 0,
                 'suficiente': 0,
                 'deficiente': 0,
                 'malo': 0
             };
-
-            $('#seguimientoPracticas tbody tr').each(function() {
-                const nombre = $(this).find('td:eq(0) input').val();
-                if (nombre) { // Solo contar filas con nombre
-                    let evaluacion = $(this).find('td:eq(13) select').val();
-                    if (conteoEvaluaciones[evaluacion] !== undefined) {
-                        conteoEvaluaciones[evaluacion]++;
-                    }
+            
+            studentsData.forEach(student => {
+                if (evaluationDistribution[student.evaluacionInstructor] !== undefined) {
+                    evaluationDistribution[student.evaluacionInstructor]++;
                 }
             });
-
-            const datos = Object.values(conteoEvaluaciones);
-            const etiquetas = ['Excelente', 'Bien', 'Suficiente', 'Deficiente', 'Malo'];
-            const colores = [
-                'rgba(75, 192, 192, 0.7)',
-                'rgba(54, 162, 235, 0.7)',
-                'rgba(255, 206, 86, 0.7)',
-                'rgba(255, 159, 64, 0.7)',
-                'rgba(255, 99, 132, 0.7)'
-            ];
-
-            if (evaluacionInstructorChart) {
-                evaluacionInstructorChart.data.datasets[0].data = datos;
-                evaluacionInstructorChart.update();
-            } else {
-                const ctx = document.getElementById('evaluacionInstructorChart').getContext('2d');
-                evaluacionInstructorChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: etiquetas,
-                        datasets: [{
-                            label: 'Evaluación del Instructor',
-                            data: datos,
-                            backgroundColor: colores
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { position: 'right' },
-                            title: {
-                                display: true,
-                                text: 'Evaluación del Instructor'
-                            }
-                        }
-                    }
-                });
-            }
-        }
-
-        function actualizarGraficoFinalizacionPractica() {
-            let conteoFinalizacion = {
-                'no-comienza': 0,
-                'en-proceso': 0,
-                'completada': 0
-            };
-
-            $('#seguimientoPracticas tbody tr').each(function() {
-                const nombre = $(this).find('td:eq(0) input').val();
-                if (nombre) { // Solo contar filas con nombre
-                    let finalizacion = $(this).find('td:eq(15) select').val();
-                    if (conteoFinalizacion[finalizacion] !== undefined) {
-                        conteoFinalizacion[finalizacion]++;
-                    }
+            
+            // Imprimir distribución de evaluaciones
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            yPos += 25;
+            doc.text(`Excelente: ${evaluationDistribution['excelente']}`, 20, yPos);
+            doc.text(`Bien: ${evaluationDistribution['bien']}`, 70, yPos);
+            doc.text(`Suficiente: ${evaluationDistribution['suficiente']}`, 120, yPos);
+            doc.text(`Deficiente: ${evaluationDistribution['deficiente']}`, 20, yPos + 6);
+            doc.text(`Malo: ${evaluationDistribution['malo']}`, 70, yPos + 6);
+            
+            // Lista de estudiantes
+            doc.addPage();
+            
+            doc.setFontSize(16);
+            doc.setTextColor(0, 32, 78);
+            doc.text('Listado de Estudiantes en Prácticas', 105, 20, { align: 'center' });
+            
+            // Tabla de estudiantes
+            const tableData = [];
+            const tableColumns = ['Nombre', 'RUT', 'Carrera', 'Sede', 'Estado'];
+            
+            studentsData.forEach(student => {
+                let estado = 'Pendiente';
+                if (student.finalizacionPractica === 'en-proceso') {
+                    estado = 'En proceso';
+                } else if (student.finalizacionPractica === 'completada') {
+                    estado = 'Completada';
                 }
-            });
-
-            const datos = Object.values(conteoFinalizacion);
-            const etiquetas = ['No comienza', 'En proceso', 'Completada'];
-            const colores = [
-                'rgba(255, 99, 132, 0.7)',
-                'rgba(255, 206, 86, 0.7)',
-                'rgba(75, 192, 192, 0.7)'
-            ];
-
-            if (finalizacionPracticaChart) {
-                finalizacionPracticaChart.data.datasets[0].data = datos;
-                finalizacionPracticaChart.update();
-            } else {
-                const ctx = document.getElementById('finalizacionPracticaChart').getContext('2d');
-                finalizacionPracticaChart = new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: etiquetas,
-                        datasets: [{
-                            label: 'Estado de Finalización de Prácticas',
-                            data: datos,
-                            backgroundColor: colores
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { position: 'right' },
-                            title: {
-                                display: true,
-                                text: 'Estado de Finalización de Prácticas'
-                            }
-                        }
-                    }
-                });
-            }
-        }
-
-        function actualizarGraficoAsignacionHoraExamen() {
-            let conteoAsignacion = {
-                'no-comienza': 0,
-                'en-proceso': 0,
-                'completada': 0
-            };
-
-            $('#seguimientoPracticas tbody tr').each(function() {
-                const nombre = $(this).find('td:eq(0) input').val();
-                if (nombre) { // Solo contar filas con nombre
-                    let asignacion = $(this).find('td:eq(17) select').val();
-                    if (conteoAsignacion[asignacion] !== undefined) {
-                        conteoAsignacion[asignacion]++;
-                    }
-                }
-            });
-
-            const datos = Object.values(conteoAsignacion);
-            const etiquetas = ['No comienza', 'En proceso', 'Completada'];
-            const colores = [
-                'rgba(255, 99, 132, 0.7)',
-                'rgba(255, 206, 86, 0.7)',
-                'rgba(75, 192, 192, 0.7)'
-            ];
-
-            if (asignacionHoraExamenChart) {
-                asignacionHoraExamenChart.data.datasets[0].data = datos;
-                asignacionHoraExamenChart.update();
-            } else {
-                const ctx = document.getElementById('asignacionHoraExamenChart').getContext('2d');
-                asignacionHoraExamenChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: etiquetas,
-                        datasets: [{
-                            label: 'Asignación de Hora de Examen',
-                            data: datos,
-                            backgroundColor: colores
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false },
-                            title: {
-                                display: true,
-                                text: 'Asignación de Hora de Examen'
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                title: { display: true, text: 'Número de Prácticas' }
-                            }
-                        }
-                    }
-                });
-            }
-        }
-
-        // Función para calcular la moda
-        function calcularModa(arr) {
-            return arr.sort((a,b) =>
-                arr.filter(v => v===a).length - arr.filter(v => v===b).length
-            ).pop();
-        }
-
-        // Función para calcular el promedio
-        function calcularPromedio(arr) {
-            return arr.reduce((a, b) => a + b, 0) / arr.length;
-        }
-
-        // Función para actualizar las estadísticas de prácticas por carrera
-        function actualizarEstadisticasPorCarrera() {
-            const estadisticasPorCarrera = carreras.reduce((acc, carrera) => {
-                const practicas = $(`#seguimientoPracticas .carrera-select option[value="${carrera}"]:selected`).closest('tr');
-                const duraciones = [];
                 
-                practicas.each(function() {
-                    const nombre = $(this).find('td:eq(0) input').val();
-                    if (nombre) { // Solo contar filas con nombre
-                        const fechaInicio = $(this).find('td:eq(7) input').val();
-                        const fechaTermino = $(this).find('td:eq(8) input').val();
-                        if (fechaInicio && fechaTermino) {
-                            const inicio = new Date(fechaInicio.split('/').reverse().join('-'));
-                            const termino = new Date(fechaTermino.split('/').reverse().join('-'));
-                            const duracion = (termino - inicio) / (1000 * 60 * 60 * 24);
-                            duraciones.push(duracion);
-                        }
-                    }
+                tableData.push([
+                    student.nombre,
+                    student.rut,
+                    student.carrera.length > 25 ? student.carrera.substring(0, 25) + '...' : student.carrera,
+                    student.sede,
+                    estado
+                ]);
+            });
+            
+            // Simple table implementation
+            yPos = 30;
+            const cellWidth = [50, 30, 60, 20, 30];
+            const cellPadding = 5;
+            const lineHeight = 7;
+            
+            // Table header
+            doc.setFillColor(0, 32, 78);
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(10);
+            
+            let xPos = 10;
+            tableColumns.forEach((column, index) => {
+                doc.rect(xPos, yPos, cellWidth[index], lineHeight, 'F');
+                doc.text(column, xPos + cellPadding, yPos + 5);
+                xPos += cellWidth[index];
+            });
+            
+            // Table rows
+            doc.setTextColor(0, 0, 0);
+            yPos += lineHeight;
+            
+            tableData.forEach((row, rowIndex) => {
+                // Add a new page if needed
+                if (yPos > 270) {
+                    doc.addPage();
+                    yPos = 20;
+                }
+                
+                // Alternate row colors
+                if (rowIndex % 2 === 0) {
+                    doc.setFillColor(240, 240, 240);
+                    xPos = 10;
+                    tableColumns.forEach((column, index) => {
+                        doc.rect(xPos, yPos, cellWidth[index], lineHeight, 'F');
+                        xPos += cellWidth[index];
+                    });
+                }
+                
+                // Cell content
+                xPos = 10;
+                row.forEach((cell, cellIndex) => {
+                    doc.text(cell.toString(), xPos + cellPadding, yPos + 5);
+                    xPos += cellWidth[cellIndex];
                 });
                 
-                acc[carrera] = {
-                    promedio: duraciones.length > 0 ? Math.round(calcularPromedio(duraciones)) : 0,
-                    moda: duraciones.length > 0 ? calcularModa(duraciones) : 0,
-                    total: practicas.length
-                };
-                return acc;
-            }, {});
+                yPos += lineHeight;
+            });
+            
+            // Guardar el archivo
+            doc.save('informe_practicas_ingenieria.pdf');
+            
+            showAlert('Informe generado correctamente', 'success');
+        }
 
-            // Actualizar la tabla de estadísticas por carrera
-            let estadisticasHTML = `
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead class="table-primary">
-                            <tr>
-                                <th>Carrera</th>
-                                <th>Total Prácticas</th>
-                                <th>Duración Promedio (días)</th>
-                                <th>Duración Moda (días)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
-            
-            for (const [carrera, stats] of Object.entries(estadisticasPorCarrera)) {
-                if (stats.total > 0) {
-                    estadisticasHTML += `
-                        <tr>
-                            <td>${carrera}</td>
-                            <td>${stats.total}</td>
-                            <td>${stats.promedio}</td>
-                            <td>${stats.moda}</td>
-                        </tr>
-                    `;
-                }
-            }
-            
-            estadisticasHTML += `
-                        </tbody>
-                    </table>
+        // Función para mostrar alertas
+        function showAlert(message, type) {
+            const alertHTML = `
+                <div class="alert alert-${type} alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3" 
+                    role="alert" style="z-index: 1050;">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i> ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
                 </div>
             `;
-            
-            $('#estadisticasPorCarrera').html(estadisticasHTML);
+            $('body').append(alertHTML);
+            setTimeout(() => {
+                $('.alert').alert('close');
+            }, 3000);
         }
 
+        // Inicialización cuando el DOM esté listo
         $(document).ready(function() {
             // Verificar si el usuario está logueado
             if (sessionStorage.getItem('loggedIn') !== 'true') {
@@ -1087,238 +1671,216 @@
                 return;
             }
             
-            // Inicializar la tabla y los datos
-            generarFilas();
-
-            $('#seguimientoPracticas').DataTable({
-                paging: true,
-                pageLength: 25,
-                lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Todos"]],
-                scrollY: '60vh',
-                scrollCollapse: true,
-                scrollX: true,
-                responsive: true,
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json'
-                },
-                dom: '<"row"<"col-md-6"l><"col-md-6"f>>rtip'
+            // Cargar datos de estudiantes
+            loadStudentsData();
+            
+            // Inicializar tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
             });
-
-            // Inicializar datepicker
-            $('.datepicker').flatpickr({
+            
+            // Inicializar datepickers
+            flatpickr(".datepicker", {
                 dateFormat: "d/m/Y",
                 locale: "es",
                 allowInput: true
             });
-
-            // Inicializar tooltips
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl, {
-                    container: 'body'
+            
+            // Inicializar Select2
+            $('.form-select').select2({
+                theme: 'bootstrap-5',
+                width: '100%'
+            });
+            
+            // Event listeners
+            
+            // Filtro de búsqueda
+            $('#searchStudent').on('input', function() {
+                activeFilters.search = $(this).val().trim();
+                currentPage = 1;
+                renderStudentsList();
+            });
+            
+            // Filtro por carrera
+            $('#filterCareer').on('change', function() {
+                activeFilters.career = $(this).val();
+                currentPage = 1;
+                renderStudentsList();
+                
+                // Actualizar etiquetas de filtros activos
+                updateActiveFiltersDisplay();
+            });
+            
+            // Filtro por estado
+            $('#filterStatus').on('change', function() {
+                activeFilters.status = $(this).val();
+                currentPage = 1;
+                renderStudentsList();
+                
+                // Actualizar etiquetas de filtros activos
+                updateActiveFiltersDisplay();
+            });
+            
+            // Función para actualizar etiquetas de filtros activos
+            function updateActiveFiltersDisplay() {
+                const activeFiltersContainer = document.getElementById('activeFilters');
+                activeFiltersContainer.innerHTML = '';
+                
+                if (activeFilters.career) {
+                    const tag = document.createElement('span');
+                    tag.className = 'filter-tag';
+                    tag.innerHTML = `Carrera: ${activeFilters.career} <i class="fas fa-times close"></i>`;
+                    tag.querySelector('.close').addEventListener('click', () => {
+                        $('#filterCareer').val('').trigger('change');
+                    });
+                    activeFiltersContainer.appendChild(tag);
+                }
+                
+                if (activeFilters.status) {
+                    let statusText = 'Pendiente';
+                    if (activeFilters.status === 'en-proceso') statusText = 'En proceso';
+                    if (activeFilters.status === 'completada') statusText = 'Completada';
+                    
+                    const tag = document.createElement('span');
+                    tag.className = 'filter-tag';
+                    tag.innerHTML = `Estado: ${statusText} <i class="fas fa-times close"></i>`;
+                    tag.querySelector('.close').addEventListener('click', () => {
+                        $('#filterStatus').val('').trigger('change');
+                    });
+                    activeFiltersContainer.appendChild(tag);
+                }
+            }
+            
+            // Editar estudiante
+            $(document).on('click', '.edit-student', function() {
+                const studentId = parseInt($(this).data('id'));
+                fillEditModal(studentId);
+            });
+            
+            // Cambio en carrera o sede para actualizar encargado práctica
+            $('#studentCareer, #studentCampus').on('change', function() {
+                const carrera = $('#studentCareer').val();
+                const sede = $('#studentCampus').val();
+                const encargado = obtenerEncargadoPractica(carrera, sede);
+                $('#practiceSupervisor').val(encargado);
+            });
+            
+            // Subir documento
+            $(document).on('click', '.upload-document', function() {
+                const studentId = parseInt($(this).data('id'));
+                const docType = $(this).data('type');
+                
+                // Simular clic en el input file correspondiente en el modal
+                fillEditModal(studentId);
+                
+                // Una vez cargado el modal, hacer foco en el campo correspondiente
+                $('#editStudentModal').on('shown.bs.modal', function() {
+                    if (docType === 'instructor') {
+                        $('#instructorDoc').focus();
+                    } else {
+                        $('#completionDoc').focus();
+                    }
                 });
             });
-
-            // Actualizar dashboard al inicio
-            actualizarDashboard();
-
-            // Eventos para cambios en la tabla
-            $('#seguimientoPracticas').on('change', 'select, input', function() {
-                actualizarDashboard();
+            
+            // Envío del formulario de edición
+            $('#editStudentForm').on('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                saveStudentChanges(formData);
+                $('#editStudentModal').modal('hide');
             });
-
-            $('#seguimientoPracticas').on('change', '.carrera-select, .sede-select', function() {
-                const fila = $(this).closest('tr');
-                actualizarEncargadoPractica(fila);
-            });
-
+            
             // Botón para agregar estudiante
             $('#addStudentBtn').on('click', function() {
-                // Scroll a la primera fila vacía
-                const primeraFilaVacia = $('#seguimientoPracticas tbody tr').filter(function() {
-                    return $(this).find('td:eq(0) input').val() === '';
-                }).first();
+                // Llenar el formulario de agregar con el mismo formato que el de editar
+                const addForm = document.getElementById('addStudentForm');
                 
-                if (primeraFilaVacia.length) {
-                    primeraFilaVacia[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    primeraFilaVacia.find('td:eq(0) input').focus();
-                    
-                    // Animar la fila para destacarla
-                    primeraFilaVacia.addClass('bg-light');
-                    setTimeout(() => {
-                        primeraFilaVacia.removeClass('bg-light');
-                    }, 2000);
-                }
+                // Clonar estructura del formulario de edición pero con IDs diferentes
+                addForm.innerHTML = document.getElementById('editStudentForm').innerHTML
+                    .replace(/studentId/g, 'newStudentId')
+                    .replace(/studentName/g, 'newStudentName')
+                    .replace(/studentRut/g, 'newStudentRut')
+                    .replace(/studentCareer/g, 'newStudentCareer')
+                    .replace(/studentCampus/g, 'newStudentCampus')
+                    .replace(/practiceSupervisor/g, 'newPracticeSupervisor')
+                    .replace(/practiceCenter/g, 'newPracticeCenter')
+                    .replace(/practiceInstructor/g, 'newPracticeInstructor')
+                    .replace(/practiceState/g, 'newPracticeState')
+                    .replace(/startDate/g, 'newStartDate')
+                    .replace(/endDate/g, 'newEndDate')
+                    .replace(/tracking1/g, 'newTracking1')
+                    .replace(/partialEvaluation/g, 'newPartialEvaluation')
+                    .replace(/tracking2/g, 'newTracking2')
+                    .replace(/progressReview/g, 'newProgressReview')
+                    .replace(/instructorEvaluation/g, 'newInstructorEvaluation')
+                    .replace(/examAssignment/g, 'newExamAssignment')
+                    .replace(/instructorDoc/g, 'newInstructorDoc')
+                    .replace(/completionDoc/g, 'newCompletionDoc')
+                    .replace(/viewInstructorDoc/g, 'newViewInstructorDoc')
+                    .replace(/viewCompletionDoc/g, 'newViewCompletionDoc');
+                
+                // Eliminar el campo oculto de ID
+                addForm.querySelector('[type="hidden"]').remove();
+                
+                // Inicializar campos del formulario con valores por defecto
+                $('#newPracticeSupervisor').val(obtenerEncargadoPractica(carreras[0], sedes[0]));
+                
+                // Inicializar Select2 y datepickers para el nuevo formulario
+                flatpickr("#newStartDate, #newEndDate", {
+                    dateFormat: "d/m/Y",
+                    locale: "es",
+                    allowInput: true
+                });
+                
+                $('#newStudentCareer, #newStudentCampus, #newPracticeState, #newTracking1, #newPartialEvaluation, #newTracking2, #newProgressReview, #newInstructorEvaluation, #newExamAssignment').select2({
+                    theme: 'bootstrap-5',
+                    width: '100%',
+                    dropdownParent: $('#addStudentModal')
+                });
+                
+                // Evento para actualizar encargado práctica
+                $('#newStudentCareer, #newStudentCampus').on('change', function() {
+                    const carrera = $('#newStudentCareer').val();
+                    const sede = $('#newStudentCampus').val();
+                    const encargado = obtenerEncargadoPractica(carrera, sede);
+                    $('#newPracticeSupervisor').val(encargado);
+                });
+                
+                // Mostrar el modal
+                const addModal = new bootstrap.Modal(document.getElementById('addStudentModal'));
+                addModal.show();
+                
+                // Manejar envío del formulario
+                $('#addStudentForm').on('submit', function(e) {
+                    e.preventDefault();
+                    const formData = new FormData(this);
+                    addNewStudent(formData);
+                    $('#addStudentModal').modal('hide');
+                });
             });
-
+            
             // Botón para exportar a Excel
-            $('#exportButton').on('click', function() {
-                let data = [['Nombre y Apellidos', 'RUT', 'Carrera', 'SEDE', 'Encargado práctica UAC', 'Centro de práctica', 
-                            'Instructor', 'Fecha de Inicio', 'Fecha de Término', 'Seguimiento 1', 'Evaluación parcial', 
-                            'Seguimiento 2', 'Revisión de avance', 'Evaluación instructor', 'Documentación instructor', 
-                            'Finalización práctica', 'Documentación finalización', 'Asignación hora examen']];
-                
-                $('#seguimientoPracticas tbody tr').each(function() {
-                    const nombre = $(this).find('td:eq(0) input').val();
-                    if (nombre) { // Solo exportar filas con nombre
-                        let row = [];
-                        $(this).find('td').each(function(index) {
-                            // Manejar diferentes tipos de campos
-                            if (index === 14 || index === 16) { // Columnas de documentación
-                                row.push($(this).hasClass('documento-adjuntado') ? 'Documento adjuntado' : 'Sin documento');
-                            } else if ($(this).find('input').length > 0) {
-                                row.push($(this).find('input').val());
-                            } else if ($(this).find('select').length > 0) {
-                                row.push($(this).find('select option:selected').text());
-                            } else {
-                                row.push($(this).text().trim());
-                            }
-                        });
-                        data.push(row);
-                    }
-                });
-
-                let ws = XLSX.utils.aoa_to_sheet(data);
-                let wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, "Seguimiento Prácticas");
-                XLSX.writeFile(wb, "seguimiento_practicas_ingenieria.xlsx");
-                
-                // Mostrar alerta de éxito
-                const alertHTML = `
-                    <div class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3" role="alert" style="z-index: 1050;">
-                        <i class="fas fa-check-circle me-2"></i> Datos exportados correctamente a Excel
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-                    </div>
-                `;
-                $('body').append(alertHTML);
-                setTimeout(() => {
-                    $('.alert').alert('close');
-                }, 3000);
+            $('#exportExcelBtn').on('click', function() {
+                exportToExcel();
             });
-
-            // Botón para guardar datos
-            $('#saveButton').on('click', function() {
-                let data = [];
-                $('#seguimientoPracticas tbody tr').each(function() {
-                    const nombre = $(this).find('td:eq(0) input').val();
-                    if (nombre) { // Solo guardar filas con nombre
-                        let row = {};
-                        row.nombre = $(this).find('td:eq(0) input').val();
-                        row.rut = $(this).find('td:eq(1) input').val();
-                        row.carrera = $(this).find('td:eq(2) select').val();
-                        row.sede = $(this).find('td:eq(3) select').val();
-                        row.encargadoPractica = $(this).find('td:eq(4) input').val();
-                        row.centroPractica = $(this).find('td:eq(5) input').val();
-                        row.instructor = $(this).find('td:eq(6) input').val();
-                        row.fechaInicio = $(this).find('td:eq(7) input').val();
-                        row.fechaTermino = $(this).find('td:eq(8) input').val();
-                        row.seguimiento1 = $(this).find('td:eq(9) select').val();
-                        row.evaluacionParcial = $(this).find('td:eq(10) select').val();
-                        row.seguimiento2 = $(this).find('td:eq(11) select').val();
-                        row.revisionAvance = $(this).find('td:eq(12) select').val();
-                        row.evaluacionInstructor = $(this).find('td:eq(13) select').val();
-                        row.finalizacionPractica = $(this).find('td:eq(15) select').val();
-                        row.asignacionHoraExamen = $(this).find('td:eq(17) select').val();
-                        data.push(row);
-                    }
-                });
-                
-                localStorage.setItem('datosPracticas', JSON.stringify(data));
-                
-                // Mostrar alerta de éxito
-                const alertHTML = `
-                    <div class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3" role="alert" style="z-index: 1050;">
-                        <i class="fas fa-check-circle me-2"></i> Datos guardados exitosamente
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-                    </div>
-                `;
-                $('body').append(alertHTML);
-                setTimeout(() => {
-                    $('.alert').alert('close');
-                }, 3000);
+            
+            // Botón para generar informe
+            $('#generateReportBtn').on('click', function() {
+                generateReport();
             });
-
-            // Manejo de adjuntar documentos
-            $(document).on('click', '.adjuntar-doc', function() {
-                let input = document.createElement('input');
-                input.type = 'file';
-                input.accept = '.pdf,.doc,.docx';
-                input.onchange = e => {
-                    let file = e.target.files[0];
-                    let reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = readerEvent => {
-                        let content = readerEvent.target.result;
-                        $(this).closest('td').data('fileContent', content);
-                        $(this).closest('td').data('fileName', file.name);
-                        $(this).closest('td').addClass('documento-adjuntado');
-                        $(this).siblings('.descargar-doc').show();
-                        
-                        // Actualizar dashboard después de adjuntar
-                        actualizarDashboard();
-                    }
-                }
-                input.click();
-            });
-
-            // Manejo de descargar documentos
-            $(document).on('click', '.descargar-doc', function(e) {
-                e.preventDefault();
-                let content = $(this).closest('td').data('fileContent');
-                let fileName = $(this).closest('td').data('fileName');
-                let link = document.createElement('a');
-                link.href = content;
-                link.download = fileName;
-                link.click();
-            });
-
-            // Botón para volver a la página principal
-            $('#volverPrincipal, .navbar-brand').on('click', function(e) {
-                e.preventDefault();
-                window.location.href = 'index.html';
-            });
-
+            
             // Botón para cerrar sesión
             $('#logoutBtn').on('click', function() {
-                // Limpiar sesión
                 sessionStorage.removeItem('loggedIn');
                 window.location.href = 'index.html';
             });
-
-            // Botón para descargar dashboard en PDF
-            $('#downloadDashboardPDF').on('click', function() {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF('l', 'mm', 'a4');
-                
-                html2canvas(document.querySelector("#dashboard")).then(canvas => {
-                    const imgData = canvas.toDataURL('image/png');
-                    const imgProps = doc.getImageProperties(imgData);
-                    const pdfWidth = doc.internal.pageSize.getWidth();
-                    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-                    
-                    doc.setFontSize(18);
-                    doc.setTextColor(0, 32, 78); // Color primario
-                    doc.text('Dashboard de Prácticas - Facultad de Ingenierías', pdfWidth/2, 10, { align: 'center' });
-                    
-                    doc.setFontSize(12);
-                    doc.setTextColor(100, 100, 100);
-                    doc.text(`Generado: ${new Date().toLocaleDateString('es-ES')}`, pdfWidth/2, 18, { align: 'center' });
-                    
-                    doc.addImage(imgData, 'PNG', 0, 25, pdfWidth, pdfHeight);
-                    doc.save('dashboard_practicas_ingenieria.pdf');
-                    
-                    // Mostrar alerta de éxito
-                    const alertHTML = `
-                        <div class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3" role="alert" style="z-index: 1050;">
-                            <i class="fas fa-check-circle me-2"></i> PDF generado correctamente
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-                        </div>
-                    `;
-                    $('body').append(alertHTML);
-                    setTimeout(() => {
-                        $('.alert').alert('close');
-                    }, 3000);
-                });
+            
+            // Botón para volver al menú principal
+            $('#volverPrincipal, .navbar-brand').on('click', function(e) {
+                e.preventDefault();
+                window.location.href = 'index.html';
             });
         });
     </script>
