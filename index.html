@@ -252,12 +252,17 @@
             transition: all 0.3s;
             margin-top: 20px;
             font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
         }
         
         .btn-faculty:hover {
             background: linear-gradient(to right, var(--accent-color), var(--secondary-color));
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(255, 165, 0, 0.3);
+            color: white;
+            text-decoration: none;
         }
         
         .main-content {
@@ -407,7 +412,7 @@
                         <h3 class="card-title">Facultad de Ingenierías</h3>
                         <p>Seguimiento de prácticas para estudiantes de ingeniería.</p>
                     </div>
-                    <a href="pagina1.html" class="btn btn-faculty">
+                    <a href="javascript:void(0)" onclick="navigateToPage('pagina1.html')" class="btn btn-faculty">
                         Acceder <i class="fas fa-arrow-right ms-2"></i>
                     </a>
                 </div>
@@ -419,7 +424,7 @@
                         <h3 class="card-title">Facultad de Humanidades</h3>
                         <p>Seguimiento de prácticas para estudiantes de humanidades.</p>
                     </div>
-                    <a href="pagina2.html" class="btn btn-faculty">
+                    <a href="javascript:void(0)" onclick="navigateToPage('pagina2.html')" class="btn btn-faculty">
                         Acceder <i class="fas fa-arrow-right ms-2"></i>
                     </a>
                 </div>
@@ -431,7 +436,7 @@
                         <h3 class="card-title">Facultad de Salud</h3>
                         <p>Seguimiento de prácticas para estudiantes del área de salud.</p>
                     </div>
-                    <a href="pagina3.html" class="btn btn-faculty">
+                    <a href="javascript:void(0)" onclick="navigateToPage('pagina3.html')" class="btn btn-faculty">
                         Acceder <i class="fas fa-arrow-right ms-2"></i>
                     </a>
                 </div>
@@ -551,6 +556,47 @@
                 setInterval(animateRandomCard, 3000);
             }
         });
+        
+        // Función para navegar a las páginas considerando si estamos en GitHub Pages o local
+        function navigateToPage(page) {
+            // Detectar si estamos en GitHub Pages
+            const isGitHubPages = window.location.hostname.includes('github.io');
+            let url;
+            
+            if (isGitHubPages) {
+                // En GitHub Pages, necesitamos incluir el nombre del repositorio
+                const pathParts = window.location.pathname.split('/');
+                const repoName = pathParts[1]; // Obtiene el nombre del repo (PRACTICAS)
+                
+                // Verificamos si ya estamos en una subcarpeta
+                if (pathParts.length > 2 && pathParts[2] !== '') {
+                    // Si estamos en una subcarpeta, navegamos relativamente
+                    url = page;
+                } else {
+                    // Si estamos en la raíz del repo, incluimos el nombre del repo
+                    url = `/${repoName}/${page}`;
+                }
+            } else {
+                // En desarrollo local o en otro servidor
+                url = page;
+            }
+            
+            // Antes de navegar, intentamos verificar si el archivo existe
+            fetch(url)
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = url;
+                    } else {
+                        console.error(`Error: No se pudo encontrar ${url}`);
+                        alert(`No se pudo cargar la página ${page}. Por favor, verifique que el archivo existe.`);
+                    }
+                })
+                .catch(error => {
+                    // En caso de error CORS o de red, intentamos navegar de todos modos
+                    console.warn(`Advertencia: No se pudo verificar ${url}. Intentando navegar de todos modos.`);
+                    window.location.href = url;
+                });
+        }
     </script>
 </body>
 </html>
