@@ -469,6 +469,425 @@
             height: 200px;
             margin-bottom: 10px;
         }
+        
+        /* Estilos para las opciones tipo encuesta */
+        .option-selector {
+            margin-bottom: 1.5rem;
+        }
+        
+        .option-selector .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .option-item {
+            position: relative;
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .option-item input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .option-item label {
+            display: block;
+            padding: 0.75rem;
+            text-align: center;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            background-color: white;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .option-item:hover label {
+            border-color: var(--primary-color);
+        }
+        
+        .option-item input[type="radio"]:checked + label {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        /* Opciones para estados de seguimiento */
+        .option-item.status-pending label {
+            border-color: var(--danger-color);
+            color: var(--danger-color);
+        }
+        
+        .option-item.status-in-progress label {
+            border-color: var(--warning-color);
+            color: var(--warning-color);
+        }
+        
+        .option-item.status-completed label {
+            border-color: var(--success-color);
+            color: var(--success-color);
+        }
+        
+        .option-item.status-pending input[type="radio"]:checked + label {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .option-item.status-in-progress input[type="radio"]:checked + label {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .option-item.status-completed input[type="radio"]:checked + label {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        /* Opciones para evaluación */
+        .option-item.eval-excellent label {
+            border-color: #28a745;
+            color: #28a745;
+        }
+        
+        .option-item.eval-good label {
+            border-color: #17a2b8;
+            color: #17a2b8;
+        }
+        
+        .option-item.eval-sufficient label {
+            border-color: #ffc107;
+            color: #ffc107;
+        }
+        
+        .option-item.eval-deficient label {
+            border-color: #fd7e14;
+            color: #fd7e14;
+        }
+        
+        .option-item.eval-bad label {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+        
+        .option-item.eval-excellent input[type="radio"]:checked + label {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .option-item.eval-good input[type="radio"]:checked + label {
+            background-color: #17a2b8;
+            color: white;
+        }
+        
+        .option-item.eval-sufficient input[type="radio"]:checked + label {
+            background-color: #ffc107;
+            color: white;
+        }
+        
+        .option-item.eval-deficient input[type="radio"]:checked + label {
+            background-color: #fd7e14;
+            color: white;
+        }
+        
+        .option-item.eval-bad input[type="radio"]:checked + label {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        /* Selector de carrera */
+        .career-selector {
+            margin-bottom: 1.5rem;
+        }
+        
+        .career-selector .form-label {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .career-options-btn {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            text-align: left;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            background-color: white;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .career-options-btn:hover {
+            border-color: var(--primary-color);
+        }
+        
+        .career-options-btn::after {
+            content: '\f107';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .career-selector.active .career-options-btn::after {
+            content: '\f106';
+        }
+        
+        .career-selector.selected .career-options-btn {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .career-options-list {
+            display: none;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 2px solid #dee2e6;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            margin-top: -2px;
+        }
+        
+        .career-selector.active .career-options-list {
+            display: block;
+        }
+        
+        .career-option-item {
+            padding: 0.75rem;
+            border-bottom: 1px solid #dee2e6;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .career-option-item:last-child {
+            border-bottom: none;
+        }
+        
+        .career-option-item:hover {
+            background-color: #f8f9fa;
+            color: var(--primary-color);
+        }
+        
+        .career-option-item.selected {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* Selector de sede */
+        .campus-selector {
+            margin-bottom: 1.5rem;
+        }
+        
+        .campus-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .campus-option-item {
+            flex: 1;
+            min-width: 100px;
+            position: relative;
+        }
+        
+        .campus-option-item input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .campus-option-item label {
+            display: block;
+            padding: 1rem 0.75rem;
+            text-align: center;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        
+        .campus-option-item:hover label {
+            border-color: var(--primary-color);
+        }
+        
+        .campus-option-item input[type="radio"]:checked + label {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        /* Filtros de estado visuales */
+        .filter-status-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .filter-status-item {
+            flex: 1;
+            min-width: 100px;
+            position: relative;
+        }
+        
+        .filter-status-item input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .filter-status-item label {
+            display: block;
+            padding: 0.75rem;
+            text-align: center;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        
+        .filter-status-item.all label {
+            border-color: #6c757d;
+            color: #6c757d;
+        }
+        
+        .filter-status-item.pending label {
+            border-color: var(--danger-color);
+            color: var(--danger-color);
+        }
+        
+        .filter-status-item.in-progress label {
+            border-color: var(--warning-color);
+            color: var(--warning-color);
+        }
+        
+        .filter-status-item.completed label {
+            border-color: var(--success-color);
+            color: var(--success-color);
+        }
+        
+        .filter-status-item.all input[type="radio"]:checked + label {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .filter-status-item.pending input[type="radio"]:checked + label {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .filter-status-item.in-progress input[type="radio"]:checked + label {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .filter-status-item.completed input[type="radio"]:checked + label {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        /* Selector de carrera en filtro */
+        .filter-career-selector {
+            margin-bottom: 1rem;
+        }
+        
+        .filter-career-btn {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            text-align: left;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            background-color: white;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .filter-career-btn:hover {
+            border-color: var(--primary-color);
+        }
+        
+        .filter-career-btn::after {
+            content: '\f107';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .filter-career-selector.active .filter-career-btn::after {
+            content: '\f106';
+        }
+        
+        .filter-career-selector.selected .filter-career-btn {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .filter-career-options {
+            display: none;
+            position: absolute;
+            width: 100%;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            background-color: white;
+            z-index: 1000;
+            margin-top: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .filter-career-selector.active .filter-career-options {
+            display: block;
+        }
+        
+        .filter-career-option {
+            padding: 0.75rem;
+            border-bottom: 1px solid #dee2e6;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .filter-career-option:last-child {
+            border-bottom: none;
+        }
+        
+        .filter-career-option:hover {
+            background-color: #f8f9fa;
+            color: var(--primary-color);
+        }
+        
+        .filter-career-option.selected {
+            background-color: var(--primary-color);
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -589,7 +1008,7 @@
         <!-- Filtros y búsqueda -->
         <div class="filters-section">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3 mb-md-0">
                     <div class="search-box">
                         <i class="fas fa-search search-icon"></i>
                         <input type="text" id="searchStudent" class="form-control" placeholder="Buscar por nombre, RUT o centro de práctica...">
@@ -597,19 +1016,39 @@
                 </div>
                 <div class="col-md-6">
                     <div class="row">
-                        <div class="col-md-6 mb-2 mb-md-0">
-                            <select id="filterCareer" class="form-select filter-dropdown">
-                                <option value="">Todas las carreras</option>
-                                <!-- Las opciones se cargarán dinámicamente -->
-                            </select>
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <!-- Reemplazo de filtro carrera por selector visual -->
+                            <div class="filter-career-selector" id="filterCareerSelector">
+                                <div class="filter-career-btn" id="filterCareerBtn">
+                                    Todas las carreras
+                                </div>
+                                <div class="filter-career-options" id="filterCareerOptions">
+                                    <div class="filter-career-option selected" data-value="">Todas las carreras</div>
+                                    <!-- Las opciones se cargarán dinámicamente -->
+                                </div>
+                                <input type="hidden" id="filterCareer" value="">
+                            </div>
                         </div>
                         <div class="col-md-6">
-                            <select id="filterStatus" class="form-select filter-dropdown">
-                                <option value="">Todos los estados</option>
-                                <option value="no-comienza">Pendiente</option>
-                                <option value="en-proceso">En proceso</option>
-                                <option value="completada">Completada</option>
-                            </select>
+                            <!-- Reemplazo de filtro estado por opciones visuales -->
+                            <div class="filter-status-options">
+                                <div class="filter-status-item all">
+                                    <input type="radio" name="filterStatus" id="filterStatusAll" value="" checked>
+                                    <label for="filterStatusAll">Todos</label>
+                                </div>
+                                <div class="filter-status-item pending">
+                                    <input type="radio" name="filterStatus" id="filterStatusPending" value="no-comienza">
+                                    <label for="filterStatusPending">Pendiente</label>
+                                </div>
+                                <div class="filter-status-item in-progress">
+                                    <input type="radio" name="filterStatus" id="filterStatusInProgress" value="en-proceso">
+                                    <label for="filterStatusInProgress">En Proceso</label>
+                                </div>
+                                <div class="filter-status-item completed">
+                                    <input type="radio" name="filterStatus" id="filterStatusCompleted" value="completada">
+                                    <label for="filterStatusCompleted">Completada</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -617,7 +1056,6 @@
             
             <div class="mt-3" id="activeFilters">
                 <!-- Etiquetas de filtros activos se cargarán aquí -->
-                <!-- <span class="filter-tag">Carrera: Técnico en Minas <i class="fas fa-times close"></i></span> -->
             </div>
         </div>
         
@@ -638,7 +1076,7 @@
 
     <!-- Modal para editar estudiante -->
     <div class="modal fade" id="editStudentModal" tabindex="-1" aria-labelledby="editStudentModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editStudentModalLabel">Editar Información del Estudiante</h5>
@@ -663,16 +1101,25 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="studentCareer" class="form-label">Carrera</label>
-                                    <select class="form-select" id="studentCareer" required>
-                                        <!-- Las opciones se cargarán dinámicamente -->
-                                    </select>
+                                    <!-- Reemplazo del desplegable de carrera por selector visual -->
+                                    <div class="career-selector" id="careerSelector">
+                                        <label class="form-label">Carrera</label>
+                                        <div class="career-options-btn" id="careerOptionsBtn">Seleccionar carrera</div>
+                                        <div class="career-options-list" id="careerOptionsList">
+                                            <!-- Las opciones se cargarán dinámicamente -->
+                                        </div>
+                                        <input type="hidden" id="studentCareer" required>
+                                    </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="studentCampus" class="form-label">Sede</label>
-                                    <select class="form-select" id="studentCampus" required>
-                                        <!-- Las opciones se cargarán dinámicamente -->
-                                    </select>
+                                    <!-- Reemplazo del desplegable de sede por opciones visuales -->
+                                    <div class="campus-selector">
+                                        <label class="form-label">Sede</label>
+                                        <div class="campus-options" id="campusOptions">
+                                            <!-- Las opciones se cargarán dinámicamente -->
+                                        </div>
+                                        <input type="hidden" id="studentCampus" required>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -696,12 +1143,25 @@
                                     <input type="text" class="form-control" id="practiceInstructor" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="practiceState" class="form-label">Estado de la práctica</label>
-                                    <select class="form-select" id="practiceState" required>
-                                        <option value="no-comienza">No comienza</option>
-                                        <option value="en-proceso">En proceso</option>
-                                        <option value="completada">Completada</option>
-                                    </select>
+                                    <!-- Reemplazo del desplegable de estado de práctica por opciones visuales -->
+                                    <div class="option-selector">
+                                        <label class="form-label">Estado de la práctica</label>
+                                        <div class="options-container">
+                                            <div class="option-item status-pending">
+                                                <input type="radio" name="practiceState" id="practiceStatePending" value="no-comienza">
+                                                <label for="practiceStatePending">No comienza</label>
+                                            </div>
+                                            <div class="option-item status-in-progress">
+                                                <input type="radio" name="practiceState" id="practiceStateInProgress" value="en-proceso">
+                                                <label for="practiceStateInProgress">En proceso</label>
+                                            </div>
+                                            <div class="option-item status-completed">
+                                                <input type="radio" name="practiceState" id="practiceStateCompleted" value="completada">
+                                                <label for="practiceStateCompleted">Completada</label>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="practiceState" required>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -719,66 +1179,151 @@
                         <!-- Seguimiento y evaluación -->
                         <div class="form-section">
                             <h5 class="form-section-title"><i class="fas fa-tasks me-2"></i>Seguimiento y Evaluación</h5>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="tracking1" class="form-label">Seguimiento 1</label>
-                                    <select class="form-select" id="tracking1">
-                                        <option value="no-comienza">No comienza</option>
-                                        <option value="en-proceso">En proceso</option>
-                                        <option value="completada">Completada</option>
-                                    </select>
+                            
+                            <!-- Reemplazo del desplegable de Seguimiento 1 por opciones visuales -->
+                            <div class="option-selector">
+                                <label class="form-label">Seguimiento 1</label>
+                                <div class="options-container">
+                                    <div class="option-item status-pending">
+                                        <input type="radio" name="tracking1" id="tracking1Pending" value="no-comienza">
+                                        <label for="tracking1Pending">No comienza</label>
+                                    </div>
+                                    <div class="option-item status-in-progress">
+                                        <input type="radio" name="tracking1" id="tracking1InProgress" value="en-proceso">
+                                        <label for="tracking1InProgress">En proceso</label>
+                                    </div>
+                                    <div class="option-item status-completed">
+                                        <input type="radio" name="tracking1" id="tracking1Completed" value="completada">
+                                        <label for="tracking1Completed">Completada</label>
+                                    </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="partialEvaluation" class="form-label">Evaluación parcial</label>
-                                    <select class="form-select" id="partialEvaluation">
-                                        <option value="excelente">Excelente</option>
-                                        <option value="bien">Bien</option>
-                                        <option value="suficiente">Suficiente</option>
-                                        <option value="deficiente">Deficiente</option>
-                                        <option value="malo">Malo</option>
-                                    </select>
-                                </div>
+                                <input type="hidden" id="tracking1">
                             </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="tracking2" class="form-label">Seguimiento 2</label>
-                                    <select class="form-select" id="tracking2">
-                                        <option value="no-comienza">No comienza</option>
-                                        <option value="en-proceso">En proceso</option>
-                                        <option value="completada">Completada</option>
-                                    </select>
+                            
+                            <!-- Reemplazo del desplegable de Evaluación parcial por opciones visuales -->
+                            <div class="option-selector">
+                                <label class="form-label">Evaluación parcial</label>
+                                <div class="options-container">
+                                    <div class="option-item eval-excellent">
+                                        <input type="radio" name="partialEvaluation" id="partialEvalExcellent" value="excelente">
+                                        <label for="partialEvalExcellent">Excelente</label>
+                                    </div>
+                                    <div class="option-item eval-good">
+                                        <input type="radio" name="partialEvaluation" id="partialEvalGood" value="bien">
+                                        <label for="partialEvalGood">Bien</label>
+                                    </div>
+                                    <div class="option-item eval-sufficient">
+                                        <input type="radio" name="partialEvaluation" id="partialEvalSufficient" value="suficiente">
+                                        <label for="partialEvalSufficient">Suficiente</label>
+                                    </div>
+                                    <div class="option-item eval-deficient">
+                                        <input type="radio" name="partialEvaluation" id="partialEvalDeficient" value="deficiente">
+                                        <label for="partialEvalDeficient">Deficiente</label>
+                                    </div>
+                                    <div class="option-item eval-bad">
+                                        <input type="radio" name="partialEvaluation" id="partialEvalBad" value="malo">
+                                        <label for="partialEvalBad">Malo</label>
+                                    </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="progressReview" class="form-label">Revisión de avance</label>
-                                    <select class="form-select" id="progressReview">
-                                        <option value="excelente">Excelente</option>
-                                        <option value="bien">Bien</option>
-                                        <option value="suficiente">Suficiente</option>
-                                        <option value="deficiente">Deficiente</option>
-                                        <option value="malo">Malo</option>
-                                    </select>
-                                </div>
+                                <input type="hidden" id="partialEvaluation">
                             </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="instructorEvaluation" class="form-label">Evaluación instructor</label>
-                                    <select class="form-select" id="instructorEvaluation">
-                                        <option value="excelente">Excelente</option>
-                                        <option value="bien">Bien</option>
-                                        <option value="suficiente">Suficiente</option>
-                                        <option value="deficiente">Deficiente</option>
-                                        <option value="malo">Malo</option>
-                                    </select>
+                            
+                            <!-- Reemplazo del desplegable de Seguimiento 2 por opciones visuales -->
+                            <div class="option-selector">
+                                <label class="form-label">Seguimiento 2</label>
+                                <div class="options-container">
+                                    <div class="option-item status-pending">
+                                        <input type="radio" name="tracking2" id="tracking2Pending" value="no-comienza">
+                                        <label for="tracking2Pending">No comienza</label>
+                                    </div>
+                                    <div class="option-item status-in-progress">
+                                        <input type="radio" name="tracking2" id="tracking2InProgress" value="en-proceso">
+                                        <label for="tracking2InProgress">En proceso</label>
+                                    </div>
+                                    <div class="option-item status-completed">
+                                        <input type="radio" name="tracking2" id="tracking2Completed" value="completada">
+                                        <label for="tracking2Completed">Completada</label>
+                                    </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="examAssignment" class="form-label">Asignación hora examen</label>
-                                    <select class="form-select" id="examAssignment">
-                                        <option value="no-comienza">No comienza</option>
-                                        <option value="en-proceso">En proceso</option>
-                                        <option value="completada">Completada</option>
-                                    </select>
-                                </div>
+                                <input type="hidden" id="tracking2">
                             </div>
+                            
+                            <!-- Reemplazo del desplegable de Revisión de avance por opciones visuales -->
+                            <div class="option-selector">
+                                <label class="form-label">Revisión de avance</label>
+                                <div class="options-container">
+                                    <div class="option-item eval-excellent">
+                                        <input type="radio" name="progressReview" id="progressReviewExcellent" value="excelente">
+                                        <label for="progressReviewExcellent">Excelente</label>
+                                    </div>
+                                    <div class="option-item eval-good">
+                                        <input type="radio" name="progressReview" id="progressReviewGood" value="bien">
+                                        <label for="progressReviewGood">Bien</label>
+                                    </div>
+                                    <div class="option-item eval-sufficient">
+                                        <input type="radio" name="progressReview" id="progressReviewSufficient" value="suficiente">
+                                        <label for="progressReviewSufficient">Suficiente</label>
+                                    </div>
+                                    <div class="option-item eval-deficient">
+                                        <input type="radio" name="progressReview" id="progressReviewDeficient" value="deficiente">
+                                        <label for="progressReviewDeficient">Deficiente</label>
+                                    </div>
+                                    <div class="option-item eval-bad">
+                                        <input type="radio" name="progressReview" id="progressReviewBad" value="malo">
+                                        <label for="progressReviewBad">Malo</label>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="progressReview">
+                            </div>
+                            
+                            <!-- Reemplazo del desplegable de Evaluación instructor por opciones visuales -->
+                            <div class="option-selector">
+                                <label class="form-label">Evaluación instructor</label>
+                                <div class="options-container">
+                                    <div class="option-item eval-excellent">
+                                        <input type="radio" name="instructorEvaluation" id="instructorEvalExcellent" value="excelente">
+                                        <label for="instructorEvalExcellent">Excelente</label>
+                                    </div>
+                                    <div class="option-item eval-good">
+                                        <input type="radio" name="instructorEvaluation" id="instructorEvalGood" value="bien">
+                                        <label for="instructorEvalGood">Bien</label>
+                                    </div>
+                                    <div class="option-item eval-sufficient">
+                                        <input type="radio" name="instructorEvaluation" id="instructorEvalSufficient" value="suficiente">
+                                        <label for="instructorEvalSufficient">Suficiente</label>
+                                    </div>
+                                    <div class="option-item eval-deficient">
+                                        <input type="radio" name="instructorEvaluation" id="instructorEvalDeficient" value="deficiente">
+                                        <label for="instructorEvalDeficient">Deficiente</label>
+                                    </div>
+                                    <div class="option-item eval-bad">
+                                        <input type="radio" name="instructorEvaluation" id="instructorEvalBad" value="malo">
+                                        <label for="instructorEvalBad">Malo</label>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="instructorEvaluation">
+                            </div>
+                            
+                            <!-- Reemplazo del desplegable de Asignación hora examen por opciones visuales -->
+                            <div class="option-selector">
+                                <label class="form-label">Asignación hora examen</label>
+                                <div class="options-container">
+                                    <div class="option-item status-pending">
+                                        <input type="radio" name="examAssignment" id="examAssignmentPending" value="no-comienza">
+                                        <label for="examAssignmentPending">No comienza</label>
+                                    </div>
+                                    <div class="option-item status-in-progress">
+                                        <input type="radio" name="examAssignment" id="examAssignmentInProgress" value="en-proceso">
+                                        <label for="examAssignmentInProgress">En proceso</label>
+                                    </div>
+                                    <div class="option-item status-completed">
+                                        <input type="radio" name="examAssignment" id="examAssignmentCompleted" value="completada">
+                                        <label for="examAssignmentCompleted">Completada</label>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="examAssignment">
+                            </div>
+                            
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="finalGrade" class="form-label">Nota Final (1.0 - 7.0)</label>
@@ -828,7 +1373,7 @@
 
     <!-- Modal para agregar estudiante -->
     <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addStudentModalLabel">Agregar Nuevo Estudiante</h5>
@@ -851,16 +1396,25 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="newStudentCareer" class="form-label">Carrera</label>
-                                    <select class="form-select" id="newStudentCareer" required>
-                                        <!-- Las opciones se cargarán dinámicamente -->
-                                    </select>
+                                    <!-- Reemplazo del desplegable de carrera por selector visual -->
+                                    <div class="career-selector" id="newCareerSelector">
+                                        <label class="form-label">Carrera</label>
+                                        <div class="career-options-btn" id="newCareerOptionsBtn">Seleccionar carrera</div>
+                                        <div class="career-options-list" id="newCareerOptionsList">
+                                            <!-- Las opciones se cargarán dinámicamente -->
+                                        </div>
+                                        <input type="hidden" id="newStudentCareer" required>
+                                    </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="newStudentCampus" class="form-label">Sede</label>
-                                    <select class="form-select" id="newStudentCampus" required>
-                                        <!-- Las opciones se cargarán dinámicamente -->
-                                    </select>
+                                    <!-- Reemplazo del desplegable de sede por opciones visuales -->
+                                    <div class="campus-selector">
+                                        <label class="form-label">Sede</label>
+                                        <div class="campus-options" id="newCampusOptions">
+                                            <!-- Las opciones se cargarán dinámicamente -->
+                                        </div>
+                                        <input type="hidden" id="newStudentCampus" required>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -884,12 +1438,25 @@
                                     <input type="text" class="form-control" id="newPracticeInstructor" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="newPracticeState" class="form-label">Estado de la práctica</label>
-                                    <select class="form-select" id="newPracticeState" required>
-                                        <option value="no-comienza">No comienza</option>
-                                        <option value="en-proceso">En proceso</option>
-                                        <option value="completada">Completada</option>
-                                    </select>
+                                    <!-- Reemplazo del desplegable de estado de práctica por opciones visuales -->
+                                    <div class="option-selector">
+                                        <label class="form-label">Estado de la práctica</label>
+                                        <div class="options-container">
+                                            <div class="option-item status-pending">
+                                                <input type="radio" name="newPracticeState" id="newPracticeStatePending" value="no-comienza">
+                                                <label for="newPracticeStatePending">No comienza</label>
+                                            </div>
+                                            <div class="option-item status-in-progress">
+                                                <input type="radio" name="newPracticeState" id="newPracticeStateInProgress" value="en-proceso">
+                                                <label for="newPracticeStateInProgress">En proceso</label>
+                                            </div>
+                                            <div class="option-item status-completed">
+                                                <input type="radio" name="newPracticeState" id="newPracticeStateCompleted" value="completada">
+                                                <label for="newPracticeStateCompleted">Completada</label>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="newPracticeState" required>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -907,66 +1474,151 @@
                         <!-- Seguimiento y evaluación -->
                         <div class="form-section">
                             <h5 class="form-section-title"><i class="fas fa-tasks me-2"></i>Seguimiento y Evaluación</h5>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="newTracking1" class="form-label">Seguimiento 1</label>
-                                    <select class="form-select" id="newTracking1">
-                                        <option value="no-comienza">No comienza</option>
-                                        <option value="en-proceso">En proceso</option>
-                                        <option value="completada">Completada</option>
-                                    </select>
+                            
+                            <!-- Reemplazo del desplegable de Seguimiento 1 por opciones visuales -->
+                            <div class="option-selector">
+                                <label class="form-label">Seguimiento 1</label>
+                                <div class="options-container">
+                                    <div class="option-item status-pending">
+                                        <input type="radio" name="newTracking1" id="newTracking1Pending" value="no-comienza">
+                                        <label for="newTracking1Pending">No comienza</label>
+                                    </div>
+                                    <div class="option-item status-in-progress">
+                                        <input type="radio" name="newTracking1" id="newTracking1InProgress" value="en-proceso">
+                                        <label for="newTracking1InProgress">En proceso</label>
+                                    </div>
+                                    <div class="option-item status-completed">
+                                        <input type="radio" name="newTracking1" id="newTracking1Completed" value="completada">
+                                        <label for="newTracking1Completed">Completada</label>
+                                    </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="newPartialEvaluation" class="form-label">Evaluación parcial</label>
-                                    <select class="form-select" id="newPartialEvaluation">
-                                        <option value="excelente">Excelente</option>
-                                        <option value="bien">Bien</option>
-                                        <option value="suficiente">Suficiente</option>
-                                        <option value="deficiente">Deficiente</option>
-                                        <option value="malo">Malo</option>
-                                    </select>
-                                </div>
+                                <input type="hidden" id="newTracking1">
                             </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="newTracking2" class="form-label">Seguimiento 2</label>
-                                    <select class="form-select" id="newTracking2">
-                                        <option value="no-comienza">No comienza</option>
-                                        <option value="en-proceso">En proceso</option>
-                                        <option value="completada">Completada</option>
-                                    </select>
+                            
+                            <!-- Reemplazo del desplegable de Evaluación parcial por opciones visuales -->
+                            <div class="option-selector">
+                                <label class="form-label">Evaluación parcial</label>
+                                <div class="options-container">
+                                    <div class="option-item eval-excellent">
+                                        <input type="radio" name="newPartialEvaluation" id="newPartialEvalExcellent" value="excelente">
+                                        <label for="newPartialEvalExcellent">Excelente</label>
+                                    </div>
+                                    <div class="option-item eval-good">
+                                        <input type="radio" name="newPartialEvaluation" id="newPartialEvalGood" value="bien">
+                                        <label for="newPartialEvalGood">Bien</label>
+                                    </div>
+                                    <div class="option-item eval-sufficient">
+                                        <input type="radio" name="newPartialEvaluation" id="newPartialEvalSufficient" value="suficiente">
+                                        <label for="newPartialEvalSufficient">Suficiente</label>
+                                    </div>
+                                    <div class="option-item eval-deficient">
+                                        <input type="radio" name="newPartialEvaluation" id="newPartialEvalDeficient" value="deficiente">
+                                        <label for="newPartialEvalDeficient">Deficiente</label>
+                                    </div>
+                                    <div class="option-item eval-bad">
+                                        <input type="radio" name="newPartialEvaluation" id="newPartialEvalBad" value="malo">
+                                        <label for="newPartialEvalBad">Malo</label>
+                                    </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="newProgressReview" class="form-label">Revisión de avance</label>
-                                    <select class="form-select" id="newProgressReview">
-                                        <option value="excelente">Excelente</option>
-                                        <option value="bien">Bien</option>
-                                        <option value="suficiente">Suficiente</option>
-                                        <option value="deficiente">Deficiente</option>
-                                        <option value="malo">Malo</option>
-                                    </select>
-                                </div>
+                                <input type="hidden" id="newPartialEvaluation">
                             </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="newInstructorEvaluation" class="form-label">Evaluación instructor</label>
-                                    <select class="form-select" id="newInstructorEvaluation">
-                                        <option value="excelente">Excelente</option>
-                                        <option value="bien">Bien</option>
-                                        <option value="suficiente">Suficiente</option>
-                                        <option value="deficiente">Deficiente</option>
-                                        <option value="malo">Malo</option>
-                                    </select>
+                            
+                            <!-- Reemplazo del desplegable de Seguimiento 2 por opciones visuales -->
+                            <div class="option-selector">
+                                <label class="form-label">Seguimiento 2</label>
+                                <div class="options-container">
+                                    <div class="option-item status-pending">
+                                        <input type="radio" name="newTracking2" id="newTracking2Pending" value="no-comienza">
+                                        <label for="newTracking2Pending">No comienza</label>
+                                    </div>
+                                    <div class="option-item status-in-progress">
+                                        <input type="radio" name="newTracking2" id="newTracking2InProgress" value="en-proceso">
+                                        <label for="newTracking2InProgress">En proceso</label>
+                                    </div>
+                                    <div class="option-item status-completed">
+                                        <input type="radio" name="newTracking2" id="newTracking2Completed" value="completada">
+                                        <label for="newTracking2Completed">Completada</label>
+                                    </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="newExamAssignment" class="form-label">Asignación hora examen</label>
-                                    <select class="form-select" id="newExamAssignment">
-                                        <option value="no-comienza">No comienza</option>
-                                        <option value="en-proceso">En proceso</option>
-                                        <option value="completada">Completada</option>
-                                    </select>
-                                </div>
+                                <input type="hidden" id="newTracking2">
                             </div>
+                            
+                            <!-- Reemplazo del desplegable de Revisión de avance por opciones visuales -->
+                            <div class="option-selector">
+                                <label class="form-label">Revisión de avance</label>
+                                <div class="options-container">
+                                    <div class="option-item eval-excellent">
+                                        <input type="radio" name="newProgressReview" id="newProgressReviewExcellent" value="excelente">
+                                        <label for="newProgressReviewExcellent">Excelente</label>
+                                    </div>
+                                    <div class="option-item eval-good">
+                                        <input type="radio" name="newProgressReview" id="newProgressReviewGood" value="bien">
+                                        <label for="newProgressReviewGood">Bien</label>
+                                    </div>
+                                    <div class="option-item eval-sufficient">
+                                        <input type="radio" name="newProgressReview" id="newProgressReviewSufficient" value="suficiente">
+                                        <label for="newProgressReviewSufficient">Suficiente</label>
+                                    </div>
+                                    <div class="option-item eval-deficient">
+                                        <input type="radio" name="newProgressReview" id="newProgressReviewDeficient" value="deficiente">
+                                        <label for="newProgressReviewDeficient">Deficiente</label>
+                                    </div>
+                                    <div class="option-item eval-bad">
+                                        <input type="radio" name="newProgressReview" id="newProgressReviewBad" value="malo">
+                                        <label for="newProgressReviewBad">Malo</label>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="newProgressReview">
+                            </div>
+                            
+                            <!-- Reemplazo del desplegable de Evaluación instructor por opciones visuales -->
+                            <div class="option-selector">
+                                <label class="form-label">Evaluación instructor</label>
+                                <div class="options-container">
+                                    <div class="option-item eval-excellent">
+                                        <input type="radio" name="newInstructorEvaluation" id="newInstructorEvalExcellent" value="excelente">
+                                        <label for="newInstructorEvalExcellent">Excelente</label>
+                                    </div>
+                                    <div class="option-item eval-good">
+                                        <input type="radio" name="newInstructorEvaluation" id="newInstructorEvalGood" value="bien">
+                                        <label for="newInstructorEvalGood">Bien</label>
+                                    </div>
+                                    <div class="option-item eval-sufficient">
+                                        <input type="radio" name="newInstructorEvaluation" id="newInstructorEvalSufficient" value="suficiente">
+                                        <label for="newInstructorEvalSufficient">Suficiente</label>
+                                    </div>
+                                    <div class="option-item eval-deficient">
+                                        <input type="radio" name="newInstructorEvaluation" id="newInstructorEvalDeficient" value="deficiente">
+                                        <label for="newInstructorEvalDeficient">Deficiente</label>
+                                    </div>
+                                    <div class="option-item eval-bad">
+                                        <input type="radio" name="newInstructorEvaluation" id="newInstructorEvalBad" value="malo">
+                                        <label for="newInstructorEvalBad">Malo</label>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="newInstructorEvaluation">
+                            </div>
+                            
+                            <!-- Reemplazo del desplegable de Asignación hora examen por opciones visuales -->
+                            <div class="option-selector">
+                                <label class="form-label">Asignación hora examen</label>
+                                <div class="options-container">
+                                    <div class="option-item status-pending">
+                                        <input type="radio" name="newExamAssignment" id="newExamAssignmentPending" value="no-comienza">
+                                        <label for="newExamAssignmentPending">No comienza</label>
+                                    </div>
+                                    <div class="option-item status-in-progress">
+                                        <input type="radio" name="newExamAssignment" id="newExamAssignmentInProgress" value="en-proceso">
+                                        <label for="newExamAssignmentInProgress">En proceso</label>
+                                    </div>
+                                    <div class="option-item status-completed">
+                                        <input type="radio" name="newExamAssignment" id="newExamAssignmentCompleted" value="completada">
+                                        <label for="newExamAssignmentCompleted">Completada</label>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="newExamAssignment">
+                            </div>
+                            
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="newFinalGrade" class="form-label">Nota Final (1.0 - 7.0)</label>
@@ -1160,7 +1812,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -1246,6 +1897,7 @@
             
             updateStatistics();
             renderStudentsList();
+            setupFilterCareerOptions();
         }
 
         // Función para filtrar estudiantes según los criterios activos
@@ -1515,32 +2167,74 @@
             document.getElementById('inProgressBar').style.width = totalStudents ? `${(inProgress / totalStudents) * 100}%` : '0%';
             document.getElementById('completedBar').style.width = totalStudents ? `${(completed / totalStudents) * 100}%` : '0%';
             document.getElementById('pendingBar').style.width = totalStudents ? `${(pending / totalStudents) * 100}%` : '0%';
-            
-            // Actualizar opciones de filtro
-            const filterCareer = document.getElementById('filterCareer');
-            filterCareer.innerHTML = '<option value="">Todas las carreras</option>';
+        }
+        
+        // Función para configurar el selector visual de carrera en el filtro
+        function setupFilterCareerOptions() {
+            const filterCareerOptions = document.getElementById('filterCareerOptions');
+            filterCareerOptions.innerHTML = '<div class="filter-career-option selected" data-value="">Todas las carreras</div>';
             
             // Crear un conjunto de carreras únicas
             const uniqueCareers = [...new Set(studentsData.map(student => student.carrera))];
             uniqueCareers.forEach(career => {
-                const option = document.createElement('option');
-                option.value = career;
+                const option = document.createElement('div');
+                option.className = 'filter-career-option';
+                option.dataset.value = career;
                 option.textContent = career;
-                filterCareer.appendChild(option);
+                filterCareerOptions.appendChild(option);
             });
         }
 
-        // Función para llenar select con opciones
-        function fillSelectOptions(selectElement, options, selectedValue = '') {
-            selectElement.innerHTML = '';
-            options.forEach(option => {
-                const optionElement = document.createElement('option');
-                optionElement.value = option;
-                optionElement.textContent = option;
-                if (option === selectedValue) {
-                    optionElement.selected = true;
+        // Función para llenar el selector visual de carrera
+        function fillCareerSelector(selector, optionsList, selectedValue = '') {
+            optionsList.innerHTML = '';
+            
+            carreras.forEach(carrera => {
+                const option = document.createElement('div');
+                option.className = 'career-option-item';
+                option.dataset.value = carrera;
+                option.textContent = carrera;
+                
+                if (carrera === selectedValue) {
+                    option.classList.add('selected');
+                    selector.querySelector('.career-options-btn').textContent = carrera;
+                    selector.classList.add('selected');
                 }
-                selectElement.appendChild(optionElement);
+                
+                optionsList.appendChild(option);
+            });
+        }
+        
+        // Función para llenar el selector visual de sede
+        function fillCampusSelector(container, selectedValue = '') {
+            container.innerHTML = '';
+            
+            sedes.forEach((sede, index) => {
+                const option = document.createElement('div');
+                option.className = 'campus-option-item';
+                option.innerHTML = `
+                    <input type="radio" name="campus-option" id="campus-${sede}" value="${sede}" ${sede === selectedValue ? 'checked' : ''}>
+                    <label for="campus-${sede}">${sede}</label>
+                `;
+                container.appendChild(option);
+            });
+            
+            // Añadir event listeners a los radios
+            container.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const hiddenInput = this.closest('.campus-selector').nextElementSibling;
+                    if (hiddenInput && hiddenInput.id === 'studentCampus') {
+                        document.getElementById('studentCampus').value = this.value;
+                        // Actualizar encargado de práctica
+                        const carrera = document.getElementById('studentCareer').value;
+                        document.getElementById('practiceSupervisor').value = obtenerEncargadoPractica(carrera, this.value);
+                    } else if (hiddenInput && hiddenInput.id === 'newStudentCampus') {
+                        document.getElementById('newStudentCampus').value = this.value;
+                        // Actualizar encargado de práctica
+                        const carrera = document.getElementById('newStudentCareer').value;
+                        document.getElementById('newPracticeSupervisor').value = obtenerEncargadoPractica(carrera, this.value);
+                    }
+                });
             });
         }
 
@@ -1553,11 +2247,22 @@
             document.getElementById('studentName').value = student.nombre;
             document.getElementById('studentRut').value = student.rut;
             
-            // Llenar select de carreras
-            fillSelectOptions(document.getElementById('studentCareer'), carreras, student.carrera);
+            // Carrera y sede
+            document.getElementById('studentCareer').value = student.carrera;
+            document.getElementById('studentCampus').value = student.sede;
             
-            // Llenar select de sedes
-            fillSelectOptions(document.getElementById('studentCampus'), sedes, student.sede);
+            // Llenar selector visual de carrera
+            fillCareerSelector(
+                document.getElementById('careerSelector'),
+                document.getElementById('careerOptionsList'),
+                student.carrera
+            );
+            
+            // Llenar selector visual de sede
+            fillCampusSelector(
+                document.getElementById('campusOptions'),
+                student.sede
+            );
             
             // Información de práctica
             document.getElementById('practiceSupervisor').value = student.encargadoPractica;
@@ -1567,6 +2272,9 @@
             document.getElementById('startDate').value = student.fechaInicio;
             document.getElementById('endDate').value = student.fechaTermino;
             
+            // Seleccionar el estado de práctica correcto
+            document.querySelector(`input[name="practiceState"][value="${student.finalizacionPractica}"]`).checked = true;
+            
             // Seguimiento y evaluación
             document.getElementById('tracking1').value = student.seguimiento1;
             document.getElementById('partialEvaluation').value = student.evaluacionParcial;
@@ -1575,6 +2283,14 @@
             document.getElementById('instructorEvaluation').value = student.evaluacionInstructor;
             document.getElementById('examAssignment').value = student.asignacionHoraExamen;
             document.getElementById('finalGrade').value = student.notaFinal;
+            
+            // Seleccionar opciones visuales de seguimiento
+            document.querySelector(`input[name="tracking1"][value="${student.seguimiento1}"]`).checked = true;
+            document.querySelector(`input[name="partialEvaluation"][value="${student.evaluacionParcial}"]`).checked = true;
+            document.querySelector(`input[name="tracking2"][value="${student.seguimiento2}"]`).checked = true;
+            document.querySelector(`input[name="progressReview"][value="${student.revisionAvance}"]`).checked = true;
+            document.querySelector(`input[name="instructorEvaluation"][value="${student.evaluacionInstructor}"]`).checked = true;
+            document.querySelector(`input[name="examAssignment"][value="${student.asignacionHoraExamen}"]`).checked = true;
             
             // Documentación - Aquí se manejaría la visualización de archivos existentes
             const viewInstructorDocBtn = document.getElementById('viewInstructorDoc');
@@ -1593,25 +2309,33 @@
             // Mostrar el modal
             const editModal = new bootstrap.Modal(document.getElementById('editStudentModal'));
             editModal.show();
-            
-            // Inicializar Select2 en todos los selects DESPUÉS de que el modal esté visible
-            setTimeout(() => {
-                $('#studentCareer, #studentCampus, #practiceState, #tracking1, #partialEvaluation, #tracking2, #progressReview, #instructorEvaluation, #examAssignment').select2({
-                    theme: 'bootstrap-5',
-                    width: '100%',
-                    dropdownParent: $('#editStudentModal')
-                });
-            }, 300);
         }
 
         // Función para preparar el modal de agregar estudiante
         function prepareAddStudentModal() {
-            // Llenar selects de carrera y sede
-            fillSelectOptions(document.getElementById('newStudentCareer'), carreras, carreras[0]);
-            fillSelectOptions(document.getElementById('newStudentCampus'), sedes, sedes[0]);
+            // Datos por defecto
+            document.getElementById('newStudentName').value = '';
+            document.getElementById('newStudentRut').value = '';
+            document.getElementById('newStudentCareer').value = carreras[0];
+            document.getElementById('newStudentCampus').value = sedes[0];
+            
+            // Llenar selector visual de carrera
+            fillCareerSelector(
+                document.getElementById('newCareerSelector'),
+                document.getElementById('newCareerOptionsList'),
+                carreras[0]
+            );
+            
+            // Llenar selector visual de sede
+            fillCampusSelector(
+                document.getElementById('newCampusOptions'),
+                sedes[0]
+            );
             
             // Establecer valores por defecto
             document.getElementById('newPracticeSupervisor').value = obtenerEncargadoPractica(carreras[0], sedes[0]);
+            document.getElementById('newPracticeCenter').value = '';
+            document.getElementById('newPracticeInstructor').value = '';
             document.getElementById('newPracticeState').value = 'no-comienza';
             document.getElementById('newTracking1').value = 'no-comienza';
             document.getElementById('newPartialEvaluation').value = 'excelente';
@@ -1620,6 +2344,15 @@
             document.getElementById('newInstructorEvaluation').value = 'excelente';
             document.getElementById('newExamAssignment').value = 'no-comienza';
             document.getElementById('newFinalGrade').value = '4.0';
+            
+            // Seleccionar opciones por defecto
+            document.querySelector('input[name="newPracticeState"][value="no-comienza"]').checked = true;
+            document.querySelector('input[name="newTracking1"][value="no-comienza"]').checked = true;
+            document.querySelector('input[name="newPartialEvaluation"][value="excelente"]').checked = true;
+            document.querySelector('input[name="newTracking2"][value="no-comienza"]').checked = true;
+            document.querySelector('input[name="newProgressReview"][value="excelente"]').checked = true;
+            document.querySelector('input[name="newInstructorEvaluation"][value="excelente"]').checked = true;
+            document.querySelector('input[name="newExamAssignment"][value="no-comienza"]').checked = true;
             
             // Inicializar flatpickr en los campos de fecha
             flatpickr("#newStartDate, #newEndDate", {
@@ -1631,15 +2364,6 @@
             // Mostrar el modal
             const addModal = new bootstrap.Modal(document.getElementById('addStudentModal'));
             addModal.show();
-            
-            // Inicializar Select2 en todos los selects DESPUÉS de que el modal esté visible
-            setTimeout(() => {
-                $('#newStudentCareer, #newStudentCampus, #newPracticeState, #newTracking1, #newPartialEvaluation, #newTracking2, #newProgressReview, #newInstructorEvaluation, #newExamAssignment').select2({
-                    theme: 'bootstrap-5',
-                    width: '100%',
-                    dropdownParent: $('#addStudentModal')
-                });
-            }, 300);
         }
 
         // Función para guardar los cambios de un estudiante
@@ -1655,6 +2379,15 @@
                 const carrera = document.getElementById('studentCareer').value;
                 const sede = document.getElementById('studentCampus').value;
                 
+                // Obtener valores de los radio buttons
+                const practiceState = document.querySelector('input[name="practiceState"]:checked').value;
+                const tracking1 = document.querySelector('input[name="tracking1"]:checked').value;
+                const partialEvaluation = document.querySelector('input[name="partialEvaluation"]:checked').value;
+                const tracking2 = document.querySelector('input[name="tracking2"]:checked').value;
+                const progressReview = document.querySelector('input[name="progressReview"]:checked').value;
+                const instructorEvaluation = document.querySelector('input[name="instructorEvaluation"]:checked').value;
+                const examAssignment = document.querySelector('input[name="examAssignment"]:checked').value;
+                
                 // Actualizar datos del estudiante
                 studentsData[studentIndex] = {
                     ...studentsData[studentIndex],
@@ -1667,13 +2400,13 @@
                     instructor: document.getElementById('practiceInstructor').value,
                     fechaInicio: document.getElementById('startDate').value,
                     fechaTermino: document.getElementById('endDate').value,
-                    seguimiento1: document.getElementById('tracking1').value,
-                    evaluacionParcial: document.getElementById('partialEvaluation').value,
-                    seguimiento2: document.getElementById('tracking2').value,
-                    revisionAvance: document.getElementById('progressReview').value,
-                    evaluacionInstructor: document.getElementById('instructorEvaluation').value,
-                    finalizacionPractica: document.getElementById('practiceState').value,
-                    asignacionHoraExamen: document.getElementById('examAssignment').value,
+                    seguimiento1: tracking1,
+                    evaluacionParcial: partialEvaluation,
+                    seguimiento2: tracking2,
+                    revisionAvance: progressReview,
+                    evaluacionInstructor: instructorEvaluation,
+                    finalizacionPractica: practiceState,
+                    asignacionHoraExamen: examAssignment,
                     notaFinal: notaFinal
                 };
                 
@@ -1695,6 +2428,7 @@
                 // Actualizar interfaz
                 updateStatistics();
                 renderStudentsList();
+                setupFilterCareerOptions();
                 
                 // Mostrar mensaje de éxito
                 showAlert('Información del estudiante actualizada correctamente', 'success');
@@ -1715,6 +2449,15 @@
             let notaFinal = parseFloat(document.getElementById('newFinalGrade').value);
             notaFinal = Math.max(1.0, Math.min(7.0, notaFinal));
             
+            // Obtener valores de los radio buttons
+            const practiceState = document.querySelector('input[name="newPracticeState"]:checked').value;
+            const tracking1 = document.querySelector('input[name="newTracking1"]:checked').value;
+            const partialEvaluation = document.querySelector('input[name="newPartialEvaluation"]:checked').value;
+            const tracking2 = document.querySelector('input[name="newTracking2"]:checked').value;
+            const progressReview = document.querySelector('input[name="newProgressReview"]:checked').value;
+            const instructorEvaluation = document.querySelector('input[name="newInstructorEvaluation"]:checked').value;
+            const examAssignment = document.querySelector('input[name="newExamAssignment"]:checked').value;
+            
             const newStudent = {
                 id: newId,
                 nombre: document.getElementById('newStudentName').value,
@@ -1726,15 +2469,15 @@
                 instructor: document.getElementById('newPracticeInstructor').value,
                 fechaInicio: document.getElementById('newStartDate').value,
                 fechaTermino: document.getElementById('newEndDate').value,
-                seguimiento1: document.getElementById('newTracking1').value,
-                evaluacionParcial: document.getElementById('newPartialEvaluation').value,
-                seguimiento2: document.getElementById('newTracking2').value,
-                revisionAvance: document.getElementById('newProgressReview').value,
-                evaluacionInstructor: document.getElementById('newInstructorEvaluation').value,
+                seguimiento1: tracking1,
+                evaluacionParcial: partialEvaluation,
+                seguimiento2: tracking2,
+                revisionAvance: progressReview,
+                evaluacionInstructor: instructorEvaluation,
                 documentoInstructor: false,
-                finalizacionPractica: document.getElementById('newPracticeState').value,
+                finalizacionPractica: practiceState,
                 documentoFinalizacion: false,
-                asignacionHoraExamen: document.getElementById('newExamAssignment').value,
+                asignacionHoraExamen: examAssignment,
                 notaFinal: notaFinal
             };
             
@@ -1746,6 +2489,7 @@
             // Actualizar interfaz
             updateStatistics();
             renderStudentsList();
+            setupFilterCareerOptions();
             
             // Mostrar mensaje de éxito
             showAlert('Estudiante agregado correctamente', 'success');
@@ -1772,6 +2516,7 @@
                 // Actualizar interfaz
                 updateStatistics();
                 renderStudentsList();
+                setupFilterCareerOptions();
                 
                 // Mostrar mensaje de éxito
                 showAlert('Estudiante eliminado correctamente', 'success');
@@ -2381,7 +3126,7 @@
                 allowInput: true
             });
             
-            // Event listeners
+            // Event listeners para filtros
             
             // Filtro de búsqueda
             $('#searchStudent').on('input', function() {
@@ -2390,23 +3135,48 @@
                 renderStudentsList();
             });
             
-            // Filtro por carrera
-            $('#filterCareer').on('change', function() {
-                activeFilters.career = $(this).val();
-                currentPage = 1;
-                renderStudentsList();
-                
-                // Actualizar etiquetas de filtros activos
-                updateActiveFiltersDisplay();
-            });
-            
-            // Filtro por estado
-            $('#filterStatus').on('change', function() {
+            // Filtro por estado (radio buttons)
+            $('input[name="filterStatus"]').on('change', function() {
                 activeFilters.status = $(this).val();
                 currentPage = 1;
                 renderStudentsList();
+                updateActiveFiltersDisplay();
+            });
+            
+            // Filtro por carrera (selector visual)
+            $('#filterCareerBtn').on('click', function() {
+                $('#filterCareerSelector').toggleClass('active');
+            });
+            
+            // Cerrar selector de carrera al hacer clic fuera
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('#filterCareerSelector').length) {
+                    $('#filterCareerSelector').removeClass('active');
+                }
+            });
+            
+            // Seleccionar carrera desde el filtro
+            $(document).on('click', '.filter-career-option', function() {
+                const value = $(this).data('value');
                 
-                // Actualizar etiquetas de filtros activos
+                $('.filter-career-option').removeClass('selected');
+                $(this).addClass('selected');
+                
+                $('#filterCareerBtn').text(value ? value : 'Todas las carreras');
+                $('#filterCareer').val(value);
+                
+                if (value) {
+                    $('#filterCareerSelector').addClass('selected');
+                } else {
+                    $('#filterCareerSelector').removeClass('selected');
+                }
+                
+                $('#filterCareerSelector').removeClass('active');
+                
+                // Actualizar filtro
+                activeFilters.career = value;
+                currentPage = 1;
+                renderStudentsList();
                 updateActiveFiltersDisplay();
             });
             
@@ -2420,7 +3190,17 @@
                     tag.className = 'filter-tag';
                     tag.innerHTML = `Carrera: ${activeFilters.career} <i class="fas fa-times close"></i>`;
                     tag.querySelector('.close').addEventListener('click', () => {
-                        $('#filterCareer').val('').trigger('change');
+                        // Resetear filtro de carrera
+                        $('#filterCareer').val('');
+                        $('#filterCareerBtn').text('Todas las carreras');
+                        $('#filterCareerSelector').removeClass('selected');
+                        $('.filter-career-option').removeClass('selected');
+                        $('.filter-career-option[data-value=""]').addClass('selected');
+                        
+                        activeFilters.career = '';
+                        currentPage = 1;
+                        renderStudentsList();
+                        updateActiveFiltersDisplay();
                     });
                     activeFiltersContainer.appendChild(tag);
                 }
@@ -2434,32 +3214,133 @@
                     tag.className = 'filter-tag';
                     tag.innerHTML = `Estado: ${statusText} <i class="fas fa-times close"></i>`;
                     tag.querySelector('.close').addEventListener('click', () => {
-                        $('#filterStatus').val('').trigger('change');
+                        // Resetear filtro de estado
+                        $('input[name="filterStatus"][value=""]').prop('checked', true);
+                        
+                        activeFilters.status = '';
+                        currentPage = 1;
+                        renderStudentsList();
+                        updateActiveFiltersDisplay();
                     });
                     activeFiltersContainer.appendChild(tag);
                 }
             }
             
+            // Event listeners para selector de carrera en modales
+            $(document).on('click', '#careerOptionsBtn', function() {
+                $('#careerSelector').toggleClass('active');
+            });
+            
+            $(document).on('click', '#newCareerOptionsBtn', function() {
+                $('#newCareerSelector').toggleClass('active');
+            });
+            
+            // Seleccionar carrera en modal de edición
+            $(document).on('click', '#careerOptionsList .career-option-item', function() {
+                const value = $(this).data('value');
+                
+                $('#careerOptionsList .career-option-item').removeClass('selected');
+                $(this).addClass('selected');
+                
+                $('#careerOptionsBtn').text(value);
+                $('#studentCareer').val(value);
+                
+                $('#careerSelector').removeClass('active').addClass('selected');
+                
+                // Actualizar encargado de práctica
+                const sede = document.getElementById('studentCampus').value;
+                document.getElementById('practiceSupervisor').value = obtenerEncargadoPractica(value, sede);
+            });
+            
+            // Seleccionar carrera en modal de agregar
+            $(document).on('click', '#newCareerOptionsList .career-option-item', function() {
+                const value = $(this).data('value');
+                
+                $('#newCareerOptionsList .career-option-item').removeClass('selected');
+                $(this).addClass('selected');
+                
+                $('#newCareerOptionsBtn').text(value);
+                $('#newStudentCareer').val(value);
+                
+                $('#newCareerSelector').removeClass('active').addClass('selected');
+                
+                // Actualizar encargado de práctica
+                const sede = document.getElementById('newStudentCampus').value;
+                document.getElementById('newPracticeSupervisor').value = obtenerEncargadoPractica(value, sede);
+            });
+            
+            // Cerrar selectores de carrera al hacer clic fuera
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('#careerSelector').length) {
+                    $('#careerSelector').removeClass('active');
+                }
+                if (!$(e.target).closest('#newCareerSelector').length) {
+                    $('#newCareerSelector').removeClass('active');
+                }
+            });
+            
+            // Event listeners para radios de opciones visuales
+            $(document).on('change', 'input[name="practiceState"]', function() {
+                document.getElementById('practiceState').value = this.value;
+            });
+            
+            $(document).on('change', 'input[name="tracking1"]', function() {
+                document.getElementById('tracking1').value = this.value;
+            });
+            
+            $(document).on('change', 'input[name="partialEvaluation"]', function() {
+                document.getElementById('partialEvaluation').value = this.value;
+            });
+            
+            $(document).on('change', 'input[name="tracking2"]', function() {
+                document.getElementById('tracking2').value = this.value;
+            });
+            
+            $(document).on('change', 'input[name="progressReview"]', function() {
+                document.getElementById('progressReview').value = this.value;
+            });
+            
+            $(document).on('change', 'input[name="instructorEvaluation"]', function() {
+                document.getElementById('instructorEvaluation').value = this.value;
+            });
+            
+            $(document).on('change', 'input[name="examAssignment"]', function() {
+                document.getElementById('examAssignment').value = this.value;
+            });
+            
+            // Modal nuevo estudiante
+            $(document).on('change', 'input[name="newPracticeState"]', function() {
+                document.getElementById('newPracticeState').value = this.value;
+            });
+            
+            $(document).on('change', 'input[name="newTracking1"]', function() {
+                document.getElementById('newTracking1').value = this.value;
+            });
+            
+            $(document).on('change', 'input[name="newPartialEvaluation"]', function() {
+                document.getElementById('newPartialEvaluation').value = this.value;
+            });
+            
+            $(document).on('change', 'input[name="newTracking2"]', function() {
+                document.getElementById('newTracking2').value = this.value;
+            });
+            
+            $(document).on('change', 'input[name="newProgressReview"]', function() {
+                document.getElementById('newProgressReview').value = this.value;
+            });
+            
+            $(document).on('change', 'input[name="newInstructorEvaluation"]', function() {
+                document.getElementById('newInstructorEvaluation').value = this.value;
+            });
+            
+            $(document).on('change', 'input[name="newExamAssignment"]', function() {
+                document.getElementById('newExamAssignment').value = this.value;
+            });
+            
             // Editar estudiante
             $(document).on('click', '.edit-student', function() {
                 const studentId = parseInt($(this).data('id'));
                 fillEditModal(studentId);
-            });
-            
-            // Cambio en carrera o sede para actualizar encargado práctica (modal edición)
-            $(document).on('change', '#studentCareer, #studentCampus', function() {
-                const carrera = $('#studentCareer').val();
-                const sede = $('#studentCampus').val();
-                const encargado = obtenerEncargadoPractica(carrera, sede);
-                $('#practiceSupervisor').val(encargado);
-            });
-            
-            // Cambio en carrera o sede para actualizar encargado práctica (modal agregar)
-            $(document).on('change', '#newStudentCareer, #newStudentCampus', function() {
-                const carrera = $('#newStudentCareer').val();
-                const sede = $('#newStudentCampus').val();
-                const encargado = obtenerEncargadoPractica(carrera, sede);
-                $('#newPracticeSupervisor').val(encargado);
             });
             
             // Subir documento
@@ -2482,7 +3363,7 @@
             
             // Botón para eliminar estudiante
             $(document).on('click', '#deleteStudentBtn', function() {
-                const studentId = parseInt($('#studentId').val());
+                const studentId = parseInt($('#studentId').value);
                 showDeleteConfirmationModal(studentId);
                 $('#editStudentModal').modal('hide');
             });
