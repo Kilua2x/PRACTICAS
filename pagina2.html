@@ -1,158 +1,1737 @@
 <!-- pagina2.html -->
 <!DOCTYPE html>
-<html lang='es'>
+<html lang="es">
 <head>
-    <meta charset='UTF-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>Seguimiento de Prácticas Profesionales - Facultad de Humanidades</title>
-    <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' rel='stylesheet'>
-    <link href='https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css' rel='stylesheet'>
-    <link href='https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/6.3.7/tippy.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistema de seguimiento de prácticas profesionales para la Facultad de Humanidades - Universidad de Aconcagua">
+    <title>Seguimiento de Prácticas - Facultad de Humanidades | UAC</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Flatpickr -->
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <!-- Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+    <!-- Estilos personalizados -->
     <style>
-        body { padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .dataTables_wrapper { padding: 20px 0; }
-        .container-fluid { max-width: 100%; overflow-x: auto; }
-        .estado-no-comienza { background-color: #ffcccc; color: #990000; }
-        .estado-en-proceso { background-color: #ffffcc; color: #999900; }
-        .estado-completada { background-color: #ccffcc; color: #009900; }
-        .evaluacion-excelente { color: #009900; }
-        .evaluacion-malo { color: #990000; }
-        .chart-container { height: 300px; margin-bottom: 30px; }
-        .documento-adjuntado { background-color: #ccffcc; }
-        #dashboard { margin-top: 50px; }
-        .dashboard-card { background-color: #f8f9fa; border-radius: 10px; padding: 20px; margin-bottom: 20px; }
-        .btn-volver { position: fixed; top: 20px; left: 20px; z-index: 1000; }
+        :root {
+            --primary-color: #8E44AD; /* Morado para Humanidades */
+            --primary-light: #9B59B6;
+            --secondary-color: #FFA500;
+            --accent-color: #ff8c00;
+            --light-bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --muted-text: #6c757d;
+            
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            
+            --border-radius: 10px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            padding: 0;
+            margin: 0;
+        }
+        
+        .navbar {
+            background-color: var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 2.5rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .content-wrapper {
+            margin: 2rem auto;
+        }
+        
+        /* Card de estudiante */
+        .student-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            transition: var(--transition);
+            border: none;
+        }
+        
+        .student-card:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            transform: translateY(-3px);
+        }
+        
+        .student-card .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.25rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .student-card .card-body {
+            padding: 1.5rem;
+        }
+        
+        .student-info {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .student-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+        }
+        
+        .student-details {
+            flex: 1;
+        }
+        
+        .student-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--primary-color);
+        }
+        
+        .student-id {
+            font-size: 1rem;
+            color: var(--muted-text);
+            margin-bottom: 0.5rem;
+        }
+        
+        .student-career, .student-campus {
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .progress-section {
+            margin-top: 1.5rem;
+        }
+        
+        .progress-title {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            border-radius: 5px;
+        }
+        
+        .stage-badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .stage-not-started {
+            background-color: #f8d7da;
+            color: var(--danger-color);
+        }
+        
+        .stage-in-progress {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .stage-completed {
+            background-color: #d4edda;
+            color: var(--success-color);
+        }
+        
+        .status-not-started { color: var(--danger-color); }
+        .status-in-progress { color: var(--warning-color); }
+        .status-completed { color: var(--success-color); }
+        
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+        
+        .action-buttons .btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        
+        .btn-edit {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+        
+        .btn-edit:hover {
+            background-color: var(--primary-light);
+            color: white;
+        }
+        
+        .btn-document {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+        }
+        
+        .btn-document:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        /* Filtros y búsqueda */
+        .filters-section {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box .form-control {
+            padding-left: 40px;
+            height: 45px;
+            border-radius: 50px;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted-text);
+        }
+        
+        .filter-tag {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .filter-tag .close {
+            margin-left: 0.5rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        
+        /* Stats cards */
+        .stats-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+            text-align: center;
+            height: 100%;
+            transition: var(--transition);
+            border: none;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .stats-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .stats-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .stats-label {
+            font-size: 1rem;
+            color: var(--muted-text);
+            margin-bottom: 0.75rem;
+        }
+        
+        .stats-progress {
+            height: 8px;
+            margin-top: 1rem;
+            border-radius: 4px;
+        }
+        
+        /* Modal de edición */
+        .modal-header {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .modal-body {
+            padding: 2rem;
+        }
+        
+        .form-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-section-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 0.5rem;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Pagination */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .pagination .page-link {
+            color: var(--primary-color);
+            border-radius: 5px;
+            margin: 0 3px;
+        }
+        
+        .pagination .page-item.active .page-link {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5rem 0;
+            margin-top: 3rem;
+        }
+        
+        /* Tooltip y Popovers */
+        .tooltip-inner {
+            max-width: 250px;
+            padding: 0.5rem 1rem;
+            background-color: var(--primary-color);
+            font-size: 0.875rem;
+        }
+        
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fadeIn {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        /* Ajustes responsivos */
+        @media (max-width: 992px) {
+            .student-card .card-body {
+                padding: 1.25rem;
+            }
+            
+            .student-photo {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+            }
+            
+            .student-name {
+                font-size: 1.3rem;
+            }
+            
+            .action-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .action-buttons .btn {
+                width: 100%;
+                justify-content: center;
+                margin-bottom: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .student-info {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .student-details {
+                width: 100%;
+            }
+            
+            .filters-section .row {
+                flex-direction: column;
+            }
+            
+            .filter-dropdown {
+                margin-bottom: 1rem;
+            }
+        }
+        
+        /* Nota final */
+        .final-grade {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 0.4rem 0.75rem;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+        
+        .final-grade.high {
+            color: var(--success-color);
+        }
+        
+        .final-grade.medium {
+            color: var(--warning-color);
+        }
+        
+        .final-grade.low {
+            color: var(--danger-color);
+        }
+        
+        /* Fix para select2 en modales */
+        .select2-container--bootstrap-5 {
+            z-index: 1056 !important;
+        }
+        
+        /* Estilos para la vista previa de gráficos */
+        .chart-preview-container {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .chart-preview-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .chart-canvas-container {
+            height: 200px;
+            margin-bottom: 10px;
+        }
+        
+        /* Estilos para las opciones tipo encuesta */
+        .option-selector {
+            margin-bottom: 1.5rem;
+        }
+        
+        .option-selector .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .option-item {
+            position: relative;
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .option-item input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .option-item label {
+            display: block;
+            padding: 0.75rem;
+            text-align: center;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            background-color: white;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .option-item:hover label {
+            border-color: var(--primary-color);
+        }
+        
+        .option-item input[type="radio"]:checked + label {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        /* Opciones para estados de seguimiento */
+        .option-item.status-pending label {
+            border-color: var(--danger-color);
+            color: var(--danger-color);
+        }
+        
+        .option-item.status-in-progress label {
+            border-color: var(--warning-color);
+            color: var(--warning-color);
+        }
+        
+        .option-item.status-completed label {
+            border-color: var(--success-color);
+            color: var(--success-color);
+        }
+        
+        .option-item.status-pending input[type="radio"]:checked + label {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .option-item.status-in-progress input[type="radio"]:checked + label {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .option-item.status-completed input[type="radio"]:checked + label {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        /* Opciones para evaluación */
+        .option-item.eval-excellent label {
+            border-color: #28a745;
+            color: #28a745;
+        }
+        
+        .option-item.eval-good label {
+            border-color: #17a2b8;
+            color: #17a2b8;
+        }
+        
+        .option-item.eval-sufficient label {
+            border-color: #ffc107;
+            color: #ffc107;
+        }
+        
+        .option-item.eval-deficient label {
+            border-color: #fd7e14;
+            color: #fd7e14;
+        }
+        
+        .option-item.eval-bad label {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+        
+        .option-item.eval-excellent input[type="radio"]:checked + label {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .option-item.eval-good input[type="radio"]:checked + label {
+            background-color: #17a2b8;
+            color: white;
+        }
+        
+        .option-item.eval-sufficient input[type="radio"]:checked + label {
+            background-color: #ffc107;
+            color: white;
+        }
+        
+        .option-item.eval-deficient input[type="radio"]:checked + label {
+            background-color: #fd7e14;
+            color: white;
+        }
+        
+        .option-item.eval-bad input[type="radio"]:checked + label {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        /* Selector de carrera */
+        .career-selector {
+            margin-bottom: 1.5rem;
+        }
+        
+        .career-selector .form-label {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .career-options-btn {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            text-align: left;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            background-color: white;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .career-options-btn:hover {
+            border-color: var(--primary-color);
+        }
+        
+        .career-options-btn::after {
+            content: '\f107';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .career-selector.active .career-options-btn::after {
+            content: '\f106';
+        }
+        
+        .career-selector.selected .career-options-btn {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .career-options-list {
+            display: none;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 2px solid #dee2e6;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            margin-top: -2px;
+        }
+        
+        .career-selector.active .career-options-list {
+            display: block;
+        }
+        
+        .career-option-item {
+            padding: 0.75rem;
+            border-bottom: 1px solid #dee2e6;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .career-option-item:last-child {
+            border-bottom: none;
+        }
+        
+        .career-option-item:hover {
+            background-color: #f8f9fa;
+            color: var(--primary-color);
+        }
+        
+        .career-option-item.selected {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* Selector de sede */
+        .campus-selector {
+            margin-bottom: 1.5rem;
+        }
+        
+        .campus-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .campus-option-item {
+            flex: 1;
+            min-width: 100px;
+            position: relative;
+        }
+        
+        .campus-option-item input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .campus-option-item label {
+            display: block;
+            padding: 1rem 0.75rem;
+            text-align: center;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        
+        .campus-option-item:hover label {
+            border-color: var(--primary-color);
+        }
+        
+        .campus-option-item input[type="radio"]:checked + label {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        /* Filtros de estado visuales */
+        .filter-status-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .filter-status-item {
+            flex: 1;
+            min-width: 100px;
+            position: relative;
+        }
+        
+        .filter-status-item input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .filter-status-item label {
+            display: block;
+            padding: 0.75rem;
+            text-align: center;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        
+        .filter-status-item.all label {
+            border-color: #6c757d;
+            color: #6c757d;
+        }
+        
+        .filter-status-item.pending label {
+            border-color: var(--danger-color);
+            color: var(--danger-color);
+        }
+        
+        .filter-status-item.in-progress label {
+            border-color: var(--warning-color);
+            color: var(--warning-color);
+        }
+        
+        .filter-status-item.completed label {
+            border-color: var(--success-color);
+            color: var(--success-color);
+        }
+        
+        .filter-status-item.all input[type="radio"]:checked + label {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .filter-status-item.pending input[type="radio"]:checked + label {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .filter-status-item.in-progress input[type="radio"]:checked + label {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .filter-status-item.completed input[type="radio"]:checked + label {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        /* Selector de carrera en filtro */
+        .filter-career-selector {
+            margin-bottom: 1rem;
+        }
+        
+        .filter-career-btn {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            text-align: left;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            background-color: white;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .filter-career-btn:hover {
+            border-color: var(--primary-color);
+        }
+        
+        .filter-career-btn::after {
+            content: '\f107';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .filter-career-selector.active .filter-career-btn::after {
+            content: '\f106';
+        }
+        
+        .filter-career-selector.selected .filter-career-btn {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .filter-career-options {
+            display: none;
+            position: absolute;
+            width: 100%;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            background-color: white;
+            z-index: 1000;
+            margin-top: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .filter-career-selector.active .filter-career-options {
+            display: block;
+        }
+        
+        .filter-career-option {
+            padding: 0.75rem;
+            border-bottom: 1px solid #dee2e6;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .filter-career-option:last-child {
+            border-bottom: none;
+        }
+        
+        .filter-career-option:hover {
+            background-color: #f8f9fa;
+            color: var(--primary-color);
+        }
+        
+        .filter-career-option.selected {
+            background-color: var(--primary-color);
+            color: white;
+        }
     </style>
 </head>
 <body>
-    <div class='container-fluid'>
-        <button id='volverButton' class='btn btn-secondary btn-volver'>Volver a página principal</button>
-        <h1 class='text-center mb-4'>Seguimiento de Prácticas Profesionales - Facultad de Humanidades</h1>
-        <table id='seguimientoPracticas' class='table table-striped table-bordered'>
-            <thead>
-                <tr>
-                    <th>Nombre y Apellidos</th>
-                    <th>RUT</th>
-                    <th>Carrera</th>
-                    <th>SEDE</th>
-                    <th>Nivel de práctica</th>
-                    <th>Supervisor de práctica</th>
-                    <th>Centro de práctica</th>
-                    <th>Nombre instructor</th>
-                    <th>Fecha de Inicio</th>
-                    <th>Fecha de Término</th>
-                    <th>Seguimiento 1</th>
-                    <th>Seguimiento 2</th>
-                    <th>Evaluación instructor</th>
-                    <th>Documentación instructor</th>
-                    <th>Finalización práctica</th>
-                    <th>Documentación finalización</th>
-                    <th>Evaluación final de práctica intermedia o profesional</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Las filas se generarán dinámicamente aquí -->
-            </tbody>
-        </table>
-        <div class='text-center mt-3'>
-            <button id='exportButton' class='btn btn-primary'>Exportar a Excel</button>
-            <button id='saveButton' class='btn btn-success'>Guardar</button>
-            <button id='downloadDashboardButton' class='btn btn-info'>Descargar Dashboard (PDF)</button>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-university me-2"></i>Seguimiento Prácticas UAC
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">
+                            <i class="fas fa-home me-1"></i> Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <button id="logoutBtn" class="btn btn-danger ms-2">
+                            <i class="fas fa-sign-out-alt me-1"></i> Cerrar Sesión
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="page-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1><i class="fas fa-user-graduate me-2"></i> Seguimiento de Prácticas</h1>
+                    <p class="lead">Facultad de Humanidades</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <a href="index.html" id="volverPrincipal" class="btn btn-light">
+                        <i class="fas fa-arrow-left me-1"></i> Volver al Menú
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container content-wrapper">
+        <!-- Estadísticas generales -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="mb-4"><i class="fas fa-chart-simple me-2"></i> Estadísticas Generales</h2>
+            </div>
+            
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="stats-card">
+                    <div class="stats-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stats-value" id="totalStudentsValue">0</div>
+                    <div class="stats-label">Estudiantes en Prácticas</div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="stats-card">
+                    <div class="stats-icon text-warning">
+                        <i class="fas fa-spinner"></i>
+                    </div>
+                    <div class="stats-value text-warning" id="inProgressValue">0</div>
+                    <div class="stats-label">En Proceso</div>
+                    <div class="progress stats-progress">
+                        <div class="progress-bar bg-warning" id="inProgressBar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="stats-card">
+                    <div class="stats-icon text-success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stats-value text-success" id="completedValue">0</div>
+                    <div class="stats-label">Completadas</div>
+                    <div class="progress stats-progress">
+                        <div class="progress-bar bg-success" id="completedBar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="stats-card">
+                    <div class="stats-icon text-danger">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stats-value text-danger" id="pendingValue">0</div>
+                    <div class="stats-label">Pendientes</div>
+                    <div class="progress stats-progress">
+                        <div class="progress-bar bg-danger" id="pendingBar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Botones de acción generales -->
+            <div class="col-12 text-center mt-2 mb-4">
+                <button id="generateReportBtn" class="btn btn-primary me-2">
+                    <i class="fas fa-file-pdf me-1"></i> Generar Informe Completo
+                </button>
+                <button id="exportExcelBtn" class="btn btn-success me-2">
+                    <i class="fas fa-file-excel me-1"></i> Exportar a Excel
+                </button>
+                <button id="addStudentBtn" class="btn btn-secondary">
+                    <i class="fas fa-user-plus me-1"></i> Agregar Estudiante
+                </button>
+            </div>
         </div>
         
-        <!-- Dashboard -->
-        <div id='dashboard' class='row mt-5'>
-            <h2 class='text-center mb-4'>Dashboard de Prácticas Profesionales</h2>
-            
-            <div class='col-md-4'>
-                <div class='dashboard-card'>
-                    <h4>Distribución por Carreras</h4>
-                    <div class='chart-container'>
-                        <canvas id='carrerasChart'></canvas>
+        <!-- Filtros y búsqueda -->
+        <div class="filters-section">
+            <div class="row">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="searchStudent" class="form-control" placeholder="Buscar por nombre, RUT o centro de práctica...">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <!-- Selector visual de carrera para filtro -->
+                            <div class="filter-career-selector" id="filterCareerSelector">
+                                <div class="filter-career-btn" id="filterCareerBtn">
+                                    Todas las carreras
+                                </div>
+                                <div class="filter-career-options" id="filterCareerOptions">
+                                    <div class="filter-career-option selected" data-value="">Todas las carreras</div>
+                                    <!-- Las opciones se cargarán dinámicamente -->
+                                </div>
+                                <input type="hidden" id="filterCareer" value="">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- Opciones visuales para filtro de estado -->
+                            <div class="filter-status-options">
+                                <div class="filter-status-item all">
+                                    <input type="radio" name="filterStatus" id="filterStatusAll" value="" checked>
+                                    <label for="filterStatusAll">Todos</label>
+                                </div>
+                                <div class="filter-status-item pending">
+                                    <input type="radio" name="filterStatus" id="filterStatusPending" value="no-comienza">
+                                    <label for="filterStatusPending">Pendiente</label>
+                                </div>
+                                <div class="filter-status-item in-progress">
+                                    <input type="radio" name="filterStatus" id="filterStatusInProgress" value="en-proceso">
+                                    <label for="filterStatusInProgress">En Proceso</label>
+                                </div>
+                                <div class="filter-status-item completed">
+                                    <input type="radio" name="filterStatus" id="filterStatusCompleted" value="completada">
+                                    <label for="filterStatusCompleted">Completada</label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             
-            <div class='col-md-4'>
-                <div class='dashboard-card'>
-                    <h4>Distribución por Sedes</h4>
-                    <div class='chart-container'>
-                        <canvas id='sedesChart'></canvas>
-                    </div>
-                </div>
+            <div class="mt-3" id="activeFilters">
+                <!-- Etiquetas de filtros activos se cargarán aquí -->
             </div>
-            
-            <div class='col-md-4'>
-                <div class='dashboard-card'>
-                    <h4>Estados de Prácticas</h4>
-                    <div class='chart-container'>
-                        <canvas id='estadosPracticasChart'></canvas>
-                    </div>
-                </div>
-            </div>
-            
-            <div class='col-md-4'>
-                <div class='dashboard-card'>
-                    <h4>Evaluación Final</h4>
-                    <div class='chart-container'>
-                        <canvas id='evaluacionFinalChart'></canvas>
-                    </div>
-                </div>
-            </div>
-            
-            <div class='col-md-4'>
-                <div class='dashboard-card'>
-                    <h4>Duración Promedio por Carrera</h4>
-                    <div class='chart-container'>
-                        <canvas id='duracionPromedioChart'></canvas>
-                    </div>
-                </div>
-            </div>
-            
-            <div class='col-md-4'>
-                <div class='dashboard-card'>
-                    <h4>Nivel de Práctica</h4>
-                    <div class='chart-container'>
-                        <canvas id='nivelPracticaChart'></canvas>
-                    </div>
-                </div>
-            </div>
-            
-            <div class='col-md-12'>
-                <div class='dashboard-card'>
-                    <h4>Estadísticas Generales</h4>
-                    <div id='estadisticasGenerales'></div>
-                </div>
-            </div>
+        </div>
+        
+        <!-- Listado de estudiantes -->
+        <div id="studentsList" class="mt-4">
+            <!-- Las tarjetas se generarán dinámicamente -->
+        </div>
+        
+        <!-- Paginación -->
+        <div class="pagination-container">
+            <nav aria-label="Navegación de páginas">
+                <ul class="pagination" id="pagination">
+                    <!-- La paginación se generará dinámicamente -->
+                </ul>
+            </nav>
+        </div>
+    </main>
 
-            <div class='col-md-6'>
-                <div class='dashboard-card'>
-                    <h4>Duración Promedio y Moda por Carrera</h4>
-                    <div class='chart-container'>
-                        <canvas id='duracionPromedioYModaChart'></canvas>
-                    </div>
+    <!-- Modal para editar estudiante -->
+    <div class="modal fade" id="editStudentModal" tabindex="-1" aria-labelledby="editStudentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editStudentModalLabel">Editar Información del Estudiante</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editStudentForm">
+                        <input type="hidden" id="studentId">
+                        
+                        <!-- Información personal -->
+                        <div class="form-section">
+                            <h5 class="form-section-title"><i class="fas fa-user me-2"></i>Información Personal</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="studentName" class="form-label">Nombre completo</label>
+                                    <input type="text" class="form-control" id="studentName" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="studentRut" class="form-label">RUT</label>
+                                    <input type="text" class="form-control" id="studentRut" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <!-- Selector visual de carrera -->
+                                    <div class="career-selector" id="careerSelector">
+                                        <label class="form-label">Carrera</label>
+                                        <div class="career-options-btn" id="careerOptionsBtn">Seleccionar carrera</div>
+                                        <div class="career-options-list" id="careerOptionsList">
+                                            <!-- Las opciones se cargarán dinámicamente -->
+                                        </div>
+                                        <input type="hidden" id="studentCareer" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <!-- Opciones visuales para sede -->
+                                    <div class="campus-selector">
+                                        <label class="form-label">Sede</label>
+                                        <div class="campus-options" id="campusOptions">
+                                            <!-- Las opciones se cargarán dinámicamente -->
+                                        </div>
+                                        <input type="hidden" id="studentCampus" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Información de práctica -->
+                        <div class="form-section">
+                            <h5 class="form-section-title"><i class="fas fa-building me-2"></i>Información de Práctica</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="practiceSupervisor" class="form-label">Supervisor de práctica</label>
+                                    <input type="text" class="form-control" id="practiceSupervisor" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="practiceCenter" class="form-label">Centro de práctica</label>
+                                    <input type="text" class="form-control" id="practiceCenter" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="practiceInstructor" class="form-label">Nombre instructor</label>
+                                    <input type="text" class="form-control" id="practiceInstructor" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <!-- Opciones visuales para nivel de práctica -->
+                                    <div class="option-selector">
+                                        <label class="form-label">Nivel de práctica</label>
+                                        <div class="options-container">
+                                            <div class="option-item">
+                                                <input type="radio" name="practiceLevel" id="practiceLevelInt1" value="practica-intermedia-1">
+                                                <label for="practiceLevelInt1">Intermedia 1</label>
+                                            </div>
+                                            <div class="option-item">
+                                                <input type="radio" name="practiceLevel" id="practiceLevelInt2" value="practica-intermedia-2">
+                                                <label for="practiceLevelInt2">Intermedia 2</label>
+                                            </div>
+                                            <div class="option-item">
+                                                <input type="radio" name="practiceLevel" id="practiceLevelPro" value="practica-profesional">
+                                                <label for="practiceLevelPro">Profesional</label>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="practiceLevel" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="startDate" class="form-label">Fecha de inicio</label>
+                                    <input type="text" class="form-control datepicker" id="startDate">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="endDate" class="form-label">Fecha de término</label>
+                                    <input type="text" class="form-control datepicker" id="endDate">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Seguimiento y evaluación -->
+                        <div class="form-section">
+                            <h5 class="form-section-title"><i class="fas fa-tasks me-2"></i>Seguimiento y Evaluación</h5>
+                            
+                            <!-- Opciones visuales para Seguimiento 1 -->
+                            <div class="option-selector">
+                                <label class="form-label">Seguimiento 1</label>
+                                <div class="options-container">
+                                    <div class="option-item status-pending">
+                                        <input type="radio" name="tracking1" id="tracking1Pending" value="no-comienza">
+                                        <label for="tracking1Pending">No comienza</label>
+                                    </div>
+                                    <div class="option-item status-in-progress">
+                                        <input type="radio" name="tracking1" id="tracking1InProgress" value="en-proceso">
+                                        <label for="tracking1InProgress">En proceso</label>
+                                    </div>
+                                    <div class="option-item status-completed">
+                                        <input type="radio" name="tracking1" id="tracking1Completed" value="completada">
+                                        <label for="tracking1Completed">Completada</label>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="tracking1">
+                            </div>
+                            
+                            <!-- Opciones visuales para Seguimiento 2 -->
+                            <div class="option-selector">
+                                <label class="form-label">Seguimiento 2</label>
+                                <div class="options-container">
+                                    <div class="option-item status-pending">
+                                        <input type="radio" name="tracking2" id="tracking2Pending" value="no-comienza">
+                                        <label for="tracking2Pending">No comienza</label>
+                                    </div>
+                                    <div class="option-item status-in-progress">
+                                        <input type="radio" name="tracking2" id="tracking2InProgress" value="en-proceso">
+                                        <label for="tracking2InProgress">En proceso</label>
+                                    </div>
+                                    <div class="option-item status-completed">
+                                        <input type="radio" name="tracking2" id="tracking2Completed" value="completada">
+                                        <label for="tracking2Completed">Completada</label>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="tracking2">
+                            </div>
+                            
+                            <!-- Opciones visuales para Evaluación instructor -->
+                            <div class="option-selector">
+                                <label class="form-label">Evaluación instructor</label>
+                                <div class="options-container">
+                                    <div class="option-item eval-excellent">
+                                        <input type="radio" name="instructorEvaluation" id="instructorEvalExcellent" value="excelente">
+                                        <label for="instructorEvalExcellent">Excelente</label>
+                                    </div>
+                                    <div class="option-item eval-good">
+                                        <input type="radio" name="instructorEvaluation" id="instructorEvalGood" value="bien">
+                                        <label for="instructorEvalGood">Bien</label>
+                                    </div>
+                                    <div class="option-item eval-sufficient">
+                                        <input type="radio" name="instructorEvaluation" id="instructorEvalSufficient" value="suficiente">
+                                        <label for="instructorEvalSufficient">Suficiente</label>
+                                    </div>
+                                    <div class="option-item eval-deficient">
+                                        <input type="radio" name="instructorEvaluation" id="instructorEvalDeficient" value="deficiente">
+                                        <label for="instructorEvalDeficient">Deficiente</label>
+                                    </div>
+                                    <div class="option-item eval-bad">
+                                        <input type="radio" name="instructorEvaluation" id="instructorEvalBad" value="malo">
+                                        <label for="instructorEvalBad">Malo</label>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="instructorEvaluation">
+                            </div>
+                            
+                            <!-- Opciones visuales para Finalización práctica -->
+                            <div class="option-selector">
+                                <label class="form-label">Finalización práctica</label>
+                                <div class="options-container">
+                                    <div class="option-item status-pending">
+                                        <input type="radio" name="practiceState" id="practiceStatePending" value="no-comienza">
+                                        <label for="practiceStatePending">No comienza</label>
+                                    </div>
+                                    <div class="option-item status-in-progress">
+                                        <input type="radio" name="practiceState" id="practiceStateInProgress" value="en-proceso">
+                                        <label for="practiceStateInProgress">En proceso</label>
+                                    </div>
+                                    <div class="option-item status-completed">
+                                        <input type="radio" name="practiceState" id="practiceStateCompleted" value="completada">
+                                        <label for="practiceStateCompleted">Completada</label>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="practiceState" required>
+                            </div>
+                            
+                            <!-- Opciones visuales para Evaluación final -->
+                            <div class="option-selector">
+                                <label class="form-label">Evaluación final</label>
+                                <div class="options-container">
+                                    <div class="option-item status-pending">
+                                        <input type="radio" name="finalEvaluation" id="finalEvaluationPending" value="no-comienza">
+                                        <label for="finalEvaluationPending">No comienza</label>
+                                    </div>
+                                    <div class="option-item status-in-progress">
+                                        <input type="radio" name="finalEvaluation" id="finalEvaluationInProgress" value="en-proceso">
+                                        <label for="finalEvaluationInProgress">En proceso</label>
+                                    </div>
+                                    <div class="option-item status-completed">
+                                        <input type="radio" name="finalEvaluation" id="finalEvaluationCompleted" value="completada">
+                                        <label for="finalEvaluationCompleted">Completada</label>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="finalEvaluation">
+                            </div>
+                        </div>
+                        
+                        <!-- Documentación -->
+                        <div class="form-section">
+                            <h5 class="form-section-title"><i class="fas fa-file-alt me-2"></i>Documentación</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Documentación instructor</label>
+                                    <div class="input-group">
+                                        <input type="file" class="form-control" id="instructorDoc">
+                                        <button class="btn btn-outline-secondary" type="button" id="viewInstructorDoc" disabled>
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Documentación finalización</label>
+                                    <div class="input-group">
+                                        <input type="file" class="form-control" id="completionDoc">
+                                        <button class="btn btn-outline-secondary" type="button" id="viewCompletionDoc" disabled>
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-end mt-4">
+                            <button type="button" class="btn btn-danger me-2" id="deleteStudentBtn">
+                                <i class="fas fa-trash-alt me-1"></i> Eliminar Estudiante
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>
-    <script src='https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js'></script>
-    <script src='https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js'></script>
-    <script src='https://cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js'></script>
-    <script src='https://cdn.datatables.net/buttons/2.0.1/js/buttons.html5.min.js'></script>
-    <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js'></script>
-    <script src='https://cdn.jsdelivr.net/npm/flatpickr'></script>
-    <script src='https://npmcdn.com/flatpickr/dist/l10n/es.js'></script>
-    <script src='https://cdn.jsdelivr.net/npm/chart.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js'></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/6.3.7/tippy.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Modal para agregar estudiante -->
+    <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addStudentModalLabel">Agregar Nuevo Estudiante</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addStudentForm">
+                        <!-- Información personal -->
+                        <div class="form-section">
+                            <h5 class="form-section-title"><i class="fas fa-user me-2"></i>Información Personal</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="newStudentName" class="form-label">Nombre completo</label>
+                                    <input type="text" class="form-control" id="newStudentName" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="newStudentRut" class="form-label">RUT</label>
+                                    <input type="text" class="form-control" id="newStudentRut" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <!-- Selector visual de carrera -->
+                                    <div class="career-selector" id="newCareerSelector">
+                                        <label class="form-label">Carrera</label>
+                                        <div class="career-options-btn" id="newCareerOptionsBtn">Seleccionar carrera</div>
+                                        <div class="career-options-list" id="newCareerOptionsList">
+                                            <!-- Las opciones se cargarán dinámicamente -->
+                                        </div>
+                                        <input type="hidden" id="newStudentCareer" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <!-- Opciones visuales para sede -->
+                                    <div class="campus-selector">
+                                        <label class="form-label">Sede</label>
+                                        <div class="campus-options" id="newCampusOptions">
+                                            <!-- Las opciones se cargarán dinámicamente -->
+                                        </div>
+                                        <input type="hidden" id="newStudentCampus" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Información de práctica -->
+                        <div class="form-section">
+                            <h5 class="form-section-title"><i class="fas fa-building me-2"></i>Información de Práctica</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="newPracticeSupervisor" class="form-label">Supervisor de práctica</label>
+                                    <input type="text" class="form-control" id="newPracticeSupervisor" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="newPracticeCenter" class="form-label">Centro de práctica</label>
+                                    <input type="text" class="form-control" id="newPracticeCenter" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="newPracticeInstructor" class="form-label">Nombre instructor</label>
+                                    <input type="text" class="form-control" id="newPracticeInstructor" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <!-- Opciones visuales para nivel de práctica -->
+                                    <div class="option-selector">
+                                        <label class="form-label">Nivel de práctica</label>
+                                        <div class="options-container">
+                                            <div class="option-item">
+                                                <input type="radio" name="newPracticeLevel" id="newPracticeLevelInt1" value="practica-intermedia-1">
+                                                <label for="newPracticeLevelInt1">Intermedia 1</label>
+                                            </div>
+                                            <div class="option-item">
+                                                <input type="radio" name="newPracticeLevel" id="newPracticeLevelInt2" value="practica-intermedia-2">
+                                                <label for="newPracticeLevelInt2">Intermedia 2</label>
+                                            </div>
+                                            <div class="option-item">
+                                                <input type="radio" name="newPracticeLevel" id="newPracticeLevelPro" value="practica-profesional">
+                                                <label for="newPracticeLevelPro">Profesional</label>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="newPracticeLevel" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="newStartDate" class="form-label">Fecha de inicio</label>
+                                    <input type="text" class="form-control datepicker" id="newStartDate">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="newEndDate" class="form-label">Fecha de término</label>
+                                    <input type="text" class="form-control datepicker" id="newEndDate">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Seguimiento y evaluación -->
+                        <div class="form-section">
+                            <h5 class="form-section-title"><i class="fas fa-tasks me-2"></i>Seguimiento y Evaluación</h5>
+                            
+                            <!-- Opciones visuales para Seguimiento 1 -->
+                            <div class="option-selector">
+                                <label class="form-label">Seguimiento 1</label>
+                                <div class="options-container">
+                                    <div class="option-item status-pending">
+                                        <input type="radio" name="newTracking1" id="newTracking1Pending" value="no-comienza">
+                                        <label for="newTracking1Pending">No comienza</label>
+                                    </div>
+                                    <div class="option-item status-in-progress">
+                                        <input type="radio" name="newTracking1" id="newTracking1InProgress" value="en-proceso">
+                                        <label for="newTracking1InProgress">En proceso</label>
+                                    </div>
+                                    <div class="option-item status-completed">
+                                        <input type="radio" name="newTracking1" id="newTracking1Completed" value="completada">
+                                        <label for="newTracking1Completed">Completada</label>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="newTracking1">
+                            </div>
+                            
+                            <!-- Opciones visuales para Seguimiento 2 -->
+                            <div class="option-selector">
+                                <label class="form-label">Seguimiento 2</label>
+                                <div class="options-container">
+                                    <div class="option-item status-pending">
+                                        <input type="radio" name="newTracking2" id="newTracking2Pending" value="no-comienza">
+                                        <label for="newTracking2Pending">No comienza</label>
+                                    </div>
+                                    <div class="option-item status-in-progress">
+                                        <input type="radio" name="newTracking2" id="newTracking2InProgress" value="en-proceso">
+                                        <label for="newTracking2InProgress">En proceso</label>
+                                    </div>
+                                    <div class="option-item status-completed">
+                                        <input type="radio" name="newTracking2" id="newTracking2Completed" value="completada">
+                                        <label for="newTracking2Completed">Completada</label>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="newTracking2">
+                            </div>
+                            
+                            <!-- Opciones visuales para Evaluación instructor -->
+                            <div class="option-selector">
+                                <label class="form-label">Evaluación instructor</label>
+                                <div class="options-container">
+                                    <div class="option-item eval-excellent">
+                                        <input type="radio" name="newInstructorEvaluation" id="newInstructorEvalExcellent" value="excelente">
+                                        <label for="newInstructorEvalExcellent">Excelente</label>
+                                    </div>
+                                    <div class="option-item eval-good">
+                                        <input type="radio" name="newInstructorEvaluation" id="newInstructorEvalGood" value="bien">
+                                        <label for="newInstructorEvalGood">Bien</label>
+                                    </div>
+                                    <div class="option-item eval-sufficient">
+                                        <input type="radio" name="newInstructorEvaluation" id="newInstructorEvalSufficient" value="suficiente">
+                                        <label for="newInstructorEvalSufficient">Suficiente</label>
+                                    </div>
+                                    <div class="option-item eval-deficient">
+                                        <input type="radio" name="newInstructorEvaluation" id="newInstructorEvalDeficient" value="deficiente">
+                                        <label for="newInstructorEvalDeficient">Deficiente</label>
+                                    </div>
+                                    <div class="option-item eval-bad">
+                                        <input type="radio" name="newInstructorEvaluation" id="newInstructorEvalBad" value="malo">
+                                        <label for="newInstructorEvalBad">Malo</label>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="newInstructorEvaluation">
+                            </div>
+                            
+                            <!-- Opciones visuales para Finalización práctica -->
+                            <div class="option-selector">
+                                <label class="form-label">Finalización práctica</label>
+                                <div class="options-container">
+                                    <div class="option-item status-pending">
+                                        <input type="radio" name="newPracticeState" id="newPracticeStatePending" value="no-comienza">
+                                        <label for="newPracticeStatePending">No comienza</label>
+                                    </div>
+                                    <div class="option-item status-in-progress">
+                                        <input type="radio" name="newPracticeState" id="newPracticeStateInProgress" value="en-proceso">
+                                        <label for="newPracticeStateInProgress">En proceso</label>
+                                    </div>
+                                    <div class="option-item status-completed">
+                                        <input type="radio" name="newPracticeState" id="newPracticeStateCompleted" value="completada">
+                                        <label for="newPracticeStateCompleted">Completada</label>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="newPracticeState" required>
+                            </div>
+                            
+                            <!-- Opciones visuales para Evaluación final -->
+                            <div class="option-selector">
+                                <label class="form-label">Evaluación final</label>
+                                <div class="options-container">
+                                    <div class="option-item status-pending">
+                                        <input type="radio" name="newFinalEvaluation" id="newFinalEvaluationPending" value="no-comienza">
+                                        <label for="newFinalEvaluationPending">No comienza</label>
+                                    </div>
+                                    <div class="option-item status-in-progress">
+                                        <input type="radio" name="newFinalEvaluation" id="newFinalEvaluationInProgress" value="en-proceso">
+                                        <label for="newFinalEvaluationInProgress">En proceso</label>
+                                    </div>
+                                    <div class="option-item status-completed">
+                                        <input type="radio" name="newFinalEvaluation" id="newFinalEvaluationCompleted" value="completada">
+                                        <label for="newFinalEvaluationCompleted">Completada</label>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="newFinalEvaluation">
+                            </div>
+                        </div>
+                        
+                        <!-- Documentación -->
+                        <div class="form-section">
+                            <h5 class="form-section-title"><i class="fas fa-file-alt me-2"></i>Documentación</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Documentación instructor</label>
+                                    <div class="input-group">
+                                        <input type="file" class="form-control" id="newInstructorDoc">
+                                        <button class="btn btn-outline-secondary" type="button" disabled>
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Documentación finalización</label>
+                                    <div class="input-group">
+                                        <input type="file" class="form-control" id="newCompletionDoc">
+                                        <button class="btn btn-outline-secondary" type="button" disabled>
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-end mt-4">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- Modal para documentos -->
+    <div class="modal fade" id="documentModal" tabindex="-1" aria-labelledby="documentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="documentModalLabel">Documentación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="documentViewer" class="text-center">
+                        <!-- El contenido se generará dinámicamente -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <a id="downloadDocumentBtn" href="#" class="btn btn-primary">
+                        <i class="fas fa-download me-1"></i> Descargar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación para eliminar estudiante -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteConfirmModalLabel">Confirmar eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <p><i class="fas fa-exclamation-triangle text-danger me-2"></i> ¿Está seguro que desea eliminar a este estudiante?</p>
+                    <p class="fw-bold" id="studentToDeleteName"></p>
+                    <p>Esta acción no se puede deshacer.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                        <i class="fas fa-trash-alt me-1"></i> Eliminar definitivamente
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de previsualización de informe -->
+    <div class="modal fade" id="reportPreviewModal" tabindex="-1" aria-labelledby="reportPreviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reportPreviewModalLabel">Vista previa del informe</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 mb-4 text-center">
+                            <h3>Informe de Seguimiento de Prácticas</h3>
+                            <p class="lead">Facultad de Humanidades</p>
+                            <p class="text-muted">Generado: <span id="reportDate"></span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="chart-preview-container">
+                                <h5 class="chart-preview-title">Distribución por Estado</h5>
+                                <div class="chart-canvas-container">
+                                    <canvas id="previewStatusChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="chart-preview-container">
+                                <h5 class="chart-preview-title">Distribución por Sedes</h5>
+                                <div class="chart-canvas-container">
+                                    <canvas id="previewCampusChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="chart-preview-container">
+                                <h5 class="chart-preview-title">Distribución por Carreras</h5>
+                                <div class="chart-canvas-container">
+                                    <canvas id="previewCareerChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="chart-preview-container">
+                                <h5 class="chart-preview-title">Evaluación del Instructor</h5>
+                                <div class="chart-canvas-container">
+                                    <canvas id="previewEvaluationChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="chart-preview-container">
+                                <h5 class="chart-preview-title">Nivel de Práctica</h5>
+                                <div class="chart-canvas-container">
+                                    <canvas id="previewNivelPracticaChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="chart-preview-container">
+                                <h5 class="chart-preview-title">Estadísticas Generales</h5>
+                                <div class="p-3">
+                                    <div id="previewStatsContent"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="generateFinalReportBtn">
+                        <i class="fas fa-file-pdf me-1"></i> Generar PDF Final
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">© 2025 Universidad de Aconcagua</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">Facultad de Humanidades</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <!-- Custom JavaScript -->
     <script>
+        // Datos de carreras y sedes
         const carreras = [
             'Psicología',
             'Derecho',
@@ -160,620 +1739,1523 @@
         ];
 
         const sedes = ['Ancud', 'Calama', 'Los Andes', 'San Felipe', 'Machali'];
+        
+        // Datos de estudiantes y estado global
+        let studentsData = [];
+        let currentPage = 1;
+        const studentsPerPage = 5;
+        let totalPages = 0;
+        let activeFilters = {
+            search: '',
+            career: '',
+            status: ''
+        };
+        
+        // Variable para almacenar el ID del estudiante a eliminar
+        let studentIdToDelete = null;
+        
+        // Variables para gráficos del informe
+        let statusChart, campusChart, careerChart, evaluationChart, nivelPracticaChart;
 
-        function crearSelectCarrera(valorSeleccionado = '') {
-            return `<select class='form-select carrera-select' data-tippy-content="Selecciona la carrera del estudiante">
-                ${carreras.map(carrera => `<option value='${carrera}' ${carrera === valorSeleccionado ? 'selected' : ''}>${carrera}</option>`).join('')}
-            </select>`;
-        }
-
-        function crearSelectEstado(valorSeleccionado = '') {
-            return `<select class='form-select estado-select' data-tippy-content="Selecciona el estado actual de la práctica">
-                <option value='no-comienza' class='estado-no-comienza' ${valorSeleccionado === 'no-comienza' ? 'selected' : ''}>No comienza</option>
-                <option value='en-proceso' class='estado-en-proceso' ${valorSeleccionado === 'en-proceso' ? 'selected' : ''}>En proceso</option>
-                <option value='completada' class='estado-completada' ${valorSeleccionado === 'completada' ? 'selected' : ''}>Completada</option>
-            </select>`;
-        }
-
-        function crearSelectEvaluacion(valorSeleccionado = '') {
-            return `<select class='form-select evaluacion-select' data-tippy-content="Selecciona la evaluación del instructor">
-                <option value='excelente' class='evaluacion-excelente' ${valorSeleccionado === 'excelente' ? 'selected' : ''}>Excelente</option>
-                <option value='bien' ${valorSeleccionado === 'bien' ? 'selected' : ''}>Bien</option>
-                <option value='suficiente' ${valorSeleccionado === 'suficiente' ? 'selected' : ''}>Suficiente</option>
-                <option value='deficiente' ${valorSeleccionado === 'deficiente' ? 'selected' : ''}>Deficiente</option>
-                <option value='malo' class='evaluacion-malo' ${valorSeleccionado === 'malo' ? 'selected' : ''}>Malo</option>
-            </select>`;
-        }
-
-        function crearSelectSede(valorSeleccionado = '') {
-            return `<select class='form-select sede-select' data-tippy-content="Selecciona la sede del estudiante">
-                ${sedes.map(sede => `<option value='${sede}' ${sede === valorSeleccionado ? 'selected' : ''}>${sede}</option>`).join('')}
-            </select>`;
-        }
-
-        function crearSelectNivelPractica(valorSeleccionado = '') {
-            return `<select class='form-select nivel-practica-select' data-tippy-content="Selecciona el nivel de práctica">
-                <option value='practica-intermedia-1' ${valorSeleccionado === 'practica-intermedia-1' ? 'selected' : ''}>Práctica Intermedia 1</option>
-                <option value='practica-intermedia-2' ${valorSeleccionado === 'practica-intermedia-2' ? 'selected' : ''}>Práctica Intermedia 2</option>
-                <option value='practica-profesional' ${valorSeleccionado === 'practica-profesional' ? 'selected' : ''}>Práctica Profesional</option>
-            </select>`;
-        }
-
-        function generarFilas(start, end) {
-            let filas = [];
-            const datosGuardados = JSON.parse(localStorage.getItem('datosPracticas')) || [];
-
-            for (let i = start; i < end; i++) {
-                if (i < datosGuardados.length) {
-                    filas.push(crearFila(datosGuardados[i]));
-                } else {
-                    filas.push(crearFila());
-                }
-            }
-            return filas;
-        }
-
-        function crearFila(datos = {}) {
-            return `
-                <tr>
-                    <td><input type='text' class='form-control' value='${datos.nombre || ''}' data-tippy-content="Ingresa el nombre y apellidos del estudiante"></td>
-                    <td><input type='text' class='form-control' value='${datos.rut || ''}' data-tippy-content="Ingresa el RUT del estudiante"></td>
-                    <td>${crearSelectCarrera(datos.carrera)}</td>
-                    <td>${crearSelectSede(datos.sede)}</td>
-                    <td>${crearSelectNivelPractica(datos.nivelPractica)}</td>
-                    <td><input type='text' class='form-control' value='${datos.supervisorPractica || ''}' data-tippy-content="Ingresa el nombre del supervisor de práctica"></td>
-                    <td><input type='text' class='form-control' value='${datos.centroPractica || ''}' data-tippy-content="Ingresa el nombre del centro de práctica"></td>
-                    <td><input type='text' class='form-control' placeholder='Nombre del instructor' value='${datos.instructor || ''}' data-tippy-content="Ingresa el nombre del instructor"></td>
-                    <td><input type='text' class='form-control datepicker' value='${datos.fechaInicio || ''}' data-tippy-content="Selecciona la fecha de inicio de la práctica"></td>
-                    <td><input type='text' class='form-control datepicker' value='${datos.fechaTermino || ''}' data-tippy-content="Selecciona la fecha de término de la práctica"></td>
-                    <td>${crearSelectEstado(datos.seguimiento1)}</td>
-                    <td>${crearSelectEstado(datos.seguimiento2)}</td>
-                    <td>${crearSelectEvaluacion(datos.evaluacionInstructor)}</td>
-                    <td>
-                        <div class="documento-container">
-                            <input type="file" class="form-control adjuntar-doc" style="display: none;">
-                            <button class='btn btn-primary btn-sm adjuntar-btn' data-tippy-content="Adjunta la documentación del instructor">Adjuntar documentación</button>
-                            <a href="#" class="btn btn-success btn-sm descargar-doc" style="display: none;">Descargar</a>
-                        </div>
-                    </td>
-                    <td>${crearSelectEstado(datos.finalizacionPractica)}</td>
-                    <td>
-                        <div class="documento-container">
-                            <input type="file" class="form-control adjuntar-doc" style="display: none;">
-                            <button class='btn btn-primary btn-sm adjuntar-btn' data-tippy-content="Adjunta la documentación de finalización">Adjuntar documentación</button>
-                            <a href="#" class="btn btn-success btn-sm descargar-doc" style="display: none;">Descargar</a>
-                        </div>
-                    </td>
-                    <td>${crearSelectEstado(datos.evaluacionFinal)}</td>
-                </tr>
-            `;
-        }
-
-        let carrerasChart, sedesChart, estadosPracticasChart, evaluacionFinalChart, duracionPromedioChart, nivelPracticaChart, duracionPromedioYModaChart;
-
-        function actualizarDashboard() {
-            actualizarGraficoCarreras();
-            actualizarGraficoSedes();
-            actualizarGraficoEstados();
-            actualizarGraficoEvaluacionFinal();
-            actualizarGraficoDuracionPromedio();
-            actualizarGraficoNivelPractica();
-            actualizarEstadisticasGenerales();
-            actualizarEstadisticasPorCarrera();
-            actualizarGraficoDuracionPromedioYModa();
-        }
-
-        function actualizarGraficoCarreras() {
-            const conteoCarreras = carreras.reduce((acc, carrera) => {
-                acc[carrera] = $(`#seguimientoPracticas .carrera-select option[value="${carrera}"]:selected`).length;
-                return acc;
-            }, {});
-
-            if (carrerasChart) {
-                carrerasChart.data.datasets[0].data = Object.values(conteoCarreras);
-                carrerasChart.update();
-            } else {
-                const ctx = document.getElementById('carrerasChart').getContext('2d');
-                carrerasChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: carreras,
-                        datasets: [{
-                            label: 'Número de estudiantes',
-                            data: Object.values(conteoCarreras),
-                            backgroundColor: 'rgba(75, 192, 192, 0.6)'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: 'Distribución por Carreras'
-                            }
-                        }
-                    }
-                });
-            }
-        }
-
-        function actualizarGraficoSedes() {
-            const conteoSedes = sedes.reduce((acc, sede) => {
-                acc[sede] = $(`#seguimientoPracticas .sede-select option[value="${sede}"]:selected`).length;
-                return acc;
-            }, {});
-
-            if (sedesChart) {
-                sedesChart.data.datasets[0].data = Object.values(conteoSedes);
-                sedesChart.update();
-            } else {
-                const ctx = document.getElementById('sedesChart').getContext('2d');
-                sedesChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: sedes,
-                        datasets: [{
-                            data: Object.values(conteoSedes),
-                            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: 'Distribución por Sedes'
-                            }
-                        }
-                    }
-                });
-            }
-        }
-
-        function actualizarGraficoEstados() {
-            const estados = ['en-proceso', 'completada'];
-            const conteoEstados = estados.reduce((acc, estado) => {
-                acc[estado] = $(`#seguimientoPracticas .estado-select option[value="${estado}"]:selected`).length;
-                return acc;
-            }, {});
-
-            if (estadosPracticasChart) {
-                estadosPracticasChart.data.datasets[0].data = Object.values(conteoEstados);
-                estadosPracticasChart.update();
-            } else {
-                const ctx = document.getElementById('estadosPracticasChart').getContext('2d');
-                estadosPracticasChart = new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: ['En proceso', 'Completada'],
-                        datasets: [{
-                            data: Object.values(conteoEstados),
-                            backgroundColor: ['#ffffcc', '#ccffcc']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: 'Estados de Prácticas'
-                            }
-                        }
-                    }
-                });
-            }
-        }
-
-        function actualizarGraficoEvaluacionFinal() {
-            const evaluaciones = ['excelente', 'bien', 'suficiente', 'deficiente', 'malo'];
-            const conteoEvaluaciones = evaluaciones.reduce((acc, evaluacion) => {
-                acc[evaluacion] = $(`#seguimientoPracticas .evaluacion-select option[value="${evaluacion}"]:selected`).length;
-                return acc;
-            }, {});
-
-            if (evaluacionFinalChart) {
-                evaluacionFinalChart.data.datasets[0].data = Object.values(conteoEvaluaciones);
-                evaluacionFinalChart.update();
-            } else {
-                const ctx = document.getElementById('evaluacionFinalChart').getContext('2d');
-                evaluacionFinalChart = new Chart(ctx, {
-                    type: 'polarArea',
-                    data: {
-                        labels: ['Excelente', 'Bien', 'Suficiente', 'Deficiente', 'Malo'],
-                        datasets: [{
-                            data: Object.values(conteoEvaluaciones),
-                            backgroundColor: ['#4BC0C0', '#36A2EB', '#FFCE56', '#FF9F40', '#FF6384']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: 'Evaluación Final'
-                            }
-                        }
-                    }
-                });
-            }
-        }
-
-        function actualizarGraficoDuracionPromedio() {
-            const duracionPorCarrera = carreras.reduce((acc, carrera) => {
-                const practicas = $(`#seguimientoPracticas .carrera-select option[value="${carrera}"]:selected`).closest('tr');
-                let totalDias = 0;
-                let numPracticas = 0;
-                
-                practicas.each(function() {
-                    const fechaInicio = $(this).find('td:eq(8) input').val();
-                    const fechaTermino = $(this).find('td:eq(9) input').val();
-                    if (fechaInicio && fechaTermino) {
-                        const inicio = new Date(fechaInicio.split('/').reverse().join('-'));
-                        const termino = new Date(fechaTermino.split('/').reverse().join('-'));
-                        const duracion = (termino - inicio) / (1000 * 60 * 60 * 24);
-                        totalDias += duracion;
-                        numPracticas++;
-                    }
-                });
-                
-                acc[carrera] = numPracticas > 0 ? Math.round(totalDias / numPracticas) : 0;
-                return acc;
-            }, {});
-
-            if (duracionPromedioChart) {
-                duracionPromedioChart.data.datasets[0].data = Object.values(duracionPorCarrera);
-                duracionPromedioChart.update();
-            } else {
-                const ctx = document.getElementById('duracionPromedioChart').getContext('2d');
-                duracionPromedioChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: carreras,
-                        datasets: [{
-                            label: 'Duración promedio (días)',
-                            data: Object.values(duracionPorCarrera),
-                            backgroundColor: 'rgba(255, 159, 64, 0.6)'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: 'Duración Promedio por Carrera'
-                            }
-                        }
-                    }
-                });
-            }
-        }
-
-        function actualizarGraficoNivelPractica() {
-            const niveles = ['practica-intermedia-1', 'practica-intermedia-2', 'practica-profesional'];
-            const conteoNiveles = niveles.reduce((acc, nivel) => {
-                acc[nivel] = $(`#seguimientoPracticas .nivel-practica-select option[value="${nivel}"]:selected`).length;
-                return acc;
-            }, {});
-
-            if (nivelPracticaChart) {
-                nivelPracticaChart.data.datasets[0].data = Object.values(conteoNiveles);
-                nivelPracticaChart.update();
-            } else {
-                const ctx = document.getElementById('nivelPracticaChart').getContext('2d');
-                nivelPracticaChart = new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: ['Práctica Intermedia 1', 'Práctica Intermedia 2', 'Práctica Profesional'],
-                        datasets: [{
-                            data: Object.values(conteoNiveles),
-                            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: 'Nivel de Práctica'
-                            }
-                        }
-                    }
-                });
-            }
-        }
-
-        function actualizarEstadisticasGenerales() {
-            const totalPracticas = $('#seguimientoPracticas tbody tr').length;
-            const practicasEnProceso = $(`#seguimientoPracticas .estado-select option[value="en-proceso"]:selected`).length;
-            const practicasCompletadas = $(`#seguimientoPracticas .estado-select option[value="completada"]:selected`).length;
+        // Función para cargar los datos de estudiantes
+        function loadStudentsData() {
+            const savedData = JSON.parse(localStorage.getItem('datosPracticas')) || [];
+            studentsData = savedData.map((student, index) => {
+                return {
+                    id: index,
+                    nombre: student.nombre || '',
+                    rut: student.rut || '',
+                    carrera: student.carrera || carreras[0],
+                    sede: student.sede || sedes[0],
+                    supervisorPractica: student.supervisorPractica || '',
+                    centroPractica: student.centroPractica || '',
+                    instructor: student.instructor || '',
+                    nivelPractica: student.nivelPractica || 'practica-intermedia-1',
+                    fechaInicio: student.fechaInicio || '',
+                    fechaTermino: student.fechaTermino || '',
+                    seguimiento1: student.seguimiento1 || 'no-comienza',
+                    seguimiento2: student.seguimiento2 || 'no-comienza',
+                    evaluacionInstructor: student.evaluacionInstructor || 'excelente',
+                    documentacionInstructor: false, // Este campo requeriría almacenamiento de archivos real
+                    finalizacionPractica: student.finalizacionPractica || 'no-comienza',
+                    documentacionFinalizacion: false, // Este campo requeriría almacenamiento de archivos real
+                    evaluacionFinal: student.evaluacionFinal || 'no-comienza'
+                };
+            }).filter(student => student.nombre.trim() !== ''); // Filtrar estudiantes sin nombre
             
-            const evaluacionesExcelente = $(`#seguimientoPracticas .evaluacion-select option[value="excelente"]:selected`).length;
-            const porcentajeExcelente = ((evaluacionesExcelente / totalPracticas) * 100).toFixed(2);
-
-            const estadisticasHTML = `
-                <p><strong>Total de prácticas:</strong> ${totalPracticas}</p>
-                <p><strong>Prácticas en proceso:</strong> ${practicasEnProceso}</p>
-                <p><strong>Prácticas completadas:</strong> ${practicasCompletadas}</p>
-                <p><strong>Porcentaje de evaluaciones excelentes:</strong> ${porcentajeExcelente}%</p>
-            `;
-
-            $('#estadisticasGenerales').html(estadisticasHTML);
+            updateStatistics();
+            renderStudentsList();
+            setupFilterCareerOptions();
         }
 
-        function actualizarEstadisticasPorCarrera() {
-            const estadisticasPorCarrera = carreras.reduce((acc, carrera) => {
-                const practicas = $(`#seguimientoPracticas .carrera-select option[value="${carrera}"]:selected`).closest('tr');
-                const duraciones = [];
+        // Función para filtrar estudiantes según los criterios activos
+        function filterStudents() {
+            return studentsData.filter(student => {
+                // Filtro por búsqueda
+                const searchMatch = !activeFilters.search || 
+                    student.nombre.toLowerCase().includes(activeFilters.search.toLowerCase()) ||
+                    student.rut.toLowerCase().includes(activeFilters.search.toLowerCase()) ||
+                    student.centroPractica.toLowerCase().includes(activeFilters.search.toLowerCase());
                 
-                practicas.each(function() {
-                    const fechaInicio = $(this).find('td:eq(8) input').val();
-                    const fechaTermino = $(this).find('td:eq(9) input').val();
-                    if (fechaInicio && fechaTermino) {
-                        const inicio = new Date(fechaInicio.split('/').reverse().join('-'));
-                        const termino = new Date(fechaTermino.split('/').reverse().join('-'));
-                        const duracion = (termino - inicio) / (1000 * 60 * 60 * 24);
-                        duraciones.push(duracion);
-                    }
-                });
+                // Filtro por carrera
+                const careerMatch = !activeFilters.career || student.carrera === activeFilters.career;
                 
-                acc[carrera] = {
-                    promedio: duraciones.length > 0 ? Math.round(calcularPromedio(duraciones)) : 0,
-                    moda: duraciones.length > 0 ? calcularModa(duraciones) : 0
-                };
-                return acc;
-            }, {});
+                // Filtro por estado
+                const statusMatch = !activeFilters.status || student.finalizacionPractica === activeFilters.status;
+                
+                return searchMatch && careerMatch && statusMatch;
+            });
+        }
 
-            // Actualizar la tabla de estadísticas por carrera
-            let estadisticasHTML = '<table class="table table-striped"><thead><tr><th>Carrera</th><th>Duración Promedio (días)</th><th>Duración Moda (días)</th></tr></thead><tbody>';
-            for (const [carrera, stats] of Object.entries(estadisticasPorCarrera)) {
-                estadisticasHTML += `<tr><td>${carrera}</td><td>${stats.promedio}</td><td>${stats.moda}</td></tr>`;
+        // Función para renderizar la lista de estudiantes con paginación
+        function renderStudentsList() {
+            const filteredStudents = filterStudents();
+            totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
+            
+            // Asegurar que la página actual es válida
+            if (currentPage > totalPages) {
+                currentPage = totalPages > 0 ? totalPages : 1;
             }
-            estadisticasHTML += '</tbody></table>';
-            $('#estadisticasPorCarrera').html(estadisticasHTML);
+            
+            const startIndex = (currentPage - 1) * studentsPerPage;
+            const endIndex = startIndex + studentsPerPage;
+            const currentStudents = filteredStudents.slice(startIndex, endIndex);
+            
+            const studentsList = document.getElementById('studentsList');
+            studentsList.innerHTML = '';
+            
+            if (currentStudents.length === 0) {
+                studentsList.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                        <h4 class="text-muted">No se encontraron estudiantes</h4>
+                        <p>Intenta con otros criterios de búsqueda o agrega nuevos estudiantes.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            currentStudents.forEach(student => {
+                // Calcular progreso
+                const stagesCompleted = [
+                    student.seguimiento1 === 'completada',
+                    student.seguimiento2 === 'completada',
+                    student.evaluacionInstructor !== '',
+                    student.documentacionInstructor,
+                    student.finalizacionPractica === 'completada',
+                    student.documentacionFinalizacion,
+                    student.evaluacionFinal === 'completada'
+                ].filter(Boolean).length;
+                
+                const progress = Math.round((stagesCompleted / 7) * 100);
+                
+                // Determinar estado global para color de progreso
+                let statusClass = 'bg-danger';
+                if (student.finalizacionPractica === 'completada') {
+                    statusClass = 'bg-success';
+                } else if (student.finalizacionPractica === 'en-proceso') {
+                    statusClass = 'bg-warning';
+                }
+                
+                // Crear etiqueta de estado
+                let statusBadge = '';
+                if (student.finalizacionPractica === 'no-comienza') {
+                    statusBadge = `<span class="stage-badge stage-not-started">Pendiente</span>`;
+                } else if (student.finalizacionPractica === 'en-proceso') {
+                    statusBadge = `<span class="stage-badge stage-in-progress">En proceso</span>`;
+                } else {
+                    statusBadge = `<span class="stage-badge stage-completed">Completada</span>`;
+                }
+                
+                // Crear iniciales para foto
+                const initials = student.nombre
+                    .split(' ')
+                    .map(name => name.charAt(0))
+                    .join('')
+                    .substring(0, 2)
+                    .toUpperCase();
+                
+                // Texto nivel de práctica
+                let nivelPracticaText = 'Intermedia 1';
+                if (student.nivelPractica === 'practica-intermedia-2') {
+                    nivelPracticaText = 'Intermedia 2';
+                } else if (student.nivelPractica === 'practica-profesional') {
+                    nivelPracticaText = 'Profesional';
+                }
+                
+                // Renderizar tarjeta
+                const card = document.createElement('div');
+                card.className = 'student-card';
+                card.innerHTML = `
+                    <div class="card-header">
+                        <span>Estudiante #${student.id + 1}</span>
+                        ${statusBadge}
+                    </div>
+                    <div class="card-body">
+                        <div class="student-info">
+                            <div class="student-photo">
+                                ${initials}
+                            </div>
+                            <div class="student-details">
+                                <div class="student-name">${student.nombre}</div>
+                                <div class="student-id">RUT: ${student.rut}</div>
+                                <div class="student-career"><strong>Carrera:</strong> ${student.carrera}</div>
+                                <div class="student-campus"><strong>Sede:</strong> ${student.sede}</div>
+                                <div class="mt-2">
+                                    <strong>Centro de práctica:</strong> ${student.centroPractica || 'No asignado'}
+                                </div>
+                                <div>
+                                    <strong>Nivel de práctica:</strong> ${nivelPracticaText}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="progress-section">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="progress-title">Progreso de la práctica</span>
+                                <span>${progress}%</span>
+                            </div>
+                            <div class="progress mb-3">
+                                <div class="progress-bar ${statusClass}" role="progressbar" style="width: ${progress}%" 
+                                    aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-4 mb-2">
+                                    <small>Seguimiento 1: <span class="status-${student.seguimiento1}">
+                                        ${student.seguimiento1 === 'no-comienza' ? 'Pendiente' : 
+                                          student.seguimiento1 === 'en-proceso' ? 'En proceso' : 'Completado'}
+                                    </span></small>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <small>Seguimiento 2: <span class="status-${student.seguimiento2}">
+                                        ${student.seguimiento2 === 'no-comienza' ? 'Pendiente' : 
+                                          student.seguimiento2 === 'en-proceso' ? 'En proceso' : 'Completado'}
+                                    </span></small>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <small>Evaluación: <strong>${student.evaluacionInstructor.charAt(0).toUpperCase() + student.evaluacionInstructor.slice(1)}</strong></small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-edit edit-student" data-id="${student.id}">
+                                <i class="fas fa-edit"></i> Editar información
+                            </button>
+                            <button class="btn btn-document upload-document" data-id="${student.id}" data-type="instructor">
+                                <i class="fas fa-file-upload"></i> Documentación instructor
+                            </button>
+                            <button class="btn btn-document upload-document" data-id="${student.id}" data-type="completion">
+                                <i class="fas fa-file-upload"></i> Documentación finalización
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                studentsList.appendChild(card);
+            });
+            
+            renderPagination();
         }
 
-        function actualizarGraficoDuracionPromedioYModa() {
-            const estadisticasPorCarrera = carreras.reduce((acc, carrera) => {
-                const practicas = $(`#seguimientoPracticas .carrera-select option[value="${carrera}"]:selected`).closest('tr');
-                const duraciones = [];
+        // Función para renderizar la paginación
+        function renderPagination() {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+            
+            if (totalPages <= 1) {
+                return;
+            }
+            
+            // Botón anterior
+            const prevLi = document.createElement('li');
+            prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+            prevLi.innerHTML = `
+                <a class="page-link" href="#" aria-label="Anterior">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            `;
+            if (currentPage > 1) {
+                prevLi.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    currentPage--;
+                    renderStudentsList();
+                });
+            }
+            pagination.appendChild(prevLi);
+            
+            // Páginas
+            const maxPagesToShow = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+            const endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+            
+            if (endPage - startPage + 1 < maxPagesToShow) {
+                startPage = Math.max(1, endPage - maxPagesToShow + 1);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const pageLi = document.createElement('li');
+                pageLi.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                pageLi.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                pageLi.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    currentPage = i;
+                    renderStudentsList();
+                });
+                pagination.appendChild(pageLi);
+            }
+            
+            // Botón siguiente
+            const nextLi = document.createElement('li');
+            nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+            nextLi.innerHTML = `
+                <a class="page-link" href="#" aria-label="Siguiente">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            `;
+            if (currentPage < totalPages) {
+                nextLi.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    currentPage++;
+                    renderStudentsList();
+                });
+            }
+            pagination.appendChild(nextLi);
+        }
+
+        // Función para actualizar las estadísticas
+        function updateStatistics() {
+            let totalStudents = studentsData.length;
+            let inProgress = 0;
+            let completed = 0;
+            let pending = 0;
+            
+            studentsData.forEach(student => {
+                if (student.finalizacionPractica === 'en-proceso') {
+                    inProgress++;
+                } else if (student.finalizacionPractica === 'completada') {
+                    completed++;
+                } else {
+                    pending++;
+                }
+            });
+            
+            // Actualizar números
+            document.getElementById('totalStudentsValue').textContent = totalStudents;
+            document.getElementById('inProgressValue').textContent = inProgress;
+            document.getElementById('completedValue').textContent = completed;
+            document.getElementById('pendingValue').textContent = pending;
+            
+            // Actualizar barras de progreso
+            document.getElementById('inProgressBar').style.width = totalStudents ? `${(inProgress / totalStudents) * 100}%` : '0%';
+            document.getElementById('completedBar').style.width = totalStudents ? `${(completed / totalStudents) * 100}%` : '0%';
+            document.getElementById('pendingBar').style.width = totalStudents ? `${(pending / totalStudents) * 100}%` : '0%';
+        }
+        
+        // Función para configurar el selector visual de carrera en el filtro
+        function setupFilterCareerOptions() {
+            const filterCareerOptions = document.getElementById('filterCareerOptions');
+            filterCareerOptions.innerHTML = '<div class="filter-career-option selected" data-value="">Todas las carreras</div>';
+            
+            // Crear un conjunto de carreras únicas
+            const uniqueCareers = [...new Set(studentsData.map(student => student.carrera))];
+            uniqueCareers.forEach(career => {
+                const option = document.createElement('div');
+                option.className = 'filter-career-option';
+                option.dataset.value = career;
+                option.textContent = career;
+                filterCareerOptions.appendChild(option);
+            });
+        }
+
+        // Función para llenar el selector visual de carrera
+        function fillCareerSelector(selector, optionsList, selectedValue = '') {
+            optionsList.innerHTML = '';
+            
+            carreras.forEach(carrera => {
+                const option = document.createElement('div');
+                option.className = 'career-option-item';
+                option.dataset.value = carrera;
+                option.textContent = carrera;
                 
-                practicas.each(function() {
-                    const fechaInicio = $(this).find('td:eq(8) input').val();
-                    const fechaTermino = $(this).find('td:eq(9) input').val();
-                    if (fechaInicio && fechaTermino) {
-                        const inicio = new Date(fechaInicio.split('/').reverse().join('-'));
-                        const termino = new Date(fechaTermino.split('/').reverse().join('-'));
-                        const duracion = (termino - inicio) / (1000 * 60 * 60 * 24);
-                        duraciones.push(duracion);
+                if (carrera === selectedValue) {
+                    option.classList.add('selected');
+                    selector.querySelector('.career-options-btn').textContent = carrera;
+                    selector.classList.add('selected');
+                }
+                
+                optionsList.appendChild(option);
+            });
+        }
+        
+        // Función para llenar el selector visual de sede
+        function fillCampusSelector(container, selectedValue = '') {
+            container.innerHTML = '';
+            
+            sedes.forEach((sede, index) => {
+                const option = document.createElement('div');
+                option.className = 'campus-option-item';
+                option.innerHTML = `
+                    <input type="radio" name="campus-option" id="campus-${sede}" value="${sede}" ${sede === selectedValue ? 'checked' : ''}>
+                    <label for="campus-${sede}">${sede}</label>
+                `;
+                container.appendChild(option);
+            });
+            
+            // Añadir event listeners a los radios
+            container.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const hiddenInput = this.closest('.campus-selector').nextElementSibling;
+                    if (hiddenInput && hiddenInput.id === 'studentCampus') {
+                        document.getElementById('studentCampus').value = this.value;
+                    } else if (hiddenInput && hiddenInput.id === 'newStudentCampus') {
+                        document.getElementById('newStudentCampus').value = this.value;
                     }
                 });
-                
-                acc[carrera] = {
-                    promedio: duraciones.length > 0 ? Math.round(calcularPromedio(duraciones)) : 0,
-                    moda: duraciones.length > 0 ? calcularModa(duraciones) : 0
-                };
-                return acc;
-            }, {});
+            });
+        }
 
-            if (duracionPromedioYModaChart) {
-                duracionPromedioYModaChart.data.datasets[0].data = carreras.map(carrera => estadisticasPorCarrera[carrera].promedio);
-                duracionPromedioYModaChart.data.datasets[1].data = carreras.map(carrera => estadisticasPorCarrera[carrera].moda);
-                duracionPromedioYModaChart.update();
+        // Función para llenar el modal de edición
+        function fillEditModal(studentId) {
+            const student = studentsData.find(s => s.id === studentId);
+            if (!student) return;
+            
+            document.getElementById('studentId').value = student.id;
+            document.getElementById('studentName').value = student.nombre;
+            document.getElementById('studentRut').value = student.rut;
+            
+            // Carrera y sede
+            document.getElementById('studentCareer').value = student.carrera;
+            document.getElementById('studentCampus').value = student.sede;
+            
+            // Llenar selector visual de carrera
+            fillCareerSelector(
+                document.getElementById('careerSelector'),
+                document.getElementById('careerOptionsList'),
+                student.carrera
+            );
+            
+            // Llenar selector visual de sede
+            fillCampusSelector(
+                document.getElementById('campusOptions'),
+                student.sede
+            );
+            
+            // Información de práctica
+            document.getElementById('practiceSupervisor').value = student.supervisorPractica;
+            document.getElementById('practiceCenter').value = student.centroPractica;
+            document.getElementById('practiceInstructor').value = student.instructor;
+            document.getElementById('practiceLevel').value = student.nivelPractica;
+            document.getElementById('startDate').value = student.fechaInicio;
+            document.getElementById('endDate').value = student.fechaTermino;
+            
+            // Seleccionar el nivel de práctica correcto
+            document.querySelector(`input[name="practiceLevel"][value="${student.nivelPractica}"]`).checked = true;
+            
+            // Seleccionar el estado de práctica correcto
+            document.querySelector(`input[name="practiceState"][value="${student.finalizacionPractica}"]`).checked = true;
+            document.getElementById('practiceState').value = student.finalizacionPractica;
+            
+            // Seguimiento y evaluación
+            document.getElementById('tracking1').value = student.seguimiento1;
+            document.getElementById('tracking2').value = student.seguimiento2;
+            document.getElementById('instructorEvaluation').value = student.evaluacionInstructor;
+            document.getElementById('finalEvaluation').value = student.evaluacionFinal;
+            
+            // Seleccionar opciones visuales de seguimiento
+            document.querySelector(`input[name="tracking1"][value="${student.seguimiento1}"]`).checked = true;
+            document.querySelector(`input[name="tracking2"][value="${student.seguimiento2}"]`).checked = true;
+            document.querySelector(`input[name="instructorEvaluation"][value="${student.evaluacionInstructor}"]`).checked = true;
+            document.querySelector(`input[name="finalEvaluation"][value="${student.evaluacionFinal}"]`).checked = true;
+            
+            // Documentación - Aquí se manejaría la visualización de archivos existentes
+            const viewInstructorDocBtn = document.getElementById('viewInstructorDoc');
+            const viewCompletionDocBtn = document.getElementById('viewCompletionDoc');
+            
+            viewInstructorDocBtn.disabled = !student.documentacionInstructor;
+            viewCompletionDocBtn.disabled = !student.documentacionFinalizacion;
+            
+            // Inicializar datepickers
+            flatpickr("#startDate, #endDate", {
+                dateFormat: "d/m/Y",
+                locale: "es",
+                allowInput: true
+            });
+            
+            // Mostrar el modal
+            const editModal = new bootstrap.Modal(document.getElementById('editStudentModal'));
+            editModal.show();
+        }
+
+        // Función para preparar el modal de agregar estudiante
+        function prepareAddStudentModal() {
+            // Datos por defecto
+            document.getElementById('newStudentName').value = '';
+            document.getElementById('newStudentRut').value = '';
+            document.getElementById('newStudentCareer').value = carreras[0];
+            document.getElementById('newStudentCampus').value = sedes[0];
+            
+            // Llenar selector visual de carrera
+            fillCareerSelector(
+                document.getElementById('newCareerSelector'),
+                document.getElementById('newCareerOptionsList'),
+                carreras[0]
+            );
+            
+            // Llenar selector visual de sede
+            fillCampusSelector(
+                document.getElementById('newCampusOptions'),
+                sedes[0]
+            );
+            
+            // Establecer valores por defecto
+            document.getElementById('newPracticeSupervisor').value = '';
+            document.getElementById('newPracticeCenter').value = '';
+            document.getElementById('newPracticeInstructor').value = '';
+            document.getElementById('newPracticeLevel').value = 'practica-intermedia-1';
+            document.getElementById('newPracticeState').value = 'no-comienza';
+            document.getElementById('newTracking1').value = 'no-comienza';
+            document.getElementById('newTracking2').value = 'no-comienza';
+            document.getElementById('newInstructorEvaluation').value = 'excelente';
+            document.getElementById('newFinalEvaluation').value = 'no-comienza';
+            
+            // Seleccionar opciones por defecto
+            document.querySelector('input[name="newPracticeLevel"][value="practica-intermedia-1"]').checked = true;
+            document.querySelector('input[name="newPracticeState"][value="no-comienza"]').checked = true;
+            document.querySelector('input[name="newTracking1"][value="no-comienza"]').checked = true;
+            document.querySelector('input[name="newTracking2"][value="no-comienza"]').checked = true;
+            document.querySelector('input[name="newInstructorEvaluation"][value="excelente"]').checked = true;
+            document.querySelector('input[name="newFinalEvaluation"][value="no-comienza"]').checked = true;
+            
+            // Inicializar flatpickr en los campos de fecha
+            flatpickr("#newStartDate, #newEndDate", {
+                dateFormat: "d/m/Y",
+                locale: "es",
+                allowInput: true
+            });
+            
+            // Mostrar el modal
+            const addModal = new bootstrap.Modal(document.getElementById('addStudentModal'));
+            addModal.show();
+        }
+
+        // Función para guardar los cambios de un estudiante
+        function saveStudentChanges(form) {
+            const studentId = parseInt(document.getElementById('studentId').value);
+            const studentIndex = studentsData.findIndex(s => s.id === studentId);
+            
+            if (studentIndex !== -1) {
+                const carrera = document.getElementById('studentCareer').value;
+                const sede = document.getElementById('studentCampus').value;
+                
+                // Obtener valores de los radio buttons
+                const practiceLevel = document.querySelector('input[name="practiceLevel"]:checked').value;
+                const practiceState = document.querySelector('input[name="practiceState"]:checked').value;
+                const tracking1 = document.querySelector('input[name="tracking1"]:checked').value;
+                const tracking2 = document.querySelector('input[name="tracking2"]:checked').value;
+                const instructorEvaluation = document.querySelector('input[name="instructorEvaluation"]:checked').value;
+                const finalEvaluation = document.querySelector('input[name="finalEvaluation"]:checked').value;
+                
+                // Actualizar datos del estudiante
+                studentsData[studentIndex] = {
+                    ...studentsData[studentIndex],
+                    nombre: document.getElementById('studentName').value,
+                    rut: document.getElementById('studentRut').value,
+                    carrera: carrera,
+                    sede: sede,
+                    supervisorPractica: document.getElementById('practiceSupervisor').value,
+                    centroPractica: document.getElementById('practiceCenter').value,
+                    instructor: document.getElementById('practiceInstructor').value,
+                    nivelPractica: practiceLevel,
+                    fechaInicio: document.getElementById('startDate').value,
+                    fechaTermino: document.getElementById('endDate').value,
+                    seguimiento1: tracking1,
+                    seguimiento2: tracking2,
+                    evaluacionInstructor: instructorEvaluation,
+                    finalizacionPractica: practiceState,
+                    evaluacionFinal: finalEvaluation
+                };
+                
+                // Aquí manejaríamos la lógica para guardar archivos
+                const instructorDoc = document.getElementById('instructorDoc').files[0];
+                const completionDoc = document.getElementById('completionDoc').files[0];
+                
+                if (instructorDoc) {
+                    studentsData[studentIndex].documentacionInstructor = true;
+                }
+                
+                if (completionDoc) {
+                    studentsData[studentIndex].documentacionFinalizacion = true;
+                }
+                
+                // Guardar en localStorage
+                saveToLocalStorage();
+                
+                // Actualizar interfaz
+                updateStatistics();
+                renderStudentsList();
+                setupFilterCareerOptions();
+                
+                // Mostrar mensaje de éxito
+                showAlert('Información del estudiante actualizada correctamente', 'success');
+                
+                return true;
             } else {
-                const ctx = document.getElementById('duracionPromedioYModaChart').getContext('2d');
-                duracionPromedioYModaChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: carreras,
-                        datasets: [
-                            {
-                                label: 'Duración Promedio',
-                                data: carreras.map(carrera => estadisticasPorCarrera[carrera].promedio),
-                                backgroundColor: 'rgba(75, 192, 192, 0.6)'
-                            },
-                            {
-                                label: 'Duración Moda',
-                                data: carreras.map(carrera => estadisticasPorCarrera[carrera].moda),
-                                backgroundColor: 'rgba(255, 159, 64, 0.6)'
-                            }
+                showAlert('Error al actualizar la información del estudiante', 'danger');
+                return false;
+            }
+        }
+
+        // Función para agregar un nuevo estudiante
+        function addNewStudent(form) {
+            const newId = studentsData.length > 0 ? Math.max(...studentsData.map(s => s.id)) + 1 : 0;
+            
+            const carrera = document.getElementById('newStudentCareer').value;
+            const sede = document.getElementById('newStudentCampus').value;
+            
+            // Obtener valores de los radio buttons
+            const practiceLevel = document.querySelector('input[name="newPracticeLevel"]:checked').value;
+            const practiceState = document.querySelector('input[name="newPracticeState"]:checked').value;
+            const tracking1 = document.querySelector('input[name="newTracking1"]:checked').value;
+            const tracking2 = document.querySelector('input[name="newTracking2"]:checked').value;
+            const instructorEvaluation = document.querySelector('input[name="newInstructorEvaluation"]:checked').value;
+            const finalEvaluation = document.querySelector('input[name="newFinalEvaluation"]:checked').value;
+            
+            const newStudent = {
+                id: newId,
+                nombre: document.getElementById('newStudentName').value,
+                rut: document.getElementById('newStudentRut').value,
+                carrera: carrera,
+                sede: sede,
+                supervisorPractica: document.getElementById('newPracticeSupervisor').value,
+                centroPractica: document.getElementById('newPracticeCenter').value,
+                instructor: document.getElementById('newPracticeInstructor').value,
+                nivelPractica: practiceLevel,
+                fechaInicio: document.getElementById('newStartDate').value,
+                fechaTermino: document.getElementById('newEndDate').value,
+                seguimiento1: tracking1,
+                seguimiento2: tracking2,
+                evaluacionInstructor: instructorEvaluation,
+                documentacionInstructor: false,
+                finalizacionPractica: practiceState,
+                documentacionFinalizacion: false,
+                evaluacionFinal: finalEvaluation
+            };
+            
+            studentsData.push(newStudent);
+            
+            // Guardar en localStorage
+            saveToLocalStorage();
+            
+            // Actualizar interfaz
+            updateStatistics();
+            renderStudentsList();
+            setupFilterCareerOptions();
+            
+            // Mostrar mensaje de éxito
+            showAlert('Estudiante agregado correctamente', 'success');
+            
+            return true;
+        }
+
+        // Función para eliminar un estudiante
+        function deleteStudent(studentId) {
+            const studentIndex = studentsData.findIndex(s => s.id === studentId);
+            
+            if (studentIndex !== -1) {
+                // Eliminar el estudiante
+                studentsData.splice(studentIndex, 1);
+                
+                // Reasignar IDs para mantener la secuencia
+                studentsData.forEach((student, index) => {
+                    student.id = index;
+                });
+                
+                // Guardar en localStorage
+                saveToLocalStorage();
+                
+                // Actualizar interfaz
+                updateStatistics();
+                renderStudentsList();
+                setupFilterCareerOptions();
+                
+                // Mostrar mensaje de éxito
+                showAlert('Estudiante eliminado correctamente', 'success');
+                
+                return true;
+            } else {
+                showAlert('Error al eliminar el estudiante', 'danger');
+                return false;
+            }
+        }
+
+        // Función para mostrar el modal de confirmación de eliminación
+        function showDeleteConfirmationModal(studentId) {
+            const student = studentsData.find(s => s.id === studentId);
+            if (!student) return;
+            
+            studentIdToDelete = studentId;
+            document.getElementById('studentToDeleteName').textContent = student.nombre;
+            
+            const deleteConfirmModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+            deleteConfirmModal.show();
+        }
+
+        // Función para guardar en localStorage
+        function saveToLocalStorage() {
+            const dataToSave = studentsData.map(student => ({
+                nombre: student.nombre,
+                rut: student.rut,
+                carrera: student.carrera,
+                sede: student.sede,
+                supervisorPractica: student.supervisorPractica,
+                centroPractica: student.centroPractica,
+                instructor: student.instructor,
+                nivelPractica: student.nivelPractica,
+                fechaInicio: student.fechaInicio,
+                fechaTermino: student.fechaTermino,
+                seguimiento1: student.seguimiento1,
+                seguimiento2: student.seguimiento2,
+                evaluacionInstructor: student.evaluacionInstructor,
+                finalizacionPractica: student.finalizacionPractica,
+                evaluacionFinal: student.evaluacionFinal
+            }));
+            
+            localStorage.setItem('datosPracticas', JSON.stringify(dataToSave));
+        }
+
+        // Función para exportar a Excel
+        function exportToExcel() {
+            // Crear un array con los datos a exportar
+            const exportData = [
+                ['Nombre', 'RUT', 'Carrera', 'Sede', 'Nivel de práctica', 'Supervisor de práctica', 
+                'Centro de práctica', 'Nombre instructor', 'Fecha Inicio', 'Fecha Término', 
+                'Seguimiento 1', 'Seguimiento 2', 'Evaluación instructor', 'Finalización práctica', 
+                'Evaluación final']
+            ];
+            
+            studentsData.forEach(student => {
+                exportData.push([
+                    student.nombre,
+                    student.rut,
+                    student.carrera,
+                    student.sede,
+                    student.nivelPractica === 'practica-intermedia-1' ? 'Intermedia 1' : 
+                        student.nivelPractica === 'practica-intermedia-2' ? 'Intermedia 2' : 'Profesional',
+                    student.supervisorPractica,
+                    student.centroPractica,
+                    student.instructor,
+                    student.fechaInicio,
+                    student.fechaTermino,
+                    student.seguimiento1 === 'no-comienza' ? 'No comienza' : 
+                        student.seguimiento1 === 'en-proceso' ? 'En proceso' : 'Completada',
+                    student.seguimiento2 === 'no-comienza' ? 'No comienza' : 
+                        student.seguimiento2 === 'en-proceso' ? 'En proceso' : 'Completada',
+                    student.evaluacionInstructor.charAt(0).toUpperCase() + student.evaluacionInstructor.slice(1),
+                    student.finalizacionPractica === 'no-comienza' ? 'No comienza' : 
+                        student.finalizacionPractica === 'en-proceso' ? 'En proceso' : 'Completada',
+                    student.evaluacionFinal === 'no-comienza' ? 'No comienza' : 
+                        student.evaluacionFinal === 'en-proceso' ? 'En proceso' : 'Completada'
+                ]);
+            });
+            
+            // Crear workbook y worksheet
+            const ws = XLSX.utils.aoa_to_sheet(exportData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Seguimiento Prácticas");
+            
+            // Guardar archivo
+            XLSX.writeFile(wb, "seguimiento_practicas_humanidades.xlsx");
+            
+            showAlert('Datos exportados correctamente a Excel', 'success');
+        }
+        
+        // Función para obtener datos para gráficos
+        function getReportData() {
+            // Datos para gráfico de estado
+            const statusData = {
+                labels: ['No comienza', 'En proceso', 'Completada'],
+                data: [0, 0, 0]
+            };
+            
+            // Datos para gráfico de sedes
+            const campusData = {
+                labels: [...sedes],
+                data: Array(sedes.length).fill(0)
+            };
+            
+            // Datos para gráfico de carreras
+            const careerData = {
+                labels: [...carreras],
+                data: Array(carreras.length).fill(0)
+            };
+            
+            // Datos para gráfico de evaluación
+            const evaluationData = {
+                labels: ['Excelente', 'Bien', 'Suficiente', 'Deficiente', 'Malo'],
+                data: [0, 0, 0, 0, 0]
+            };
+            
+            // Datos para gráfico de nivel de práctica
+            const nivelPracticaData = {
+                labels: ['Intermedia 1', 'Intermedia 2', 'Profesional'],
+                data: [0, 0, 0]
+            };
+            
+            // Estadísticas generales
+            const stats = {
+                total: studentsData.length,
+                enProceso: 0,
+                completadas: 0,
+                pendientes: 0,
+                duracionPromedio: 0
+            };
+            
+            // Recopilar datos
+            studentsData.forEach(student => {
+                // Datos de estado
+                if (student.finalizacionPractica === 'no-comienza') {
+                    statusData.data[0]++;
+                    stats.pendientes++;
+                } else if (student.finalizacionPractica === 'en-proceso') {
+                    statusData.data[1]++;
+                    stats.enProceso++;
+                } else {
+                    statusData.data[2]++;
+                    stats.completadas++;
+                }
+                
+                // Datos de sede
+                const campusIndex = sedes.indexOf(student.sede);
+                if (campusIndex !== -1) {
+                    campusData.data[campusIndex]++;
+                }
+                
+                // Datos de carrera
+                const careerIndex = carreras.indexOf(student.carrera);
+                if (careerIndex !== -1) {
+                    careerData.data[careerIndex]++;
+                }
+                
+                // Datos de evaluación
+                const evalMap = {
+                    'excelente': 0,
+                    'bien': 1,
+                    'suficiente': 2,
+                    'deficiente': 3,
+                    'malo': 4
+                };
+                const evalIndex = evalMap[student.evaluacionInstructor] || 0;
+                evaluationData.data[evalIndex]++;
+                
+                // Datos de nivel de práctica
+                if (student.nivelPractica === 'practica-intermedia-1') {
+                    nivelPracticaData.data[0]++;
+                } else if (student.nivelPractica === 'practica-intermedia-2') {
+                    nivelPracticaData.data[1]++;
+                } else {
+                    nivelPracticaData.data[2]++;
+                }
+                
+                // Duración promedio (si hay fechas)
+                if (student.fechaInicio && student.fechaTermino) {
+                    const inicio = new Date(student.fechaInicio.split('/').reverse().join('-'));
+                    const termino = new Date(student.fechaTermino.split('/').reverse().join('-'));
+                    const duracion = (termino - inicio) / (1000 * 60 * 60 * 24);
+                    stats.duracionPromedio += duracion;
+                }
+            });
+            
+            // Calcular duración promedio
+            stats.duracionPromedio = stats.total > 0 ? Math.round(stats.duracionPromedio / stats.total) : 0;
+            
+            return {
+                statusData,
+                campusData,
+                careerData,
+                evaluationData,
+                nivelPracticaData,
+                stats
+            };
+        }
+        
+        // Función para crear gráficos de vista previa
+        function createPreviewCharts() {
+            const reportData = getReportData();
+            
+            // Actualizar fecha del informe
+            document.getElementById('reportDate').textContent = new Date().toLocaleDateString('es-ES');
+            
+            // Gráfico de Estado
+            if (statusChart) statusChart.destroy();
+            const statusCtx = document.getElementById('previewStatusChart').getContext('2d');
+            statusChart = new Chart(statusCtx, {
+                type: 'pie',
+                data: {
+                    labels: reportData.statusData.labels,
+                    datasets: [{
+                        data: reportData.statusData.data,
+                        backgroundColor: ['#dc3545', '#ffc107', '#28a745']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de Sedes
+            if (campusChart) campusChart.destroy();
+            const campusCtx = document.getElementById('previewCampusChart').getContext('2d');
+            campusChart = new Chart(campusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: reportData.campusData.labels,
+                    datasets: [{
+                        data: reportData.campusData.data,
+                        backgroundColor: [
+                            '#8E44AD', '#9B59B6', '#8E44AD', '#9B59B6', '#8E44AD'
                         ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de Carreras
+            if (careerChart) careerChart.destroy();
+            const careerCtx = document.getElementById('previewCareerChart').getContext('2d');
+            careerChart = new Chart(careerCtx, {
+                type: 'bar',
+                data: {
+                    labels: reportData.careerData.labels,
+                    datasets: [{
+                        label: 'Estudiantes por carrera',
+                        data: reportData.careerData.data,
+                        backgroundColor: '#8E44AD'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
                     },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: 'Días'
-                                }
-                            }
-                        },
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: 'Duración Promedio y Moda por Carrera'
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
                             }
                         }
                     }
+                }
+            });
+            
+            // Gráfico de Evaluación
+            if (evaluationChart) evaluationChart.destroy();
+            const evaluationCtx = document.getElementById('previewEvaluationChart').getContext('2d');
+            evaluationChart = new Chart(evaluationCtx, {
+                type: 'polarArea',
+                data: {
+                    labels: reportData.evaluationData.labels,
+                    datasets: [{
+                        data: reportData.evaluationData.data,
+                        backgroundColor: [
+                            '#28a745', '#17a2b8', '#ffc107', '#fd7e14', '#dc3545'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de Nivel de Práctica
+            if (nivelPracticaChart) nivelPracticaChart.destroy();
+            const nivelPracticaCtx = document.getElementById('previewNivelPracticaChart').getContext('2d');
+            nivelPracticaChart = new Chart(nivelPracticaCtx, {
+                type: 'pie',
+                data: {
+                    labels: reportData.nivelPracticaData.labels,
+                    datasets: [{
+                        data: reportData.nivelPracticaData.data,
+                        backgroundColor: ['#8E44AD', '#9B59B6', '#D2B4DE']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+            
+            // Actualizar estadísticas
+            const statsContent = document.getElementById('previewStatsContent');
+            statsContent.innerHTML = `
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th>Total de estudiantes</th>
+                                <td>${reportData.stats.total}</td>
+                            </tr>
+                            <tr>
+                                <th>Prácticas en proceso</th>
+                                <td>${reportData.stats.enProceso}</td>
+                            </tr>
+                            <tr>
+                                <th>Prácticas completadas</th>
+                                <td>${reportData.stats.completadas}</td>
+                            </tr>
+                            <tr>
+                                <th>Prácticas pendientes</th>
+                                <td>${reportData.stats.pendientes}</td>
+                            </tr>
+                            <tr>
+                                <th>Duración promedio</th>
+                                <td>${reportData.stats.duracionPromedio} días</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+        
+        // Función para generar el informe PDF con gráficos
+        function generateReport() {
+            // Primero mostrar vista previa con gráficos
+            createPreviewCharts();
+            const previewModal = new bootstrap.Modal(document.getElementById('reportPreviewModal'));
+            previewModal.show();
+        }
+        
+        // Función para generar el PDF final con gráficos
+        async function generateFinalPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
+            const reportData = getReportData();
+            
+            // Título
+            doc.setFontSize(20);
+            doc.setTextColor(142, 68, 173); // Color primario de Humanidades
+            doc.text('Informe de Seguimiento de Prácticas', 105, 20, { align: 'center' });
+            
+            doc.setFontSize(16);
+            doc.text('Facultad de Humanidades', 105, 30, { align: 'center' });
+            
+            doc.setFontSize(12);
+            doc.setTextColor(100, 100, 100);
+            doc.text(`Generado: ${new Date().toLocaleDateString('es-ES')}`, 105, 40, { align: 'center' });
+            
+            // Estadísticas generales
+            doc.setFontSize(14);
+            doc.setTextColor(142, 68, 173);
+            doc.text('Estadísticas Generales', 20, 55);
+            
+            doc.setFontSize(11);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Total de estudiantes en prácticas: ${reportData.stats.total}`, 20, 65);
+            doc.text(`Prácticas en proceso: ${reportData.stats.enProceso} (${Math.round((reportData.stats.enProceso/reportData.stats.total || 0) * 100)}%)`, 20, 71);
+            doc.text(`Prácticas completadas: ${reportData.stats.completadas} (${Math.round((reportData.stats.completadas/reportData.stats.total || 0) * 100)}%)`, 20, 77);
+            doc.text(`Prácticas pendientes: ${reportData.stats.pendientes} (${Math.round((reportData.stats.pendientes/reportData.stats.total || 0) * 100)}%)`, 20, 83);
+            doc.text(`Duración promedio: ${reportData.stats.duracionPromedio} días`, 20, 89);
+            
+            // Capturar gráficos como imágenes
+            const statusCanvas = document.getElementById('previewStatusChart');
+            const campusCanvas = document.getElementById('previewCampusChart');
+            const careerCanvas = document.getElementById('previewCareerChart');
+            const evaluationCanvas = document.getElementById('previewEvaluationChart');
+            const nivelPracticaCanvas = document.getElementById('previewNivelPracticaChart');
+            
+            // Agregar gráficos al PDF
+            let yPos = 100;
+            
+            // Gráfico de estado
+            doc.setFontSize(14);
+            doc.setTextColor(142, 68, 173);
+            doc.text('Distribución por Estado', 20, yPos);
+            yPos += 10;
+            
+            const statusImg = statusCanvas.toDataURL('image/png');
+            doc.addImage(statusImg, 'PNG', 20, yPos, 80, 60);
+            
+            // Gráfico de sedes
+            doc.text('Distribución por Sedes', 110, yPos - 10);
+            const campusImg = campusCanvas.toDataURL('image/png');
+            doc.addImage(campusImg, 'PNG', 110, yPos, 80, 60);
+            
+            // Nueva página para más gráficos
+            doc.addPage();
+            yPos = 20;
+            
+            // Gráfico de carreras
+            doc.setFontSize(14);
+            doc.setTextColor(142, 68, 173);
+            doc.text('Distribución por Carreras', 105, yPos, { align: 'center' });
+            yPos += 10;
+            
+            const careerImg = careerCanvas.toDataURL('image/png');
+            doc.addImage(careerImg, 'PNG', 15, yPos, 180, 70);
+            yPos += 80;
+            
+            // Gráfico de evaluación
+            doc.text('Evaluación del Instructor', 20, yPos);
+            const evaluationImg = evaluationCanvas.toDataURL('image/png');
+            doc.addImage(evaluationImg, 'PNG', 20, yPos + 10, 80, 60);
+            
+            // Gráfico de nivel de práctica
+            doc.text('Nivel de Práctica', 110, yPos);
+            const nivelPracticaImg = nivelPracticaCanvas.toDataURL('image/png');
+            doc.addImage(nivelPracticaImg, 'PNG', 110, yPos + 10, 80, 60);
+            
+            // Lista de estudiantes
+            doc.addPage();
+            
+            doc.setFontSize(16);
+            doc.setTextColor(142, 68, 173);
+            doc.text('Listado de Estudiantes en Prácticas', 105, 20, { align: 'center' });
+            
+            // Tabla de estudiantes
+            const tableData = [];
+            const tableColumns = ['Nombre', 'RUT', 'Carrera', 'Sede', 'Estado', 'Nivel Práctica'];
+            
+            studentsData.forEach(student => {
+                let estado = 'No comienza';
+                if (student.finalizacionPractica === 'en-proceso') {
+                    estado = 'En proceso';
+                } else if (student.finalizacionPractica === 'completada') {
+                    estado = 'Completada';
+                }
+                
+                let nivelPractica = 'Intermedia 1';
+                if (student.nivelPractica === 'practica-intermedia-2') {
+                    nivelPractica = 'Intermedia 2';
+                } else if (student.nivelPractica === 'practica-profesional') {
+                    nivelPractica = 'Profesional';
+                }
+                
+                tableData.push([
+                    student.nombre,
+                    student.rut,
+                    student.carrera,
+                    student.sede,
+                    estado,
+                    nivelPractica
+                ]);
+            });
+            
+            // Simple table implementation
+            yPos = 30;
+            const cellWidth = [45, 25, 40, 25, 30, 30];
+            const cellPadding = 5;
+            const lineHeight = 7;
+            
+            // Table header
+            doc.setFillColor(142, 68, 173);
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(10);
+            
+            let xPos = 10;
+            tableColumns.forEach((column, index) => {
+                doc.rect(xPos, yPos, cellWidth[index], lineHeight, 'F');
+                doc.text(column, xPos + cellPadding, yPos + 5);
+                xPos += cellWidth[index];
+            });
+            
+            // Table rows
+            doc.setTextColor(0, 0, 0);
+            yPos += lineHeight;
+            
+            tableData.forEach((row, rowIndex) => {
+                // Add a new page if needed
+                if (yPos > 270) {
+                    doc.addPage();
+                    yPos = 20;
+                }
+                
+                // Alternate row colors
+                if (rowIndex % 2 === 0) {
+                    doc.setFillColor(240, 240, 240);
+                    xPos = 10;
+                    tableColumns.forEach((column, index) => {
+                        doc.rect(xPos, yPos, cellWidth[index], lineHeight, 'F');
+                        xPos += cellWidth[index];
+                    });
+                }
+                
+                // Cell content
+                xPos = 10;
+                row.forEach((cell, cellIndex) => {
+                    // Truncate text if too long
+                    let cellText = cell.toString();
+                    if (cellText.length > 20) {
+                        cellText = cellText.substring(0, 17) + '...';
+                    }
+                    doc.text(cellText, xPos + cellPadding, yPos + 5);
+                    xPos += cellWidth[cellIndex];
                 });
+                
+                yPos += lineHeight;
+            });
+            
+            // Guardar el archivo
+            doc.save('informe_practicas_humanidades.pdf');
+            
+            showAlert('Informe generado correctamente', 'success');
+            
+            // Cerrar el modal de vista previa
+            const previewModal = bootstrap.Modal.getInstance(document.getElementById('reportPreviewModal'));
+            if (previewModal) {
+                previewModal.hide();
             }
         }
 
-        // Función para calcular la moda
-        function calcularModa(arr) {
-            return arr.sort((a,b) =>
-                arr.filter(v => v===a).length - arr.filter(v => v===b).length
-            ).pop();
+        // Función para mostrar alertas
+        function showAlert(message, type) {
+            const alertHTML = `
+                <div class="alert alert-${type} alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3" 
+                    role="alert" style="z-index: 1050;">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i> ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                </div>
+            `;
+            $('body').append(alertHTML);
+            setTimeout(() => {
+                $('.alert').alert('close');
+            }, 3000);
         }
 
-        // Función para calcular el promedio
-        function calcularPromedio(arr) {
-            return arr.reduce((a, b) => a + b, 0) / arr.length;
-        }
-
+        // Inicialización cuando el DOM esté listo
         $(document).ready(function() {
-            let table = $('#seguimientoPracticas').DataTable({
-                scrollX: true,
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json'
-                },
-                dom: 'Bfrtip',
-                buttons: [],
-                pageLength: 25,
-                lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Todos"]],
-                processing: true,
-                serverSide: true,
-                ajax: function (data, callback, settings) {
-                    const start = data.start;
-                    const end = data.start + data.length;
-                    const filas = generarFilas(start, end);
-                    callback({
-                        draw: data.draw,
-                        recordsTotal: 500,
-                        recordsFiltered: 500,
-                        data: filas
-                    });
-                },
-                columns: [
-                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(0)').html(); } },
-                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(1)').html(); } },
-                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(2)').html(); } },
-                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(3)').html(); } },
-                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(4)').html(); } },
-                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(5)').html(); } },
-                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(6)').html(); } },
-                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(7)').html(); } },
-                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(8)').html(); } },
-                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(9)').html(); } },
-                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(10)').html(); } },
-                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(11)').html(); } },
-                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(12)').html(); } },
-                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(13)').html(); } },
-                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(14)').html(); } },
-                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(15)').html(); } },
-                    { data: null, render: function (data, type, row) { return $(row).find('td:eq(16)').html(); } }
-                ],
-                drawCallback: function() {
-                    $('.datepicker').flatpickr({
-                        locale: 'es',
-                        dateFormat: 'd/m/Y'
-                    });
-                    tippy('[data-tippy-content]');
-                    actualizarDashboard();
+            // Verificar si el usuario está logueado
+            if (sessionStorage.getItem('loggedIn') !== 'true') {
+                // Por ahora no requerimos login para desarrollo
+                sessionStorage.setItem('loggedIn', 'true');
+            }
+            
+            // Cargar datos de estudiantes
+            loadStudentsData();
+            
+            // Inicializar tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+            
+            // Inicializar datepickers
+            flatpickr(".datepicker", {
+                dateFormat: "d/m/Y",
+                locale: "es",
+                allowInput: true
+            });
+            
+            // Event listeners para filtros
+            
+            // Filtro de búsqueda
+            $('#searchStudent').on('input', function() {
+                activeFilters.search = $(this).val().trim();
+                currentPage = 1;
+                renderStudentsList();
+            });
+            
+            // Filtro por estado (radio buttons)
+            $('input[name="filterStatus"]').on('change', function() {
+                activeFilters.status = $(this).val();
+                currentPage = 1;
+                renderStudentsList();
+                updateActiveFiltersDisplay();
+            });
+            
+            // Filtro por carrera (selector visual)
+            $('#filterCareerBtn').on('click', function() {
+                $('#filterCareerSelector').toggleClass('active');
+            });
+            
+            // Cerrar selector de carrera al hacer clic fuera
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('#filterCareerSelector').length) {
+                    $('#filterCareerSelector').removeClass('active');
                 }
             });
-
-            $('#seguimientoPracticas').on('change', '.adjuntar-doc', function(e) {
-                const file = e.target.files[0];
-                const container = $(this).closest('.documento-container');
-                const descargarBtn = container.find('.descargar-doc');
+            
+            // Seleccionar carrera desde el filtro
+            $(document).on('click', '.filter-career-option', function() {
+                const value = $(this).data('value');
                 
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const base64Data = e.target.result;
-                        container.data('file', { name: file.name, data: base64Data });
-                        descargarBtn.show().attr('href', base64Data).attr('download', file.name);
-                    };
-                    reader.readAsDataURL(file);
+                $('.filter-career-option').removeClass('selected');
+                $(this).addClass('selected');
+                
+                $('#filterCareerBtn').text(value ? value : 'Todas las carreras');
+                $('#filterCareer').val(value);
+                
+                if (value) {
+                    $('#filterCareerSelector').addClass('selected');
+                } else {
+                    $('#filterCareerSelector').removeClass('selected');
+                }
+                
+                $('#filterCareerSelector').removeClass('active');
+                
+                // Actualizar filtro
+                activeFilters.career = value;
+                currentPage = 1;
+                renderStudentsList();
+                updateActiveFiltersDisplay();
+            });
+            
+            // Función para actualizar etiquetas de filtros activos
+            function updateActiveFiltersDisplay() {
+                const activeFiltersContainer = document.getElementById('activeFilters');
+                activeFiltersContainer.innerHTML = '';
+                
+                if (activeFilters.career) {
+                    const tag = document.createElement('span');
+                    tag.className = 'filter-tag';
+                    tag.innerHTML = `Carrera: ${activeFilters.career} <i class="fas fa-times close"></i>`;
+                    tag.querySelector('.close').addEventListener('click', () => {
+                        // Resetear filtro de carrera
+                        $('#filterCareer').val('');
+                        $('#filterCareerBtn').text('Todas las carreras');
+                        $('#filterCareerSelector').removeClass('selected');
+                        $('.filter-career-option').removeClass('selected');
+                        $('.filter-career-option[data-value=""]').addClass('selected');
+                        
+                        activeFilters.career = '';
+                        currentPage = 1;
+                        renderStudentsList();
+                        updateActiveFiltersDisplay();
+                    });
+                    activeFiltersContainer.appendChild(tag);
+                }
+                
+                if (activeFilters.status) {
+                    let statusText = 'No comienza';
+                    if (activeFilters.status === 'en-proceso') statusText = 'En proceso';
+                    if (activeFilters.status === 'completada') statusText = 'Completada';
+                    
+                    const tag = document.createElement('span');
+                    tag.className = 'filter-tag';
+                    tag.innerHTML = `Estado: ${statusText} <i class="fas fa-times close"></i>`;
+                    tag.querySelector('.close').addEventListener('click', () => {
+                        // Resetear filtro de estado
+                        $('input[name="filterStatus"][value=""]').prop('checked', true);
+                        
+                        activeFilters.status = '';
+                        currentPage = 1;
+                        renderStudentsList();
+                        updateActiveFiltersDisplay();
+                    });
+                    activeFiltersContainer.appendChild(tag);
+                }
+            }
+            
+            // Event listeners para selector de carrera en modales
+            $(document).on('click', '#careerOptionsBtn', function() {
+                $('#careerSelector').toggleClass('active');
+            });
+            
+            $(document).on('click', '#newCareerOptionsBtn', function() {
+                $('#newCareerSelector').toggleClass('active');
+            });
+            
+            // Seleccionar carrera en modal de edición
+            $(document).on('click', '#careerOptionsList .career-option-item', function() {
+                const value = $(this).data('value');
+                
+                $('#careerOptionsList .career-option-item').removeClass('selected');
+                $(this).addClass('selected');
+                
+                $('#careerOptionsBtn').text(value);
+                $('#studentCareer').val(value);
+                
+                $('#careerSelector').removeClass('active').addClass('selected');
+            });
+            
+            // Seleccionar carrera en modal de agregar
+            $(document).on('click', '#newCareerOptionsList .career-option-item', function() {
+                const value = $(this).data('value');
+                
+                $('#newCareerOptionsList .career-option-item').removeClass('selected');
+                $(this).addClass('selected');
+                
+                $('#newCareerOptionsBtn').text(value);
+                $('#newStudentCareer').val(value);
+                
+                $('#newCareerSelector').removeClass('active').addClass('selected');
+            });
+            
+            // Cerrar selectores de carrera al hacer clic fuera
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('#careerSelector').length) {
+                    $('#careerSelector').removeClass('active');
+                }
+                if (!$(e.target).closest('#newCareerSelector').length) {
+                    $('#newCareerSelector').removeClass('active');
                 }
             });
-
-            $('#seguimientoPracticas').on('click', '.adjuntar-btn', function() {
-                $(this).siblings('.adjuntar-doc').click();
+            
+            // Event listeners para radios de opciones visuales
+            $(document).on('change', 'input[name="practiceLevel"]', function() {
+                document.getElementById('practiceLevel').value = this.value;
             });
-
-            $('#exportButton').on('click', function() {
-                const workbook = XLSX.utils.book_new();
-                const worksheet = XLSX.utils.table_to_sheet(document.getElementById('seguimientoPracticas'));
+            
+            $(document).on('change', 'input[name="practiceState"]', function() {
+                document.getElementById('practiceState').value = this.value;
+            });
+            
+            $(document).on('change', 'input[name="tracking1"]', function() {
+                document.getElementById('tracking1').value = this.value;
+            });
+            
+            $(document).on('change', 'input[name="tracking2"]', function() {
+                document.getElementById('tracking2').value = this.value;
+            });
+            
+            $(document).on('change', 'input[name="instructorEvaluation"]', function() {
+                document.getElementById('instructorEvaluation').value = this.value;
+            });
+            
+            $(document).on('change', 'input[name="finalEvaluation"]', function() {
+                document.getElementById('finalEvaluation').value = this.value;
+            });
+            
+            // Modal nuevo estudiante
+            $(document).on('change', 'input[name="newPracticeLevel"]', function() {
+                document.getElementById('newPracticeLevel').value = this.value;
+            });
+            
+            $(document).on('change', 'input[name="newPracticeState"]', function() {
+                document.getElementById('newPracticeState').value = this.value;
+            });
+            
+            $(document).on('change', 'input[name="newTracking1"]', function() {
+                document.getElementById('newTracking1').value = this.value;
+            });
+            
+            $(document).on('change', 'input[name="newTracking2"]', function() {
+                document.getElementById('newTracking2').value = this.value;
+            });
+            
+            $(document).on('change', 'input[name="newInstructorEvaluation"]', function() {
+                document.getElementById('newInstructorEvaluation').value = this.value;
+            });
+            
+            $(document).on('change', 'input[name="newFinalEvaluation"]', function() {
+                document.getElementById('newFinalEvaluation').value = this.value;
+            });
+            
+            // Editar estudiante
+            $(document).on('click', '.edit-student', function() {
+                const studentId = parseInt($(this).data('id'));
+                fillEditModal(studentId);
+            });
+            
+            // Subir documento
+            $(document).on('click', '.upload-document', function() {
+                const studentId = parseInt($(this).data('id'));
+                const docType = $(this).data('type');
                 
-                // Filtrar solo las filas modificadas por el usuario
-                const modifiedRows = [];
-                $('#seguimientoPracticas tbody tr').each(function(index) {
-                    const $row = $(this);
-                    const isModified = $row.find('input, select').toArray().some(el => el.value !== '');
-                    if (isModified) {
-                        const rowData = [];
-                        $row.find('td').each(function() {
-                            const $cell = $(this);
-                            const $input = $cell.find('input');
-                            const $select = $cell.find('select');
-                            if ($input.length) {
-                                rowData.push($input.val());
-                            } else if ($select.length) {
-                                rowData.push($select.val());
-                            } else {
-                                rowData.push($cell.text());
-                            }
-                        });
-                        modifiedRows.push(rowData);
+                // Simular clic en el input file correspondiente en el modal
+                fillEditModal(studentId);
+                
+                // Una vez cargado el modal, hacer foco en el campo correspondiente
+                $('#editStudentModal').on('shown.bs.modal', function() {
+                    if (docType === 'instructor') {
+                        $('#instructorDoc').focus();
+                    } else {
+                        $('#completionDoc').focus();
                     }
                 });
-
-                const modifiedWorksheet = XLSX.utils.aoa_to_sheet([
-                    ['Nombre y Apellidos', 'RUT', 'Carrera', 'SEDE', 'Nivel de práctica', 'Supervisor de práctica', 'Centro de práctica', 'Nombre instructor', 'Fecha de Inicio', 'Fecha de Término', 'Seguimiento 1', 'Seguimiento 2', 'Evaluación instructor', 'Documentación instructor', 'Finalización práctica', 'Documentación finalización', 'Evaluación final de práctica intermedia o profesional'],
-                    ...modifiedRows
-                ]);
-
-                XLSX.utils.book_append_sheet(workbook, modifiedWorksheet, 'Datos modificados');
-                XLSX.writeFile(workbook, 'seguimiento_practicas_modificados.xlsx');
             });
-
-            $('#saveButton').on('click', function() {
-                const datos = [];
-                $('#seguimientoPracticas tbody tr').each(function() {
-                    const $row = $(this);
-                    const rowData = {
-                        nombre: $row.find('td:eq(0) input').val(),
-                        rut: $row.find('td:eq(1) input').val(),
-                        carrera: $row.find('td:eq(2) select').val(),
-                        sede: $row.find('td:eq(3) select').val(),
-                        nivelPractica: $row.find('td:eq(4) select').val(),
-                        supervisorPractica: $row.find('td:eq(5) input').val(),
-                        centroPractica: $row.find('td:eq(6) input').val(),
-                        instructor: $row.find('td:eq(7) input').val(),
-                        fechaInicio: $row.find('td:eq(8) input').val(),
-                        fechaTermino: $row.find('td:eq(9) input').val(),
-                        seguimiento1: $row.find('td:eq(10) select').val(),
-                        seguimiento2: $row.find('td:eq(11) select').val(),
-                        evaluacionInstructor: $row.find('td:eq(12) select').val(),
-                        documentacionInstructor: $row.find('td:eq(13) .documento-container').data('file'),
-                        finalizacionPractica: $row.find('td:eq(14) select').val(),
-                        documentacionFinalizacion: $row.find('td:eq(15) .documento-container').data('file'),
-                        evaluacionFinal: $row.find('td:eq(16) select').val()
-                    };
-                    datos.push(rowData);
-                });
-                localStorage.setItem('datosPracticas', JSON.stringify(datos));
-                alert('Datos guardados correctamente');
-                actualizarDashboard();
+            
+            // Botón para eliminar estudiante
+            $(document).on('click', '#deleteStudentBtn', function() {
+                const studentId = parseInt($('#studentId').value);
+                showDeleteConfirmationModal(studentId);
+                $('#editStudentModal').modal('hide');
             });
-
-            // Evento para actualizar el dashboard cuando cambie cualquier dato en la tabla
-            $('#seguimientoPracticas').on('change', 'input, select', function() {
-                actualizarDashboard();
+            
+            // Confirmar eliminación de estudiante
+            $('#confirmDeleteBtn').on('click', function() {
+                if (studentIdToDelete !== null) {
+                    deleteStudent(studentIdToDelete);
+                    $('#deleteConfirmModal').modal('hide');
+                    studentIdToDelete = null;
+                }
             });
-
-            // Inicializar el dashboard
-            actualizarDashboard();
-
-            // Botón para volver a la página principal
-            $('#volverButton').on('click', function() {
-                window.location.href = 'https://kilua2x.github.io/PRACTICAS/'; // Asegúrate de que esta sea la URL correcta de tu página principal
+            
+            // Envío del formulario de edición
+            $('#editStudentForm').on('submit', function(e) {
+                e.preventDefault();
+                if (saveStudentChanges(this)) {
+                    $('#editStudentModal').modal('hide');
+                }
             });
-
-            // Botón para descargar el dashboard en PDF
-            $('#downloadDashboardButton').on('click', function() {
-                html2canvas(document.querySelector("#dashboard")).then(canvas => {
-                    const imgData = canvas.toDataURL('image/png');
-                    const pdf = new jspdf.jsPDF();
-                    const imgProps= pdf.getImageProperties(imgData);
-                    const pdfWidth = pdf.internal.pageSize.getWidth();
-                    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-                    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-                    pdf.save("dashboard.pdf");
-                });
+            
+            // Botón para agregar estudiante
+            $('#addStudentBtn').on('click', function() {
+                prepareAddStudentModal();
+            });
+            
+            // Envío del formulario para agregar estudiante
+            $('#addStudentForm').on('submit', function(e) {
+                e.preventDefault();
+                if (addNewStudent(this)) {
+                    $('#addStudentModal').modal('hide');
+                }
+            });
+            
+            // Botón para exportar a Excel
+            $('#exportExcelBtn').on('click', function() {
+                exportToExcel();
+            });
+            
+            // Botón para generar informe
+            $('#generateReportBtn').on('click', function() {
+                generateReport();
+            });
+            
+            // Botón para generar PDF final desde la vista previa
+            $('#generateFinalReportBtn').on('click', function() {
+                generateFinalPDF();
+            });
+            
+            // Botón para cerrar sesión
+            $('#logoutBtn').on('click', function() {
+                sessionStorage.removeItem('loggedIn');
+                window.location.href = 'index.html';
+            });
+            
+            // Botón para volver al menú principal
+            $('#volverPrincipal, .navbar-brand').on('click', function(e) {
+                e.preventDefault();
+                window.location.href = 'index.html';
             });
         });
     </script>
