@@ -420,6 +420,30 @@
                 margin-bottom: 1rem;
             }
         }
+        
+        /* Nota final */
+        .final-grade {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 0.4rem 0.75rem;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+        
+        .final-grade.high {
+            color: var(--success-color);
+        }
+        
+        .final-grade.medium {
+            color: var(--warning-color);
+        }
+        
+        .final-grade.low {
+            color: var(--danger-color);
+        }
     </style>
 </head>
 <body>
@@ -730,6 +754,13 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="finalGrade" class="form-label">Nota Final (1.0 - 7.0)</label>
+                                    <input type="number" class="form-control" id="finalGrade" min="1.0" max="7.0" step="0.1" value="4.0">
+                                    <div class="form-text">Ingrese la calificación final del estudiante en escala de 1.0 a 7.0</div>
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- Documentación -->
@@ -758,6 +789,9 @@
                         </div>
                         
                         <div class="text-end mt-4">
+                            <button type="button" class="btn btn-danger me-2" id="deleteStudentBtn">
+                                <i class="fas fa-trash-alt me-1"></i> Eliminar Estudiante
+                            </button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                             <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                         </div>
@@ -908,6 +942,13 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="newFinalGrade" class="form-label">Nota Final (1.0 - 7.0)</label>
+                                    <input type="number" class="form-control" id="newFinalGrade" min="1.0" max="7.0" step="0.1" value="4.0">
+                                    <div class="form-text">Ingrese la calificación final del estudiante en escala de 1.0 a 7.0</div>
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- Documentación -->
@@ -968,6 +1009,29 @@
         </div>
     </div>
 
+    <!-- Modal de confirmación para eliminar estudiante -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteConfirmModalLabel">Confirmar eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <p><i class="fas fa-exclamation-triangle text-danger me-2"></i> ¿Está seguro que desea eliminar a este estudiante?</p>
+                    <p class="fw-bold" id="studentToDeleteName"></p>
+                    <p>Esta acción no se puede deshacer.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                        <i class="fas fa-trash-alt me-1"></i> Eliminar definitivamente
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -1021,6 +1085,9 @@
             career: '',
             status: ''
         };
+        
+        // Variable para almacenar el ID del estudiante a eliminar
+        let studentIdToDelete = null;
 
         // Función para obtener el encargado de práctica según carrera y sede
         function obtenerEncargadoPractica(carrera, sede) {
@@ -1060,7 +1127,8 @@
                     documentoInstructor: false, // Este campo requeriría almacenamiento de archivos real
                     finalizacionPractica: student.finalizacionPractica || 'no-comienza',
                     documentoFinalizacion: false, // Este campo requeriría almacenamiento de archivos real
-                    asignacionHoraExamen: student.asignacionHoraExamen || 'no-comienza'
+                    asignacionHoraExamen: student.asignacionHoraExamen || 'no-comienza',
+                    notaFinal: student.notaFinal || 4.0 // Nota final por defecto
                 };
             }).filter(student => student.nombre.trim() !== ''); // Filtrar estudiantes sin nombre
             
@@ -1157,6 +1225,16 @@
                     .substring(0, 2)
                     .toUpperCase();
                 
+                // Determinar clase para la nota final
+                let gradeClass = '';
+                if (student.notaFinal >= 6.0) {
+                    gradeClass = 'high';
+                } else if (student.notaFinal >= 4.0) {
+                    gradeClass = 'medium';
+                } else {
+                    gradeClass = 'low';
+                }
+                
                 // Renderizar tarjeta
                 const card = document.createElement('div');
                 card.className = 'student-card';
@@ -1177,6 +1255,9 @@
                                 <div class="student-campus"><strong>Sede:</strong> ${student.sede}</div>
                                 <div class="mt-2">
                                     <strong>Centro de práctica:</strong> ${student.centroPractica || 'No asignado'}
+                                </div>
+                                <div class="final-grade ${gradeClass}">
+                                    <i class="fas fa-graduation-cap me-1"></i> Nota Final: ${student.notaFinal}
                                 </div>
                             </div>
                         </div>
@@ -1381,6 +1462,7 @@
             document.getElementById('progressReview').value = student.revisionAvance;
             document.getElementById('instructorEvaluation').value = student.evaluacionInstructor;
             document.getElementById('examAssignment').value = student.asignacionHoraExamen;
+            document.getElementById('finalGrade').value = student.notaFinal;
             
             // Documentación - Aquí se manejaría la visualización de archivos existentes
             const viewInstructorDocBtn = document.getElementById('viewInstructorDoc');
@@ -1388,6 +1470,11 @@
             
             viewInstructorDocBtn.disabled = !student.documentoInstructor;
             viewCompletionDocBtn.disabled = !student.documentoFinalizacion;
+            
+            // Destruir los selects anteriores si existen
+            if ($.fn.select2) {
+                $('#studentCareer, #studentCampus, #practiceState, #tracking1, #partialEvaluation, #tracking2, #progressReview, #instructorEvaluation, #examAssignment').select2('destroy');
+            }
             
             // Inicializar Select2 en los selects del modal
             $('#studentCareer, #studentCampus, #practiceState, #tracking1, #partialEvaluation, #tracking2, #progressReview, #instructorEvaluation, #examAssignment').select2({
@@ -1416,6 +1503,12 @@
             document.getElementById('newProgressReview').value = 'excelente';
             document.getElementById('newInstructorEvaluation').value = 'excelente';
             document.getElementById('newExamAssignment').value = 'no-comienza';
+            document.getElementById('newFinalGrade').value = '4.0';
+            
+            // Destruir los selects anteriores si existen
+            if ($.fn.select2) {
+                $('#newStudentCareer, #newStudentCampus, #newPracticeState, #newTracking1, #newPartialEvaluation, #newTracking2, #newProgressReview, #newInstructorEvaluation, #newExamAssignment').select2('destroy');
+            }
             
             // Inicializar flatpickr en los campos de fecha
             flatpickr("#newStartDate, #newEndDate", {
@@ -1442,6 +1535,10 @@
             const studentIndex = studentsData.findIndex(s => s.id === studentId);
             
             if (studentIndex !== -1) {
+                // Obtener la nota final y asegurarse de que esté dentro del rango
+                let notaFinal = parseFloat(formData.get('finalGrade'));
+                notaFinal = Math.max(1.0, Math.min(7.0, notaFinal));
+                
                 // Actualizar datos del estudiante
                 studentsData[studentIndex] = {
                     ...studentsData[studentIndex],
@@ -1463,7 +1560,8 @@
                     revisionAvance: formData.get('progressReview'),
                     evaluacionInstructor: formData.get('instructorEvaluation'),
                     finalizacionPractica: formData.get('practiceState'),
-                    asignacionHoraExamen: formData.get('examAssignment')
+                    asignacionHoraExamen: formData.get('examAssignment'),
+                    notaFinal: notaFinal
                 };
                 
                 // Aquí manejaríamos la lógica para guardar archivos
@@ -1498,6 +1596,8 @@
             
             const carrera = form.querySelector('#newStudentCareer').value;
             const sede = form.querySelector('#newStudentCampus').value;
+            let notaFinal = parseFloat(form.querySelector('#newFinalGrade').value);
+            notaFinal = Math.max(1.0, Math.min(7.0, notaFinal));
             
             const newStudent = {
                 id: newId,
@@ -1518,7 +1618,8 @@
                 documentoInstructor: false,
                 finalizacionPractica: form.querySelector('#newPracticeState').value,
                 documentoFinalizacion: false,
-                asignacionHoraExamen: form.querySelector('#newExamAssignment').value
+                asignacionHoraExamen: form.querySelector('#newExamAssignment').value,
+                notaFinal: notaFinal
             };
             
             studentsData.push(newStudent);
@@ -1532,6 +1633,45 @@
             
             // Mostrar mensaje de éxito
             showAlert('Estudiante agregado correctamente', 'success');
+        }
+
+        // Función para eliminar un estudiante
+        function deleteStudent(studentId) {
+            const studentIndex = studentsData.findIndex(s => s.id === studentId);
+            
+            if (studentIndex !== -1) {
+                // Eliminar el estudiante
+                studentsData.splice(studentIndex, 1);
+                
+                // Reasignar IDs para mantener la secuencia
+                studentsData.forEach((student, index) => {
+                    student.id = index;
+                });
+                
+                // Guardar en localStorage
+                saveToLocalStorage();
+                
+                // Actualizar interfaz
+                updateStatistics();
+                renderStudentsList();
+                
+                // Mostrar mensaje de éxito
+                showAlert('Estudiante eliminado correctamente', 'success');
+            } else {
+                showAlert('Error al eliminar el estudiante', 'danger');
+            }
+        }
+
+        // Función para mostrar el modal de confirmación de eliminación
+        function showDeleteConfirmationModal(studentId) {
+            const student = studentsData.find(s => s.id === studentId);
+            if (!student) return;
+            
+            studentIdToDelete = studentId;
+            document.getElementById('studentToDeleteName').textContent = student.nombre;
+            
+            const deleteConfirmModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+            deleteConfirmModal.show();
         }
 
         // Función para guardar en localStorage
@@ -1552,7 +1692,8 @@
                 revisionAvance: student.revisionAvance,
                 evaluacionInstructor: student.evaluacionInstructor,
                 finalizacionPractica: student.finalizacionPractica,
-                asignacionHoraExamen: student.asignacionHoraExamen
+                asignacionHoraExamen: student.asignacionHoraExamen,
+                notaFinal: student.notaFinal
             }));
             
             localStorage.setItem('datosPracticas', JSON.stringify(dataToSave));
@@ -1565,7 +1706,7 @@
                 ['Nombre', 'RUT', 'Carrera', 'Sede', 'Encargado práctica', 'Centro de práctica', 
                 'Instructor', 'Fecha Inicio', 'Fecha Término', 'Seguimiento 1', 'Evaluación parcial', 
                 'Seguimiento 2', 'Revisión avance', 'Evaluación instructor', 'Finalización práctica', 
-                'Asignación hora examen']
+                'Asignación hora examen', 'Nota Final']
             ];
             
             studentsData.forEach(student => {
@@ -1589,7 +1730,8 @@
                     student.finalizacionPractica === 'no-comienza' ? 'Pendiente' : 
                         student.finalizacionPractica === 'en-proceso' ? 'En proceso' : 'Completado',
                     student.asignacionHoraExamen === 'no-comienza' ? 'Pendiente' : 
-                        student.asignacionHoraExamen === 'en-proceso' ? 'En proceso' : 'Completado'
+                        student.asignacionHoraExamen === 'en-proceso' ? 'En proceso' : 'Completado',
+                    student.notaFinal.toFixed(1)
                 ]);
             });
             
@@ -1761,6 +1903,21 @@
             doc.text(`Deficiente: ${evaluationDistribution['deficiente']}`, 20, yPos + 6);
             doc.text(`Malo: ${evaluationDistribution['malo']}`, 70, yPos + 6);
             
+            // Promedio de notas
+            let totalNotas = 0;
+            let contadorNotas = 0;
+            
+            studentsData.forEach(student => {
+                if (student.notaFinal) {
+                    totalNotas += parseFloat(student.notaFinal);
+                    contadorNotas++;
+                }
+            });
+            
+            const promedioNotas = contadorNotas > 0 ? (totalNotas / contadorNotas).toFixed(1) : 0;
+            
+            doc.text(`Nota promedio: ${promedioNotas}`, 120, yPos + 6);
+            
             // Lista de estudiantes
             doc.addPage();
             
@@ -1770,7 +1927,7 @@
             
             // Tabla de estudiantes
             const tableData = [];
-            const tableColumns = ['Nombre', 'RUT', 'Carrera', 'Sede', 'Estado'];
+            const tableColumns = ['Nombre', 'RUT', 'Carrera', 'Sede', 'Estado', 'Nota'];
             
             studentsData.forEach(student => {
                 let estado = 'Pendiente';
@@ -1785,13 +1942,14 @@
                     student.rut,
                     student.carrera.length > 25 ? student.carrera.substring(0, 25) + '...' : student.carrera,
                     student.sede,
-                    estado
+                    estado,
+                    student.notaFinal.toFixed(1)
                 ]);
             });
             
             // Simple table implementation
             yPos = 30;
-            const cellWidth = [50, 30, 60, 20, 30];
+            const cellWidth = [45, 25, 50, 20, 25, 15];
             const cellPadding = 5;
             const lineHeight = 7;
             
@@ -1988,6 +2146,22 @@
                         $('#completionDoc').focus();
                     }
                 });
+            });
+            
+            // Botón para eliminar estudiante
+            $(document).on('click', '#deleteStudentBtn', function() {
+                const studentId = parseInt($('#studentId').val());
+                showDeleteConfirmationModal(studentId);
+                $('#editStudentModal').modal('hide');
+            });
+            
+            // Confirmar eliminación de estudiante
+            $('#confirmDeleteBtn').on('click', function() {
+                if (studentIdToDelete !== null) {
+                    deleteStudent(studentIdToDelete);
+                    $('#deleteConfirmModal').modal('hide');
+                    studentIdToDelete = null;
+                }
             });
             
             // Envío del formulario de edición
