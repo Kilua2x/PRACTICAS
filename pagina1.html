@@ -444,6 +444,31 @@
         .final-grade.low {
             color: var(--danger-color);
         }
+        
+        /* Fix para select2 en modales */
+        .select2-container--bootstrap-5 {
+            z-index: 1056 !important;
+        }
+        
+        /* Estilos para la vista previa de gráficos */
+        .chart-preview-container {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .chart-preview-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .chart-canvas-container {
+            height: 200px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -1032,6 +1057,90 @@
         </div>
     </div>
 
+    <!-- Modal de previsualización de informe -->
+    <div class="modal fade" id="reportPreviewModal" tabindex="-1" aria-labelledby="reportPreviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reportPreviewModalLabel">Vista previa del informe</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 mb-4 text-center">
+                            <h3>Informe de Seguimiento de Prácticas</h3>
+                            <p class="lead">Facultad de Ingenierías, Tecnologías e Innovación</p>
+                            <p class="text-muted">Generado: <span id="reportDate"></span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="chart-preview-container">
+                                <h5 class="chart-preview-title">Distribución por Estado</h5>
+                                <div class="chart-canvas-container">
+                                    <canvas id="previewStatusChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="chart-preview-container">
+                                <h5 class="chart-preview-title">Distribución por Sedes</h5>
+                                <div class="chart-canvas-container">
+                                    <canvas id="previewCampusChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="chart-preview-container">
+                                <h5 class="chart-preview-title">Distribución por Carreras</h5>
+                                <div class="chart-canvas-container">
+                                    <canvas id="previewCareerChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="chart-preview-container">
+                                <h5 class="chart-preview-title">Evaluación del Instructor</h5>
+                                <div class="chart-canvas-container">
+                                    <canvas id="previewEvaluationChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="chart-preview-container">
+                                <h5 class="chart-preview-title">Distribución de Notas Finales</h5>
+                                <div class="chart-canvas-container">
+                                    <canvas id="previewGradesChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="chart-preview-container">
+                                <h5 class="chart-preview-title">Estadísticas Generales</h5>
+                                <div class="p-3">
+                                    <div id="previewStatsContent"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="generateFinalReportBtn">
+                        <i class="fas fa-file-pdf me-1"></i> Generar PDF Final
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -1088,6 +1197,9 @@
         
         // Variable para almacenar el ID del estudiante a eliminar
         let studentIdToDelete = null;
+        
+        // Variables para gráficos del informe
+        let statusChart, campusChart, careerChart, evaluationChart, gradesChart;
 
         // Función para obtener el encargado de práctica según carrera y sede
         function obtenerEncargadoPractica(carrera, sede) {
@@ -1471,21 +1583,25 @@
             viewInstructorDocBtn.disabled = !student.documentoInstructor;
             viewCompletionDocBtn.disabled = !student.documentoFinalizacion;
             
-            // Destruir los selects anteriores si existen
-            if ($.fn.select2) {
-                $('#studentCareer, #studentCampus, #practiceState, #tracking1, #partialEvaluation, #tracking2, #progressReview, #instructorEvaluation, #examAssignment').select2('destroy');
-            }
-            
-            // Inicializar Select2 en los selects del modal
-            $('#studentCareer, #studentCampus, #practiceState, #tracking1, #partialEvaluation, #tracking2, #progressReview, #instructorEvaluation, #examAssignment').select2({
-                theme: 'bootstrap-5',
-                width: '100%',
-                dropdownParent: $('#editStudentModal')
+            // Inicializar datepickers
+            flatpickr("#startDate, #endDate", {
+                dateFormat: "d/m/Y",
+                locale: "es",
+                allowInput: true
             });
             
             // Mostrar el modal
             const editModal = new bootstrap.Modal(document.getElementById('editStudentModal'));
             editModal.show();
+            
+            // Inicializar Select2 en todos los selects DESPUÉS de que el modal esté visible
+            setTimeout(() => {
+                $('#studentCareer, #studentCampus, #practiceState, #tracking1, #partialEvaluation, #tracking2, #progressReview, #instructorEvaluation, #examAssignment').select2({
+                    theme: 'bootstrap-5',
+                    width: '100%',
+                    dropdownParent: $('#editStudentModal')
+                });
+            }, 300);
         }
 
         // Función para preparar el modal de agregar estudiante
@@ -1505,11 +1621,6 @@
             document.getElementById('newExamAssignment').value = 'no-comienza';
             document.getElementById('newFinalGrade').value = '4.0';
             
-            // Destruir los selects anteriores si existen
-            if ($.fn.select2) {
-                $('#newStudentCareer, #newStudentCampus, #newPracticeState, #newTracking1, #newPartialEvaluation, #newTracking2, #newProgressReview, #newInstructorEvaluation, #newExamAssignment').select2('destroy');
-            }
-            
             // Inicializar flatpickr en los campos de fecha
             flatpickr("#newStartDate, #newEndDate", {
                 dateFormat: "d/m/Y",
@@ -1517,50 +1628,52 @@
                 allowInput: true
             });
             
-            // Inicializar Select2 en los selects
-            $('#newStudentCareer, #newStudentCampus, #newPracticeState, #newTracking1, #newPartialEvaluation, #newTracking2, #newProgressReview, #newInstructorEvaluation, #newExamAssignment').select2({
-                theme: 'bootstrap-5',
-                width: '100%',
-                dropdownParent: $('#addStudentModal')
-            });
-            
             // Mostrar el modal
             const addModal = new bootstrap.Modal(document.getElementById('addStudentModal'));
             addModal.show();
+            
+            // Inicializar Select2 en todos los selects DESPUÉS de que el modal esté visible
+            setTimeout(() => {
+                $('#newStudentCareer, #newStudentCampus, #newPracticeState, #newTracking1, #newPartialEvaluation, #newTracking2, #newProgressReview, #newInstructorEvaluation, #newExamAssignment').select2({
+                    theme: 'bootstrap-5',
+                    width: '100%',
+                    dropdownParent: $('#addStudentModal')
+                });
+            }, 300);
         }
 
         // Función para guardar los cambios de un estudiante
-        function saveStudentChanges(formData) {
-            const studentId = parseInt(formData.get('studentId'));
+        function saveStudentChanges(form) {
+            const studentId = parseInt(document.getElementById('studentId').value);
             const studentIndex = studentsData.findIndex(s => s.id === studentId);
             
             if (studentIndex !== -1) {
                 // Obtener la nota final y asegurarse de que esté dentro del rango
-                let notaFinal = parseFloat(formData.get('finalGrade'));
+                let notaFinal = parseFloat(document.getElementById('finalGrade').value);
                 notaFinal = Math.max(1.0, Math.min(7.0, notaFinal));
+                
+                const carrera = document.getElementById('studentCareer').value;
+                const sede = document.getElementById('studentCampus').value;
                 
                 // Actualizar datos del estudiante
                 studentsData[studentIndex] = {
                     ...studentsData[studentIndex],
-                    nombre: formData.get('studentName'),
-                    rut: formData.get('studentRut'),
-                    carrera: formData.get('studentCareer'),
-                    sede: formData.get('studentCampus'),
-                    encargadoPractica: obtenerEncargadoPractica(
-                        formData.get('studentCareer'),
-                        formData.get('studentCampus')
-                    ),
-                    centroPractica: formData.get('practiceCenter'),
-                    instructor: formData.get('practiceInstructor'),
-                    fechaInicio: formData.get('startDate'),
-                    fechaTermino: formData.get('endDate'),
-                    seguimiento1: formData.get('tracking1'),
-                    evaluacionParcial: formData.get('partialEvaluation'),
-                    seguimiento2: formData.get('tracking2'),
-                    revisionAvance: formData.get('progressReview'),
-                    evaluacionInstructor: formData.get('instructorEvaluation'),
-                    finalizacionPractica: formData.get('practiceState'),
-                    asignacionHoraExamen: formData.get('examAssignment'),
+                    nombre: document.getElementById('studentName').value,
+                    rut: document.getElementById('studentRut').value,
+                    carrera: carrera,
+                    sede: sede,
+                    encargadoPractica: obtenerEncargadoPractica(carrera, sede),
+                    centroPractica: document.getElementById('practiceCenter').value,
+                    instructor: document.getElementById('practiceInstructor').value,
+                    fechaInicio: document.getElementById('startDate').value,
+                    fechaTermino: document.getElementById('endDate').value,
+                    seguimiento1: document.getElementById('tracking1').value,
+                    evaluacionParcial: document.getElementById('partialEvaluation').value,
+                    seguimiento2: document.getElementById('tracking2').value,
+                    revisionAvance: document.getElementById('progressReview').value,
+                    evaluacionInstructor: document.getElementById('instructorEvaluation').value,
+                    finalizacionPractica: document.getElementById('practiceState').value,
+                    asignacionHoraExamen: document.getElementById('examAssignment').value,
                     notaFinal: notaFinal
                 };
                 
@@ -1585,8 +1698,11 @@
                 
                 // Mostrar mensaje de éxito
                 showAlert('Información del estudiante actualizada correctamente', 'success');
+                
+                return true;
             } else {
                 showAlert('Error al actualizar la información del estudiante', 'danger');
+                return false;
             }
         }
 
@@ -1594,31 +1710,31 @@
         function addNewStudent(form) {
             const newId = studentsData.length > 0 ? Math.max(...studentsData.map(s => s.id)) + 1 : 0;
             
-            const carrera = form.querySelector('#newStudentCareer').value;
-            const sede = form.querySelector('#newStudentCampus').value;
-            let notaFinal = parseFloat(form.querySelector('#newFinalGrade').value);
+            const carrera = document.getElementById('newStudentCareer').value;
+            const sede = document.getElementById('newStudentCampus').value;
+            let notaFinal = parseFloat(document.getElementById('newFinalGrade').value);
             notaFinal = Math.max(1.0, Math.min(7.0, notaFinal));
             
             const newStudent = {
                 id: newId,
-                nombre: form.querySelector('#newStudentName').value,
-                rut: form.querySelector('#newStudentRut').value,
+                nombre: document.getElementById('newStudentName').value,
+                rut: document.getElementById('newStudentRut').value,
                 carrera: carrera,
                 sede: sede,
                 encargadoPractica: obtenerEncargadoPractica(carrera, sede),
-                centroPractica: form.querySelector('#newPracticeCenter').value,
-                instructor: form.querySelector('#newPracticeInstructor').value,
-                fechaInicio: form.querySelector('#newStartDate').value,
-                fechaTermino: form.querySelector('#newEndDate').value,
-                seguimiento1: form.querySelector('#newTracking1').value,
-                evaluacionParcial: form.querySelector('#newPartialEvaluation').value,
-                seguimiento2: form.querySelector('#newTracking2').value,
-                revisionAvance: form.querySelector('#newProgressReview').value,
-                evaluacionInstructor: form.querySelector('#newInstructorEvaluation').value,
+                centroPractica: document.getElementById('newPracticeCenter').value,
+                instructor: document.getElementById('newPracticeInstructor').value,
+                fechaInicio: document.getElementById('newStartDate').value,
+                fechaTermino: document.getElementById('newEndDate').value,
+                seguimiento1: document.getElementById('newTracking1').value,
+                evaluacionParcial: document.getElementById('newPartialEvaluation').value,
+                seguimiento2: document.getElementById('newTracking2').value,
+                revisionAvance: document.getElementById('newProgressReview').value,
+                evaluacionInstructor: document.getElementById('newInstructorEvaluation').value,
                 documentoInstructor: false,
-                finalizacionPractica: form.querySelector('#newPracticeState').value,
+                finalizacionPractica: document.getElementById('newPracticeState').value,
                 documentoFinalizacion: false,
-                asignacionHoraExamen: form.querySelector('#newExamAssignment').value,
+                asignacionHoraExamen: document.getElementById('newExamAssignment').value,
                 notaFinal: notaFinal
             };
             
@@ -1633,6 +1749,8 @@
             
             // Mostrar mensaje de éxito
             showAlert('Estudiante agregado correctamente', 'success');
+            
+            return true;
         }
 
         // Función para eliminar un estudiante
@@ -1657,8 +1775,11 @@
                 
                 // Mostrar mensaje de éxito
                 showAlert('Estudiante eliminado correctamente', 'success');
+                
+                return true;
             } else {
                 showAlert('Error al eliminar el estudiante', 'danger');
+                return false;
             }
         }
 
@@ -1745,27 +1866,313 @@
             
             showAlert('Datos exportados correctamente a Excel', 'success');
         }
-
-        // Función para generar el informe PDF
-        function generateReport() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('p', 'mm', 'a4');
+        
+        // Función para obtener datos para gráficos
+        function getReportData() {
+            // Datos para gráfico de estado
+            const statusData = {
+                labels: ['Pendiente', 'En proceso', 'Completada'],
+                data: [0, 0, 0]
+            };
             
-            // Datos para estadísticas
-            let totalStudents = studentsData.length;
-            let inProgress = 0;
-            let completed = 0;
-            let pending = 0;
+            // Datos para gráfico de sedes
+            const campusData = {
+                labels: [...sedes],
+                data: Array(sedes.length).fill(0)
+            };
             
+            // Datos para gráfico de carreras
+            const careerData = {
+                labels: [...carreras],
+                data: Array(carreras.length).fill(0)
+            };
+            
+            // Datos para gráfico de evaluación
+            const evaluationData = {
+                labels: ['Excelente', 'Bien', 'Suficiente', 'Deficiente', 'Malo'],
+                data: [0, 0, 0, 0, 0]
+            };
+            
+            // Datos para gráfico de notas
+            const gradesData = {
+                labels: ['1.0-1.9', '2.0-2.9', '3.0-3.9', '4.0-4.9', '5.0-5.9', '6.0-7.0'],
+                data: [0, 0, 0, 0, 0, 0]
+            };
+            
+            // Estadísticas generales
+            const stats = {
+                total: studentsData.length,
+                avgGrade: 0,
+                totalGradeSum: 0,
+                maxGrade: 0,
+                minGrade: 7.0,
+                approvalRate: 0
+            };
+            
+            // Recopilar datos
             studentsData.forEach(student => {
-                if (student.finalizacionPractica === 'en-proceso') {
-                    inProgress++;
-                } else if (student.finalizacionPractica === 'completada') {
-                    completed++;
+                // Datos de estado
+                if (student.finalizacionPractica === 'no-comienza') {
+                    statusData.data[0]++;
+                } else if (student.finalizacionPractica === 'en-proceso') {
+                    statusData.data[1]++;
                 } else {
-                    pending++;
+                    statusData.data[2]++;
+                }
+                
+                // Datos de sede
+                const campusIndex = sedes.indexOf(student.sede);
+                if (campusIndex !== -1) {
+                    campusData.data[campusIndex]++;
+                }
+                
+                // Datos de carrera
+                const careerIndex = carreras.indexOf(student.carrera);
+                if (careerIndex !== -1) {
+                    careerData.data[careerIndex]++;
+                }
+                
+                // Datos de evaluación
+                const evalMap = {
+                    'excelente': 0,
+                    'bien': 1,
+                    'suficiente': 2,
+                    'deficiente': 3,
+                    'malo': 4
+                };
+                const evalIndex = evalMap[student.evaluacionInstructor] || 0;
+                evaluationData.data[evalIndex]++;
+                
+                // Datos de notas
+                const grade = parseFloat(student.notaFinal);
+                if (grade < 2.0) {
+                    gradesData.data[0]++;
+                } else if (grade < 3.0) {
+                    gradesData.data[1]++;
+                } else if (grade < 4.0) {
+                    gradesData.data[2]++;
+                } else if (grade < 5.0) {
+                    gradesData.data[3]++;
+                } else if (grade < 6.0) {
+                    gradesData.data[4]++;
+                } else {
+                    gradesData.data[5]++;
+                }
+                
+                // Estadísticas de notas
+                stats.totalGradeSum += grade;
+                stats.maxGrade = Math.max(stats.maxGrade, grade);
+                stats.minGrade = Math.min(stats.minGrade, grade);
+                if (grade >= 4.0) {
+                    stats.approvalRate++;
                 }
             });
+            
+            // Calcular promedio
+            stats.avgGrade = stats.total > 0 ? stats.totalGradeSum / stats.total : 0;
+            stats.approvalRate = stats.total > 0 ? (stats.approvalRate / stats.total) * 100 : 0;
+            
+            return {
+                statusData,
+                campusData,
+                careerData,
+                evaluationData,
+                gradesData,
+                stats
+            };
+        }
+        
+        // Función para crear gráficos de vista previa
+        function createPreviewCharts() {
+            const reportData = getReportData();
+            
+            // Actualizar fecha del informe
+            document.getElementById('reportDate').textContent = new Date().toLocaleDateString('es-ES');
+            
+            // Gráfico de Estado
+            if (statusChart) statusChart.destroy();
+            const statusCtx = document.getElementById('previewStatusChart').getContext('2d');
+            statusChart = new Chart(statusCtx, {
+                type: 'pie',
+                data: {
+                    labels: reportData.statusData.labels,
+                    datasets: [{
+                        data: reportData.statusData.data,
+                        backgroundColor: ['#dc3545', '#ffc107', '#28a745']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de Sedes
+            if (campusChart) campusChart.destroy();
+            const campusCtx = document.getElementById('previewCampusChart').getContext('2d');
+            campusChart = new Chart(campusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: reportData.campusData.labels,
+                    datasets: [{
+                        data: reportData.campusData.data,
+                        backgroundColor: [
+                            '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de Carreras
+            if (careerChart) careerChart.destroy();
+            const careerCtx = document.getElementById('previewCareerChart').getContext('2d');
+            careerChart = new Chart(careerCtx, {
+                type: 'bar',
+                data: {
+                    labels: reportData.careerData.labels.map(c => c.substring(0, 25) + '...'),
+                    datasets: [{
+                        label: 'Estudiantes por carrera',
+                        data: reportData.careerData.data,
+                        backgroundColor: '#4e73df'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de Evaluación
+            if (evaluationChart) evaluationChart.destroy();
+            const evaluationCtx = document.getElementById('previewEvaluationChart').getContext('2d');
+            evaluationChart = new Chart(evaluationCtx, {
+                type: 'polarArea',
+                data: {
+                    labels: reportData.evaluationData.labels,
+                    datasets: [{
+                        data: reportData.evaluationData.data,
+                        backgroundColor: [
+                            '#28a745', '#17a2b8', '#ffc107', '#fd7e14', '#dc3545'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de Notas
+            if (gradesChart) gradesChart.destroy();
+            const gradesCtx = document.getElementById('previewGradesChart').getContext('2d');
+            gradesChart = new Chart(gradesCtx, {
+                type: 'bar',
+                data: {
+                    labels: reportData.gradesData.labels,
+                    datasets: [{
+                        label: 'Distribución de notas',
+                        data: reportData.gradesData.data,
+                        backgroundColor: [
+                            '#dc3545', '#dc3545', '#ffc107', '#28a745', '#28a745', '#28a745'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Actualizar estadísticas
+            const statsContent = document.getElementById('previewStatsContent');
+            statsContent.innerHTML = `
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th>Total Estudiantes</th>
+                                <td>${reportData.stats.total}</td>
+                            </tr>
+                            <tr>
+                                <th>Nota Promedio</th>
+                                <td>${reportData.stats.avgGrade.toFixed(1)}</td>
+                            </tr>
+                            <tr>
+                                <th>Nota Máxima</th>
+                                <td>${reportData.stats.maxGrade.toFixed(1)}</td>
+                            </tr>
+                            <tr>
+                                <th>Nota Mínima</th>
+                                <td>${reportData.stats.minGrade.toFixed(1)}</td>
+                            </tr>
+                            <tr>
+                                <th>Tasa de Aprobación</th>
+                                <td>${reportData.stats.approvalRate.toFixed(1)}%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+        
+        // Función para generar el informe PDF con gráficos
+        function generateReport() {
+            // Primero mostrar vista previa con gráficos
+            createPreviewCharts();
+            const previewModal = new bootstrap.Modal(document.getElementById('reportPreviewModal'));
+            previewModal.show();
+        }
+        
+        // Función para generar el PDF final con gráficos
+        async function generateFinalPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
+            const reportData = getReportData();
             
             // Título
             doc.setFontSize(20);
@@ -1786,137 +2193,62 @@
             
             doc.setFontSize(11);
             doc.setTextColor(0, 0, 0);
-            doc.text(`Total de estudiantes en prácticas: ${totalStudents}`, 20, 65);
-            doc.text(`Prácticas en proceso: ${inProgress} (${Math.round((inProgress/totalStudents || 0) * 100)}%)`, 20, 71);
-            doc.text(`Prácticas completadas: ${completed} (${Math.round((completed/totalStudents || 0) * 100)}%)`, 20, 77);
-            doc.text(`Prácticas pendientes: ${pending} (${Math.round((pending/totalStudents || 0) * 100)}%)`, 20, 83);
+            doc.text(`Total de estudiantes en prácticas: ${reportData.stats.total}`, 20, 65);
+            doc.text(`Prácticas en proceso: ${reportData.statusData.data[1]} (${Math.round((reportData.statusData.data[1]/reportData.stats.total || 0) * 100)}%)`, 20, 71);
+            doc.text(`Prácticas completadas: ${reportData.statusData.data[2]} (${Math.round((reportData.statusData.data[2]/reportData.stats.total || 0) * 100)}%)`, 20, 77);
+            doc.text(`Prácticas pendientes: ${reportData.statusData.data[0]} (${Math.round((reportData.statusData.data[0]/reportData.stats.total || 0) * 100)}%)`, 20, 83);
+            doc.text(`Nota promedio: ${reportData.stats.avgGrade.toFixed(1)}`, 20, 89);
+            doc.text(`Nota máxima: ${reportData.stats.maxGrade.toFixed(1)}`, 20, 95);
+            doc.text(`Nota mínima: ${reportData.stats.minGrade.toFixed(1)}`, 20, 101);
+            doc.text(`Tasa de aprobación: ${reportData.stats.approvalRate.toFixed(1)}%`, 20, 107);
             
-            // Distribución por carreras
+            // Capturar gráficos como imágenes
+            const statusCanvas = document.getElementById('previewStatusChart');
+            const campusCanvas = document.getElementById('previewCampusChart');
+            const careerCanvas = document.getElementById('previewCareerChart');
+            const evaluationCanvas = document.getElementById('previewEvaluationChart');
+            const gradesCanvas = document.getElementById('previewGradesChart');
+            
+            // Agregar gráficos al PDF
+            let yPos = 115;
+            
+            // Gráfico de estado
             doc.setFontSize(14);
             doc.setTextColor(0, 32, 78);
-            doc.text('Distribución por Carreras', 20, 95);
+            doc.text('Distribución por Estado', 20, yPos);
+            yPos += 10;
             
-            // Contar estudiantes por carrera
-            const careerDistribution = {};
-            carreras.forEach(carrera => careerDistribution[carrera] = 0);
-            studentsData.forEach(student => {
-                if (careerDistribution[student.carrera] !== undefined) {
-                    careerDistribution[student.carrera]++;
-                }
-            });
+            const statusImg = statusCanvas.toDataURL('image/png');
+            doc.addImage(statusImg, 'PNG', 20, yPos, 80, 60);
             
-            // Imprimir distribución
-            doc.setFontSize(10);
-            doc.setTextColor(0, 0, 0);
-            let yPos = 105;
-            Object.entries(careerDistribution).forEach(([carrera, count]) => {
-                if (count > 0) {
-                    const shortName = carrera.length > 60 ? carrera.substring(0, 60) + '...' : carrera;
-                    doc.text(`${shortName}: ${count}`, 20, yPos);
-                    yPos += 6;
-                }
-            });
+            // Gráfico de sedes
+            doc.text('Distribución por Sedes', 110, yPos - 10);
+            const campusImg = campusCanvas.toDataURL('image/png');
+            doc.addImage(campusImg, 'PNG', 110, yPos, 80, 60);
             
-            // Distribución por sedes
+            // Nueva página para más gráficos
+            doc.addPage();
+            yPos = 20;
+            
+            // Gráfico de carreras
             doc.setFontSize(14);
             doc.setTextColor(0, 32, 78);
-            doc.text('Distribución por Sedes', 20, yPos + 10);
+            doc.text('Distribución por Carreras', 105, yPos, { align: 'center' });
+            yPos += 10;
             
-            // Contar estudiantes por sede
-            const campusDistribution = {};
-            sedes.forEach(sede => campusDistribution[sede] = 0);
-            studentsData.forEach(student => {
-                if (campusDistribution[student.sede] !== undefined) {
-                    campusDistribution[student.sede]++;
-                }
-            });
+            const careerImg = careerCanvas.toDataURL('image/png');
+            doc.addImage(careerImg, 'PNG', 15, yPos, 180, 70);
+            yPos += 80;
             
-            // Imprimir distribución
-            doc.setFontSize(10);
-            doc.setTextColor(0, 0, 0);
-            yPos += 20;
-            Object.entries(campusDistribution).forEach(([sede, count]) => {
-                if (count > 0) {
-                    doc.text(`${sede}: ${count}`, 20, yPos);
-                    yPos += 6;
-                }
-            });
+            // Gráfico de evaluación
+            doc.text('Evaluación del Instructor', 20, yPos);
+            const evaluationImg = evaluationCanvas.toDataURL('image/png');
+            doc.addImage(evaluationImg, 'PNG', 20, yPos + 10, 80, 60);
             
-            // Avance promedio
-            doc.setFontSize(14);
-            doc.setTextColor(0, 32, 78);
-            doc.text('Avance Promedio de Prácticas', 20, yPos + 10);
-            
-            // Calcular avance promedio
-            let totalProgress = 0;
-            studentsData.forEach(student => {
-                const stagesCompleted = [
-                    student.seguimiento1 === 'completada',
-                    student.evaluacionParcial !== '',
-                    student.seguimiento2 === 'completada',
-                    student.revisionAvance !== '',
-                    student.evaluacionInstructor !== '',
-                    student.documentoInstructor,
-                    student.finalizacionPractica === 'completada',
-                    student.documentoFinalizacion,
-                    student.asignacionHoraExamen === 'completada'
-                ].filter(Boolean).length;
-                
-                totalProgress += (stagesCompleted / 9) * 100;
-            });
-            
-            const averageProgress = totalStudents > 0 ? Math.round(totalProgress / totalStudents) : 0;
-            
-            // Imprimir avance promedio
-            doc.setFontSize(11);
-            doc.setTextColor(0, 0, 0);
-            yPos += 20;
-            doc.text(`Avance promedio: ${averageProgress}%`, 20, yPos);
-            
-            // Evaluaciones
-            doc.setFontSize(14);
-            doc.setTextColor(0, 32, 78);
-            doc.text('Distribución de Evaluaciones', 20, yPos + 15);
-            
-            // Contar evaluaciones
-            const evaluationDistribution = {
-                'excelente': 0,
-                'bien': 0,
-                'suficiente': 0,
-                'deficiente': 0,
-                'malo': 0
-            };
-            
-            studentsData.forEach(student => {
-                if (evaluationDistribution[student.evaluacionInstructor] !== undefined) {
-                    evaluationDistribution[student.evaluacionInstructor]++;
-                }
-            });
-            
-            // Imprimir distribución de evaluaciones
-            doc.setFontSize(10);
-            doc.setTextColor(0, 0, 0);
-            yPos += 25;
-            doc.text(`Excelente: ${evaluationDistribution['excelente']}`, 20, yPos);
-            doc.text(`Bien: ${evaluationDistribution['bien']}`, 70, yPos);
-            doc.text(`Suficiente: ${evaluationDistribution['suficiente']}`, 120, yPos);
-            doc.text(`Deficiente: ${evaluationDistribution['deficiente']}`, 20, yPos + 6);
-            doc.text(`Malo: ${evaluationDistribution['malo']}`, 70, yPos + 6);
-            
-            // Promedio de notas
-            let totalNotas = 0;
-            let contadorNotas = 0;
-            
-            studentsData.forEach(student => {
-                if (student.notaFinal) {
-                    totalNotas += parseFloat(student.notaFinal);
-                    contadorNotas++;
-                }
-            });
-            
-            const promedioNotas = contadorNotas > 0 ? (totalNotas / contadorNotas).toFixed(1) : 0;
-            
-            doc.text(`Nota promedio: ${promedioNotas}`, 120, yPos + 6);
+            // Gráfico de notas
+            doc.text('Distribución de Notas Finales', 110, yPos);
+            const gradesImg = gradesCanvas.toDataURL('image/png');
+            doc.addImage(gradesImg, 'PNG', 110, yPos + 10, 80, 60);
             
             // Lista de estudiantes
             doc.addPage();
@@ -2000,6 +2332,12 @@
             doc.save('informe_practicas_ingenieria.pdf');
             
             showAlert('Informe generado correctamente', 'success');
+            
+            // Cerrar el modal de vista previa
+            const previewModal = bootstrap.Modal.getInstance(document.getElementById('reportPreviewModal'));
+            if (previewModal) {
+                previewModal.hide();
+            }
         }
 
         // Función para mostrar alertas
@@ -2041,12 +2379,6 @@
                 dateFormat: "d/m/Y",
                 locale: "es",
                 allowInput: true
-            });
-            
-            // Inicializar Select2
-            $('.form-select').select2({
-                theme: 'bootstrap-5',
-                width: '100%'
             });
             
             // Event listeners
@@ -2115,7 +2447,7 @@
             });
             
             // Cambio en carrera o sede para actualizar encargado práctica (modal edición)
-            $('#studentCareer, #studentCampus').on('change', function() {
+            $(document).on('change', '#studentCareer, #studentCampus', function() {
                 const carrera = $('#studentCareer').val();
                 const sede = $('#studentCampus').val();
                 const encargado = obtenerEncargadoPractica(carrera, sede);
@@ -2123,7 +2455,7 @@
             });
             
             // Cambio en carrera o sede para actualizar encargado práctica (modal agregar)
-            $('#newStudentCareer, #newStudentCampus').on('change', function() {
+            $(document).on('change', '#newStudentCareer, #newStudentCampus', function() {
                 const carrera = $('#newStudentCareer').val();
                 const sede = $('#newStudentCampus').val();
                 const encargado = obtenerEncargadoPractica(carrera, sede);
@@ -2167,9 +2499,9 @@
             // Envío del formulario de edición
             $('#editStudentForm').on('submit', function(e) {
                 e.preventDefault();
-                const formData = new FormData(this);
-                saveStudentChanges(formData);
-                $('#editStudentModal').modal('hide');
+                if (saveStudentChanges(this)) {
+                    $('#editStudentModal').modal('hide');
+                }
             });
             
             // Botón para agregar estudiante
@@ -2180,8 +2512,9 @@
             // Envío del formulario para agregar estudiante
             $('#addStudentForm').on('submit', function(e) {
                 e.preventDefault();
-                addNewStudent(this);
-                $('#addStudentModal').modal('hide');
+                if (addNewStudent(this)) {
+                    $('#addStudentModal').modal('hide');
+                }
             });
             
             // Botón para exportar a Excel
@@ -2192,6 +2525,11 @@
             // Botón para generar informe
             $('#generateReportBtn').on('click', function() {
                 generateReport();
+            });
+            
+            // Botón para generar PDF final desde la vista previa
+            $('#generateFinalReportBtn').on('click', function() {
+                generateFinalPDF();
             });
             
             // Botón para cerrar sesión
