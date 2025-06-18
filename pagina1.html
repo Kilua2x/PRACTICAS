@@ -1,5 +1,4 @@
-<!-- pagina1.html -->
-<!DOCTYPE html>
+<!-- pagina1.html --><!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -1122,6 +1121,88 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            <!-- Nuevo campo: Tipo de Carrera -->
+                            <div class="row mt-3">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Tipo de Carrera</label>
+                                    <div class="options-container">
+                                        <div class="option-item">
+                                            <input type="radio" name="careerType" id="careerTypeProfessional" value="profesional">
+                                            <label for="careerTypeProfessional">Profesional</label>
+                                        </div>
+                                        <div class="option-item">
+                                            <input type="radio" name="careerType" id="careerTypeTechnical" value="tecnica">
+                                            <label for="careerTypeTechnical">Técnica</label>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="studentCareerType">
+                                </div>
+                            </div>
+
+                            <!-- Campos condicionales para carrera profesional -->
+                            <div id="professionalOptionsContainer" class="row mt-3" style="display: none;">
+                                <div class="col-md-4 mb-3">
+                                    <div class="option-selector">
+                                        <label class="form-label">Asignatura Integradora I</label>
+                                        <div class="options-container">
+                                            <div class="option-item status-pending">
+                                                <input type="radio" name="integrativeSubject1" id="integrativeSubject1Pending" value="no-comienza">
+                                                <label for="integrativeSubject1Pending">No comienza</label>
+                                            </div>
+                                            <div class="option-item status-in-progress">
+                                                <input type="radio" name="integrativeSubject1" id="integrativeSubject1InProgress" value="en-proceso">
+                                                <label for="integrativeSubject1InProgress">En proceso</label>
+                                            </div>
+                                            <div class="option-item status-completed">
+                                                <input type="radio" name="integrativeSubject1" id="integrativeSubject1Completed" value="completada">
+                                                <label for="integrativeSubject1Completed">Completada</label>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="studentIntegrativeSubject1">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="option-selector">
+                                        <label class="form-label">Asignatura Integradora II</label>
+                                        <div class="options-container">
+                                            <div class="option-item status-pending">
+                                                <input type="radio" name="integrativeSubject2" id="integrativeSubject2Pending" value="no-comienza">
+                                                <label for="integrativeSubject2Pending">No comienza</label>
+                                            </div>
+                                            <div class="option-item status-in-progress">
+                                                <input type="radio" name="integrativeSubject2" id="integrativeSubject2InProgress" value="en-proceso">
+                                                <label for="integrativeSubject2InProgress">En proceso</label>
+                                            </div>
+                                            <div class="option-item status-completed">
+                                                <input type="radio" name="integrativeSubject2" id="integrativeSubject2Completed" value="completada">
+                                                <label for="integrativeSubject2Completed">Completada</label>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="studentIntegrativeSubject2">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="option-selector">
+                                        <label class="form-label">Proceso de Título</label>
+                                        <div class="options-container">
+                                            <div class="option-item status-pending">
+                                                <input type="radio" name="degreeProcess" id="degreeProcessPending" value="no-comienza">
+                                                <label for="degreeProcessPending">No comienza</label>
+                                            </div>
+                                            <div class="option-item status-in-progress">
+                                                <input type="radio" name="degreeProcess" id="degreeProcessInProgress" value="en-proceso">
+                                                <label for="degreeProcessInProgress">En proceso</label>
+                                            </div>
+                                            <div class="option-item status-completed">
+                                                <input type="radio" name="degreeProcess" id="degreeProcessCompleted" value="completada">
+                                                <label for="degreeProcessCompleted">Completada</label>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="studentDegreeProcess">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- Información de práctica -->
@@ -1414,6 +1495,88 @@
                                             <!-- Las opciones se cargarán dinámicamente -->
                                         </div>
                                         <input type="hidden" id="newStudentCampus" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Nuevo campo: Tipo de Carrera -->
+                            <div class="row mt-3">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Tipo de Carrera</label>
+                                    <div class="options-container">
+                                        <div class="option-item">
+                                            <input type="radio" name="newCareerType" id="newCareerTypeProfessional" value="profesional">
+                                            <label for="newCareerTypeProfessional">Profesional</label>
+                                        </div>
+                                        <div class="option-item">
+                                            <input type="radio" name="newCareerType" id="newCareerTypeTechnical" value="tecnica">
+                                            <label for="newCareerTypeTechnical">Técnica</label>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="newStudentCareerType">
+                                </div>
+                            </div>
+
+                            <!-- Campos condicionales para carrera profesional -->
+                            <div id="newProfessionalOptionsContainer" class="row mt-3" style="display: none;">
+                                <div class="col-md-4 mb-3">
+                                    <div class="option-selector">
+                                        <label class="form-label">Asignatura Integradora I</label>
+                                        <div class="options-container">
+                                            <div class="option-item status-pending">
+                                                <input type="radio" name="newIntegrativeSubject1" id="newIntegrativeSubject1Pending" value="no-comienza">
+                                                <label for="newIntegrativeSubject1Pending">No comienza</label>
+                                            </div>
+                                            <div class="option-item status-in-progress">
+                                                <input type="radio" name="newIntegrativeSubject1" id="newIntegrativeSubject1InProgress" value="en-proceso">
+                                                <label for="newIntegrativeSubject1InProgress">En proceso</label>
+                                            </div>
+                                            <div class="option-item status-completed">
+                                                <input type="radio" name="newIntegrativeSubject1" id="newIntegrativeSubject1Completed" value="completada">
+                                                <label for="newIntegrativeSubject1Completed">Completada</label>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="newStudentIntegrativeSubject1">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="option-selector">
+                                        <label class="form-label">Asignatura Integradora II</label>
+                                        <div class="options-container">
+                                            <div class="option-item status-pending">
+                                                <input type="radio" name="newIntegrativeSubject2" id="newIntegrativeSubject2Pending" value="no-comienza">
+                                                <label for="newIntegrativeSubject2Pending">No comienza</label>
+                                            </div>
+                                            <div class="option-item status-in-progress">
+                                                <input type="radio" name="newIntegrativeSubject2" id="newIntegrativeSubject2InProgress" value="en-proceso">
+                                                <label for="newIntegrativeSubject2InProgress">En proceso</label>
+                                            </div>
+                                            <div class="option-item status-completed">
+                                                <input type="radio" name="newIntegrativeSubject2" id="newIntegrativeSubject2Completed" value="completada">
+                                                <label for="newIntegrativeSubject2Completed">Completada</label>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="newStudentIntegrativeSubject2">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="option-selector">
+                                        <label class="form-label">Proceso de Título</label>
+                                        <div class="options-container">
+                                            <div class="option-item status-pending">
+                                                <input type="radio" name="newDegreeProcess" id="newDegreeProcessPending" value="no-comienza">
+                                                <label for="newDegreeProcessPending">No comienza</label>
+                                            </div>
+                                            <div class="option-item status-in-progress">
+                                                <input type="radio" name="newDegreeProcess" id="newDegreeProcessInProgress" value="en-proceso">
+                                                <label for="newDegreeProcessInProgress">En proceso</label>
+                                            </div>
+                                            <div class="option-item status-completed">
+                                                <input type="radio" name="newDegreeProcess" id="newDegreeProcessCompleted" value="completada">
+                                                <label for="newDegreeProcessCompleted">Completada</label>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="newStudentDegreeProcess">
                                     </div>
                                 </div>
                             </div>
@@ -1821,16 +1984,30 @@
     <script>
         // Datos de carreras y sedes
         const carreras = [
-            'Técnico De Nivel Superior En Administración De Empresas',
-            'Técnico De Nivel Superior En Agronomía',
-            'Técnico De Nivel Superior En Automatización Y Control Industrial',
-            'Técnico De Nivel Superior En Construcción',
-            'Técnico De Nivel Superior En Electricidad',
-            'Técnico De Nivel Superior En Mantenimiento Industrial',
-            'Técnico De Nivel Superior En Mecánica Industrial',
-            'Técnico De Nivel Superior En Minas',
-            'Técnico De Nivel Superior En Minería Y Metalurgia',
-            'Técnico Nivel Superior En Construcción Y Obras Civiles'
+            'TNS En Administracion De Empresas',
+            'Trabajo Social',
+            'Ing. Industrial',
+            'Ing. En Administración De Empresas',
+            'Ing. En Administracion De Empresas (PCE)',
+            'Ing. En Administracion Publica (PCE)',
+            'Trabajo Social (PCE)',
+            'Ing. Comercial (PCE) Para TNS',
+            'Ing. En Construccion M/ Gestion De Obras (PCE) Para TNS',
+            'Ing. Civil Industrial M/ Gestion De Operaciones (PCE) Otra Area',
+            'Licenciatura En Educacion Para Prof.',
+            'Ing. En Construccion M/ Gestion De Obras (PCE) Para Cc',
+            'Ing. En Minas M/ Seguridad Minera (PCE) Del Area',
+            'Licenciatura En Trabajo Social Para Prof.',
+            'Ing. Civil En Minas M/ Seguridad Minera (PCE) Otra Area',
+            'Ing. En Construccion M/ Gestion De Obras (PCE) Otra Area',
+            'Ing. Comercial (PCE) Para Prof.',
+            'Ing. Industrial M/ Gestion De Operaciones (PCE)',
+            'Ing. En Prevencion De Riesgos M/ Sistemas De Gestion (PCE) Del Area',
+            'Ing. Industrial M/ Gestion De Operaciones (PCE) Del Area',
+            'Ing. Civil En Minas M/ Seguridad Minera (PCE) Del Area',
+            'Ing. Civil Industrial M/ Gestion De Operaciones (PCE) Del Area',
+            'Psicologia (PCE)',
+            'Ing. En Minas M/ Seguridad Minera (PCE) Otra Area'
         ];
 
         const sedes = ['Ancud', 'Calama', 'Los Andes', 'San Felipe', 'Machali'];
@@ -1851,6 +2028,56 @@
         
         // Variables para gráficos del informe
         let statusChart, campusChart, careerChart, evaluationChart, gradesChart;
+
+        // Event listeners para radio de tipo de carrera (formulario de edición)
+        $(document).on('change', 'input[name="careerType"]', function() {
+            document.getElementById('studentCareerType').value = this.value;
+            
+            // Mostrar u ocultar opciones según el tipo de carrera
+            if (this.value === 'profesional') {
+                $('#professionalOptionsContainer').show();
+            } else {
+                $('#professionalOptionsContainer').hide();
+            }
+        });
+
+        // Event listeners para radios de opciones de carrera profesional
+        $(document).on('change', 'input[name="integrativeSubject1"]', function() {
+            document.getElementById('studentIntegrativeSubject1').value = this.value;
+        });
+
+        $(document).on('change', 'input[name="integrativeSubject2"]', function() {
+            document.getElementById('studentIntegrativeSubject2').value = this.value;
+        });
+
+        $(document).on('change', 'input[name="degreeProcess"]', function() {
+            document.getElementById('studentDegreeProcess').value = this.value;
+        });
+
+        // Event listeners para radio de tipo de carrera (formulario de agregar)
+        $(document).on('change', 'input[name="newCareerType"]', function() {
+            document.getElementById('newStudentCareerType').value = this.value;
+            
+            // Mostrar u ocultar opciones según el tipo de carrera
+            if (this.value === 'profesional') {
+                $('#newProfessionalOptionsContainer').show();
+            } else {
+                $('#newProfessionalOptionsContainer').hide();
+            }
+        });
+
+        // Event listeners para radios de opciones de carrera profesional (formulario agregar)
+        $(document).on('change', 'input[name="newIntegrativeSubject1"]', function() {
+            document.getElementById('newStudentIntegrativeSubject1').value = this.value;
+        });
+
+        $(document).on('change', 'input[name="newIntegrativeSubject2"]', function() {
+            document.getElementById('newStudentIntegrativeSubject2').value = this.value;
+        });
+
+        $(document).on('change', 'input[name="newDegreeProcess"]', function() {
+            document.getElementById('newStudentDegreeProcess').value = this.value;
+        });
 
         // Función para obtener el encargado de práctica según carrera y sede
         function obtenerEncargadoPractica(carrera, sede) {
@@ -1877,6 +2104,10 @@
                     rut: student.rut || '',
                     carrera: student.carrera || carreras[0],
                     sede: student.sede || sedes[0],
+                    careerType: student.careerType || '',
+                    integrativeSubject1: student.integrativeSubject1 || 'no-comienza',
+                    integrativeSubject2: student.integrativeSubject2 || 'no-comienza',
+                    degreeProcess: student.degreeProcess || 'no-comienza',
                     encargadoPractica: student.encargadoPractica || obtenerEncargadoPractica(student.carrera, student.sede),
                     centroPractica: student.centroPractica || '',
                     instructor: student.instructor || '',
@@ -2264,6 +2495,28 @@
                 student.sede
             );
             
+            // Tipo de carrera
+            document.getElementById('studentCareerType').value = student.careerType || '';
+            if (student.careerType === 'profesional') {
+                document.querySelector('#careerTypeProfessional').checked = true;
+                $('#professionalOptionsContainer').show();
+                
+                // Cargar valores para las asignaturas integradoras y proceso de título
+                document.querySelector(`input[name="integrativeSubject1"][value="${student.integrativeSubject1 || 'no-comienza'}"]`).checked = true;
+                document.querySelector(`input[name="integrativeSubject2"][value="${student.integrativeSubject2 || 'no-comienza'}"]`).checked = true;
+                document.querySelector(`input[name="degreeProcess"][value="${student.degreeProcess || 'no-comienza'}"]`).checked = true;
+                
+                document.getElementById('studentIntegrativeSubject1').value = student.integrativeSubject1 || 'no-comienza';
+                document.getElementById('studentIntegrativeSubject2').value = student.integrativeSubject2 || 'no-comienza';
+                document.getElementById('studentDegreeProcess').value = student.degreeProcess || 'no-comienza';
+            } else if (student.careerType === 'tecnica') {
+                document.querySelector('#careerTypeTechnical').checked = true;
+                $('#professionalOptionsContainer').hide();
+            } else {
+                // Por defecto, ninguno seleccionado
+                $('#professionalOptionsContainer').hide();
+            }
+            
             // Información de práctica
             document.getElementById('practiceSupervisor').value = student.encargadoPractica;
             document.getElementById('practiceCenter').value = student.centroPractica;
@@ -2332,6 +2585,20 @@
                 sedes[0]
             );
             
+            // Inicializar tipo de carrera
+            document.getElementById('newStudentCareerType').value = '';
+            document.querySelector('input[name="newCareerType"]:checked')?.checked = false;
+            $('#newProfessionalOptionsContainer').hide();
+
+            // Inicializar opciones de carrera profesional
+            document.querySelector('input[name="newIntegrativeSubject1"][value="no-comienza"]').checked = true;
+            document.querySelector('input[name="newIntegrativeSubject2"][value="no-comienza"]').checked = true;
+            document.querySelector('input[name="newDegreeProcess"][value="no-comienza"]').checked = true;
+
+            document.getElementById('newStudentIntegrativeSubject1').value = 'no-comienza';
+            document.getElementById('newStudentIntegrativeSubject2').value = 'no-comienza';
+            document.getElementById('newStudentDegreeProcess').value = 'no-comienza';
+            
             // Establecer valores por defecto
             document.getElementById('newPracticeSupervisor').value = obtenerEncargadoPractica(carreras[0], sedes[0]);
             document.getElementById('newPracticeCenter').value = '';
@@ -2395,6 +2662,10 @@
                     rut: document.getElementById('studentRut').value,
                     carrera: carrera,
                     sede: sede,
+                    careerType: document.getElementById('studentCareerType').value,
+                    integrativeSubject1: document.querySelector('input[name="integrativeSubject1"]:checked')?.value || 'no-comienza',
+                    integrativeSubject2: document.querySelector('input[name="integrativeSubject2"]:checked')?.value || 'no-comienza',
+                    degreeProcess: document.querySelector('input[name="degreeProcess"]:checked')?.value || 'no-comienza',
                     encargadoPractica: obtenerEncargadoPractica(carrera, sede),
                     centroPractica: document.getElementById('practiceCenter').value,
                     instructor: document.getElementById('practiceInstructor').value,
@@ -2464,6 +2735,10 @@
                 rut: document.getElementById('newStudentRut').value,
                 carrera: carrera,
                 sede: sede,
+                careerType: document.getElementById('newStudentCareerType').value,
+                integrativeSubject1: document.querySelector('input[name="newIntegrativeSubject1"]:checked')?.value || 'no-comienza',
+                integrativeSubject2: document.querySelector('input[name="newIntegrativeSubject2"]:checked')?.value || 'no-comienza',
+                degreeProcess: document.querySelector('input[name="newDegreeProcess"]:checked')?.value || 'no-comienza',
                 encargadoPractica: obtenerEncargadoPractica(carrera, sede),
                 centroPractica: document.getElementById('newPracticeCenter').value,
                 instructor: document.getElementById('newPracticeInstructor').value,
@@ -2547,6 +2822,10 @@
                 rut: student.rut,
                 carrera: student.carrera,
                 sede: student.sede,
+                careerType: student.careerType,
+                integrativeSubject1: student.integrativeSubject1,
+                integrativeSubject2: student.integrativeSubject2,
+                degreeProcess: student.degreeProcess,
                 encargadoPractica: student.encargadoPractica,
                 centroPractica: student.centroPractica,
                 instructor: student.instructor,
@@ -2569,7 +2848,7 @@
         function exportToExcel() {
             // Crear un array con los datos a exportar
             const exportData = [
-                ['Nombre', 'RUT', 'Carrera', 'Sede', 'Encargado práctica', 'Centro de práctica', 
+                ['Nombre', 'RUT', 'Carrera', 'Sede', 'Tipo de Carrera', 'Encargado práctica', 'Centro de práctica', 
                 'Instructor', 'Fecha Inicio', 'Fecha Término', 'Seguimiento 1', 'Evaluación parcial', 
                 'Seguimiento 2', 'Revisión avance', 'Evaluación instructor', 'Finalización práctica', 
                 'Asignación hora examen', 'Nota Final']
@@ -2581,6 +2860,7 @@
                     student.rut,
                     student.carrera,
                     student.sede,
+                    student.careerType === 'profesional' ? 'Profesional' : student.careerType === 'tecnica' ? 'Técnica' : '',
                     student.encargadoPractica,
                     student.centroPractica,
                     student.instructor,
