@@ -1830,7 +1830,7 @@
             'Técnico De Nivel Superior En Mecánica Industrial',
             'Técnico De Nivel Superior En Minas',
             'Técnico De Nivel Superior En Minería Y Metalurgia',
-            'Técnico Nivel Superior En Construcción Y Obras Civiles'
+            'Técnico Nivel Superior En Construcción Y Obras Civiles',
             'TNS En Administracion De Empresas',
             'Trabajo Social',
             'Ing. Industrial',
@@ -3387,10 +3387,10 @@
             
             // Botón para eliminar estudiante
             $(document).on('click', '#deleteStudentBtn', function() {
-                const studentId = parseInt($('#studentId').value);
-                showDeleteConfirmationModal(studentId);
-                $('#editStudentModal').modal('hide');
-            });
+    const studentId = parseInt($('#studentId').val());
+        showDeleteConfirmationModal(studentId);
+    $('#editStudentModal').modal('hide');
+});
             
             // Confirmar eliminación de estudiante
             $('#confirmDeleteBtn').on('click', function() {
