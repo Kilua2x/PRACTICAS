@@ -2089,46 +2089,32 @@
             });
         }
         
-        // Función corregida para llenar el selector visual de sede
-        function fillCampusSelector(container, selectedValue = '') {
-            container.innerHTML = '';
-            
-            sedes.forEach((sede, index) => {
-                const option = document.createElement('div');
-                option.className = 'campus-option-item';
-                
-                // Generar un ID único para cada radio button
-                const radioId = `campus-${sede}-${Math.random().toString(36).substring(2, 9)}`;
-                
-                option.innerHTML = `
-                    <input type="radio" name="campus-option" id="${radioId}" value="${sede}" ${sede === selectedValue ? 'checked' : ''}>
-                    <label for="${radioId}">${sede}</label>
-                `;
-                container.appendChild(option);
-            });
-            
-            // Añadir event listeners a los radios
-            container.querySelectorAll('input[type="radio"]').forEach(radio => {
-                radio.addEventListener('change', function() {
-                    // Buscar el input oculto dentro de la jerarquía del DOM
-                    const campusSelector = this.closest('.campus-selector');
-                    const hiddenInput = campusSelector.querySelector('input[type="hidden"]');
-                    
-                    if (hiddenInput) {
-                        hiddenInput.value = this.value;
-                    }
-                });
-            });
-            
-            // Si hay un valor seleccionado, asegurarse de que se actualice el input oculto
-            if (selectedValue) {
-                const campusSelector = container.closest('.campus-selector');
-                const hiddenInput = campusSelector.querySelector('input[type="hidden"]');
-                if (hiddenInput) {
-                    hiddenInput.value = selectedValue;
-                }
+        // Función para llenar el selector visual de sede
+function fillCampusSelector(container, selectedValue = '') {
+    container.innerHTML = '';
+    
+    sedes.forEach((sede, index) => {
+        const option = document.createElement('div');
+        option.className = 'campus-option-item';
+        option.innerHTML = `
+            <input type="radio" name="campus-option-${container.id}" id="campus-${container.id}-${sede}" value="${sede}" ${sede === selectedValue ? 'checked' : ''}>
+            <label for="campus-${container.id}-${sede}">${sede}</label>
+        `;
+        container.appendChild(option);
+    });
+    
+    // Añadir event listeners a los radios
+    container.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            // Determinar qué campo oculto actualizar según el contenedor
+            if (container.id === 'campusOptions') {
+                document.getElementById('studentCampus').value = this.value;
+            } else if (container.id === 'newCampusOptions') {
+                document.getElementById('newStudentCampus').value = this.value;
             }
-        }
+        });
+    });
+}
 
         // Función para llenar el modal de edición
         function fillEditModal(studentId) {
