@@ -1130,7 +1130,23 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="practiceSupervisor" class="form-label">Encargado práctica UAC</label>
-                                    <input type="text" class="form-control" id="practiceSupervisor" readonly>
+                                    <div class="option-selector">
+                                        <div class="options-container">
+                                            <div class="option-item">
+                                                <input type="radio" name="practiceSupervisorType" id="practiceSupervisorDirectorAcademico" value="Director/a Académico/a">
+                                                <label for="practiceSupervisorDirectorAcademico">Director/a Académico/a</label>
+                                            </div>
+                                            <div class="option-item">
+                                                <input type="radio" name="practiceSupervisorType" id="practiceSupervisorDirectorCarrera" value="Director/a de Carrera">
+                                                <label for="practiceSupervisorDirectorCarrera">Director/a de Carrera</label>
+                                            </div>
+                                            <div class="option-item">
+                                                <input type="radio" name="practiceSupervisorType" id="practiceSupervisorTutorVirtual" value="Tutor/a Virtual">
+                                                <label for="practiceSupervisorTutorVirtual">Tutor/a Virtual</label>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="practiceSupervisor" required>
+                                    </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="practiceCenter" class="form-label">Centro de práctica</label>
@@ -1161,6 +1177,32 @@
                                             </div>
                                         </div>
                                         <input type="hidden" id="practiceState" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">Instrumento Metodológico</label>
+                                    <div class="option-selector">
+                                        <div class="options-container">
+                                            <div class="option-item">
+                                                <input type="radio" name="instrumentoMetodologico" id="instrumentoTesis" value="Tesis">
+                                                <label for="instrumentoTesis">Tesis</label>
+                                            </div>
+                                            <div class="option-item">
+                                                <input type="radio" name="instrumentoMetodologico" id="instrumentoTesina" value="Tesina">
+                                                <label for="instrumentoTesina">Tesina</label>
+                                            </div>
+                                            <div class="option-item">
+                                                <input type="radio" name="instrumentoMetodologico" id="instrumentoPlanMejora" value="Plan de mejora">
+                                                <label for="instrumentoPlanMejora">Plan de mejora</label>
+                                            </div>
+                                            <div class="option-item">
+                                                <input type="radio" name="instrumentoMetodologico" id="instrumentoInforme" value="Informe de Practica">
+                                                <label for="instrumentoInforme">Informe de Practica</label>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="instrumentoMetodologicoValue" required>
                                     </div>
                                 </div>
                             </div>
@@ -1324,13 +1366,22 @@
                                 <input type="hidden" id="examAssignment">
                             </div>
                             
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="finalGrade" class="form-label">Nota Final (1.0 - 7.0)</label>
-                                    <input type="number" class="form-control" id="finalGrade" min="1.0" max="7.0" step="0.1" value="4.0">
-                                    <div class="form-text">Ingrese la calificación final del estudiante en escala de 1.0 a 7.0</div>
-                                </div>
-                            </div>
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label for="researchLine" class="form-label">Lineas de Investigación</label>
+        <select class="form-select" id="researchLine">
+            <option value="" disabled selected>Seleccione una línea</option>
+            <option value="industrias">Escuela de Industrias: "Transformación Industrial Inteligente: Integración de Tecnologías 4.0 y Optimización de Procesos Productivos"</option>
+            <option value="mineria">Escuela de Mineria: "Minería Sustentable y Tecnológica: Integración de Innovación, Seguridad, inclusión y Desarrollo Social"</option>
+            <option value="negocios">Escuela de Negocios: "Transformación Digital y Sostenibilidad en la Gestión Empresarial: Innovación y Competitividad en Mercados Globalizados"</option>
+        </select>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label for="finalGrade" class="form-label">Nota Final (1.0 - 7.0)</label>
+        <input type="number" class="form-control" id="finalGrade" min="1.0" max="7.0" step="0.1" value="4.0">
+        <div class="form-text">Ingrese la calificación final del estudiante en escala de 1.0 a 7.0</div>
+    </div>
+</div>
                         </div>
                         
                         <!-- Documentación -->
@@ -1425,7 +1476,23 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="newPracticeSupervisor" class="form-label">Encargado práctica UAC</label>
-                                    <input type="text" class="form-control" id="newPracticeSupervisor" readonly>
+                                    <div class="option-selector">
+                                        <div class="options-container">
+                                            <div class="option-item">
+                                                <input type="radio" name="newPracticeSupervisorType" id="newPracticeSupervisorDirectorAcademico" value="Director/a Académico/a">
+                                                <label for="newPracticeSupervisorDirectorAcademico">Director/a Académico/a</label>
+                                            </div>
+                                            <div class="option-item">
+                                                <input type="radio" name="newPracticeSupervisorType" id="newPracticeSupervisorDirectorCarrera" value="Director/a de Carrera">
+                                                <label for="newPracticeSupervisorDirectorCarrera">Director/a de Carrera</label>
+                                            </div>
+                                            <div class="option-item">
+                                                <input type="radio" name="newPracticeSupervisorType" id="newPracticeSupervisorTutorVirtual" value="Tutor/a Virtual">
+                                                <label for="newPracticeSupervisorTutorVirtual">Tutor/a Virtual</label>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="newPracticeSupervisor" required>
+                                    </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="newPracticeCenter" class="form-label">Centro de práctica</label>
@@ -1456,6 +1523,32 @@
                                             </div>
                                         </div>
                                         <input type="hidden" id="newPracticeState" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">Instrumento Metodológico</label>
+                                    <div class="option-selector">
+                                        <div class="options-container">
+                                            <div class="option-item">
+                                                <input type="radio" name="newInstrumentoMetodologico" id="newInstrumentoTesis" value="Tesis">
+                                                <label for="newInstrumentoTesis">Tesis</label>
+                                            </div>
+                                            <div class="option-item">
+                                                <input type="radio" name="newInstrumentoMetodologico" id="newInstrumentoTesina" value="Tesina">
+                                                <label for="newInstrumentoTesina">Tesina</label>
+                                            </div>
+                                            <div class="option-item">
+                                                <input type="radio" name="newInstrumentoMetodologico" id="newInstrumentoPlanMejora" value="Plan de mejora">
+                                                <label for="newInstrumentoPlanMejora">Plan de mejora</label>
+                                            </div>
+                                            <div class="option-item">
+                                                <input type="radio" name="newInstrumentoMetodologico" id="newInstrumentoInforme" value="Informe de Practica">
+                                                <label for="newInstrumentoInforme">Informe de Practica</label>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="newInstrumentoMetodologicoValue" required>
                                     </div>
                                 </div>
                             </div>
@@ -1619,13 +1712,22 @@
                                 <input type="hidden" id="newExamAssignment">
                             </div>
                             
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="newFinalGrade" class="form-label">Nota Final (1.0 - 7.0)</label>
-                                    <input type="number" class="form-control" id="newFinalGrade" min="1.0" max="7.0" step="0.1" value="4.0">
-                                    <div class="form-text">Ingrese la calificación final del estudiante en escala de 1.0 a 7.0</div>
-                                </div>
-                            </div>
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label for="newResearchLine" class="form-label">Lineas de Investigación</label>
+        <select class="form-select" id="newResearchLine">
+            <option value="" disabled selected>Seleccione una línea</option>
+            <option value="industrias">Escuela de Industrias: "Transformación Industrial Inteligente: Integración de Tecnologías 4.0 y Optimización de Procesos Productivos"</option>
+            <option value="mineria">Escuela de Mineria: "Minería Sustentable y Tecnológica: Integración de Innovación, Seguridad, inclusión y Desarrollo Social"</option>
+            <option value="negocios">Escuela de Negocios: "Transformación Digital y Sostenibilidad en la Gestión Empresarial: Innovación y Competitividad en Mercados Globalizados"</option>
+        </select>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label for="newFinalGrade" class="form-label">Nota Final (1.0 - 7.0)</label>
+        <input type="number" class="form-control" id="newFinalGrade" min="1.0" max="7.0" step="0.1" value="4.0">
+        <div class="form-text">Ingrese la calificación final del estudiante en escala de 1.0 a 7.0</div>
+    </div>
+</div>
                         </div>
                         
                         <!-- Documentación -->
@@ -1873,15 +1975,15 @@
         // Función para obtener el encargado de práctica según carrera y sede
         function obtenerEncargadoPractica(carrera, sede) {
             if (carrera === 'Técnico De Nivel Superior En Agronomía' && sede === 'San Felipe') {
-                return 'Julio Guzmán';
+                return 'Director/a de Carrera';
             } else if (carrera !== 'Técnico De Nivel Superior En Agronomía' && sede === 'Los Andes') {
-                return 'Arturo Montenegro';
+                return 'Director/a de Carrera';
             } else if (carrera !== 'Técnico De Nivel Superior En Agronomía' && sede === 'Calama') {
-                return 'Director carrera Calama';
+                return 'Director/a de Carrera';
             } else if (['Machali', 'Ancud'].includes(sede)) {
-                return 'Define director/a académica';
+                return 'Director/a Académico/a';
             } else {
-                return '';
+                return 'Tutor/a Virtual';
             }
         }
 
@@ -1898,6 +2000,7 @@
                     encargadoPractica: student.encargadoPractica || obtenerEncargadoPractica(student.carrera, student.sede),
                     centroPractica: student.centroPractica || '',
                     instructor: student.instructor || '',
+                    instrumentoMetodologico: student.instrumentoMetodologico || 'Informe de Practica',
                     fechaInicio: student.fechaInicio || '',
                     fechaTermino: student.fechaTermino || '',
                     seguimiento1: student.seguimiento1 || 'no-comienza',
@@ -2224,37 +2327,51 @@
         }
         
         // Función para llenar el selector visual de sede
-        function fillCampusSelector(container, selectedValue = '') {
-            container.innerHTML = '';
+function fillCampusSelector(container, selectedValue = '') {
+    container.innerHTML = '';
+    
+    // Determinar un nombre único para el grupo de radio buttons
+    const radioGroupName = container.id === 'campusOptions' ? 'campus-option' : 'new-campus-option';
+    
+    sedes.forEach((sede, index) => {
+        const option = document.createElement('div');
+        option.className = 'campus-option-item';
+        option.innerHTML = `
+            <input type="radio" name="${radioGroupName}" id="${radioGroupName}-${sede}" value="${sede}" ${sede === selectedValue ? 'checked' : ''}>
+            <label for="${radioGroupName}-${sede}">${sede}</label>
+        `;
+        container.appendChild(option);
+    });
+    
+    // Añadir event listeners a los radios
+    container.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const parentSelector = this.closest('.campus-selector');
+            const hiddenInput = parentSelector.querySelector('input[type="hidden"]') || 
+                                (container.id === 'campusOptions' ? document.getElementById('studentCampus') : 
+                                                                   document.getElementById('newStudentCampus'));
             
-            sedes.forEach((sede, index) => {
-                const option = document.createElement('div');
-                option.className = 'campus-option-item';
-                option.innerHTML = `
-                    <input type="radio" name="campus-option" id="campus-${sede}" value="${sede}" ${sede === selectedValue ? 'checked' : ''}>
-                    <label for="campus-${sede}">${sede}</label>
-                `;
-                container.appendChild(option);
-            });
-            
-            // Añadir event listeners a los radios
-            container.querySelectorAll('input[type="radio"]').forEach(radio => {
-                radio.addEventListener('change', function() {
-                    const hiddenInput = this.closest('.campus-selector').nextElementSibling;
-                    if (hiddenInput && hiddenInput.id === 'studentCampus') {
-                        document.getElementById('studentCampus').value = this.value;
-                        // Actualizar encargado de práctica
-                        const carrera = document.getElementById('studentCareer').value;
-                        document.getElementById('practiceSupervisor').value = obtenerEncargadoPractica(carrera, this.value);
-                    } else if (hiddenInput && hiddenInput.id === 'newStudentCampus') {
-                        document.getElementById('newStudentCampus').value = this.value;
-                        // Actualizar encargado de práctica
-                        const carrera = document.getElementById('newStudentCareer').value;
-                        document.getElementById('newPracticeSupervisor').value = obtenerEncargadoPractica(carrera, this.value);
-                    }
-                });
-            });
-        }
+            if (hiddenInput) {
+                hiddenInput.value = this.value;
+                
+                // Actualizar encargado de práctica
+                const carrera = container.id === 'campusOptions' ? 
+                    document.getElementById('studentCareer').value : 
+                    document.getElementById('newStudentCareer').value;
+                
+                const tipoEncargado = obtenerEncargadoPractica(carrera, this.value);
+                
+                if (container.id === 'campusOptions') {
+                    document.querySelector(`input[name="practiceSupervisorType"][value="${tipoEncargado}"]`).checked = true;
+                    document.getElementById('practiceSupervisor').value = tipoEncargado;
+                } else {
+                    document.querySelector(`input[name="newPracticeSupervisorType"][value="${tipoEncargado}"]`).checked = true;
+                    document.getElementById('newPracticeSupervisor').value = tipoEncargado;
+                }
+            }
+        });
+    });
+}
 
         // Función para llenar el modal de edición
         function fillEditModal(studentId) {
@@ -2281,6 +2398,11 @@
                 document.getElementById('campusOptions'),
                 student.sede
             );
+
+            // Llenar el selector de línea de investigación
+if (student.lineaInvestigacion) {
+    document.getElementById('researchLine').value = student.lineaInvestigacion;
+}
             
             // Información de práctica
             document.getElementById('practiceSupervisor').value = student.encargadoPractica;
@@ -2290,8 +2412,18 @@
             document.getElementById('startDate').value = student.fechaInicio;
             document.getElementById('endDate').value = student.fechaTermino;
             
+            // Seleccionar el tipo de encargado de práctica
+            const supervisorTypeRadio = document.querySelector(`input[name="practiceSupervisorType"][value="${student.encargadoPractica}"]`);
+            if (supervisorTypeRadio) supervisorTypeRadio.checked = true;
+            
             // Seleccionar el estado de práctica correcto
             document.querySelector(`input[name="practiceState"][value="${student.finalizacionPractica}"]`).checked = true;
+            
+            // Seleccionar el instrumento metodológico
+            const instrumentoMetodologico = student.instrumentoMetodologico || 'Informe de Practica';
+            document.getElementById('instrumentoMetodologicoValue').value = instrumentoMetodologico;
+            const instrumentoRadio = document.querySelector(`input[name="instrumentoMetodologico"][value="${instrumentoMetodologico}"]`);
+            if (instrumentoRadio) instrumentoRadio.checked = true;
             
             // Seguimiento y evaluación
             document.getElementById('tracking1').value = student.seguimiento1;
@@ -2351,7 +2483,10 @@
             );
             
             // Establecer valores por defecto
-            document.getElementById('newPracticeSupervisor').value = obtenerEncargadoPractica(carreras[0], sedes[0]);
+            const tipoEncargado = obtenerEncargadoPractica(carreras[0], sedes[0]);
+            document.getElementById('newPracticeSupervisor').value = tipoEncargado;
+            document.querySelector(`input[name="newPracticeSupervisorType"][value="${tipoEncargado}"]`).checked = true;
+            
             document.getElementById('newPracticeCenter').value = '';
             document.getElementById('newPracticeInstructor').value = '';
             document.getElementById('newPracticeState').value = 'no-comienza';
@@ -2371,6 +2506,10 @@
             document.querySelector('input[name="newProgressReview"][value="excelente"]').checked = true;
             document.querySelector('input[name="newInstructorEvaluation"][value="excelente"]').checked = true;
             document.querySelector('input[name="newExamAssignment"][value="no-comienza"]').checked = true;
+            
+            // Seleccionar instrumento metodológico por defecto
+            document.getElementById('newInstrumentoMetodologicoValue').value = 'Informe de Practica';
+            document.querySelector('input[name="newInstrumentoMetodologico"][value="Informe de Practica"]').checked = true;
             
             // Inicializar flatpickr en los campos de fecha
             flatpickr("#newStartDate, #newEndDate", {
@@ -2405,6 +2544,8 @@
                 const progressReview = document.querySelector('input[name="progressReview"]:checked').value;
                 const instructorEvaluation = document.querySelector('input[name="instructorEvaluation"]:checked').value;
                 const examAssignment = document.querySelector('input[name="examAssignment"]:checked').value;
+                const instrumentoMetodologico = document.querySelector('input[name="instrumentoMetodologico"]:checked').value;
+                const encargadoPractica = document.querySelector('input[name="practiceSupervisorType"]:checked').value;
                 
                 // Actualizar datos del estudiante
                 studentsData[studentIndex] = {
@@ -2413,9 +2554,11 @@
                     rut: document.getElementById('studentRut').value,
                     carrera: carrera,
                     sede: sede,
-                    encargadoPractica: obtenerEncargadoPractica(carrera, sede),
+                    lineaInvestigacion: document.getElementById('researchLine').value,
+                    encargadoPractica: encargadoPractica,
                     centroPractica: document.getElementById('practiceCenter').value,
                     instructor: document.getElementById('practiceInstructor').value,
+                    instrumentoMetodologico: instrumentoMetodologico,
                     fechaInicio: document.getElementById('startDate').value,
                     fechaTermino: document.getElementById('endDate').value,
                     seguimiento1: tracking1,
@@ -2475,6 +2618,8 @@
             const progressReview = document.querySelector('input[name="newProgressReview"]:checked').value;
             const instructorEvaluation = document.querySelector('input[name="newInstructorEvaluation"]:checked').value;
             const examAssignment = document.querySelector('input[name="newExamAssignment"]:checked').value;
+            const instrumentoMetodologico = document.querySelector('input[name="newInstrumentoMetodologico"]:checked').value;
+            const encargadoPractica = document.querySelector('input[name="newPracticeSupervisorType"]:checked').value;
             
             const newStudent = {
                 id: newId,
@@ -2482,9 +2627,11 @@
                 rut: document.getElementById('newStudentRut').value,
                 carrera: carrera,
                 sede: sede,
-                encargadoPractica: obtenerEncargadoPractica(carrera, sede),
+                lineaInvestigacion: document.getElementById('newResearchLine').value,
+                encargadoPractica: encargadoPractica,
                 centroPractica: document.getElementById('newPracticeCenter').value,
                 instructor: document.getElementById('newPracticeInstructor').value,
+                instrumentoMetodologico: instrumentoMetodologico,
                 fechaInicio: document.getElementById('newStartDate').value,
                 fechaTermino: document.getElementById('newEndDate').value,
                 seguimiento1: tracking1,
@@ -2565,9 +2712,11 @@
                 rut: student.rut,
                 carrera: student.carrera,
                 sede: student.sede,
+                lineaInvestigacion: student.lineaInvestigacion,
                 encargadoPractica: student.encargadoPractica,
                 centroPractica: student.centroPractica,
                 instructor: student.instructor,
+                instrumentoMetodologico: student.instrumentoMetodologico,
                 fechaInicio: student.fechaInicio,
                 fechaTermino: student.fechaTermino,
                 seguimiento1: student.seguimiento1,
@@ -2583,52 +2732,78 @@
             localStorage.setItem('datosPracticas', JSON.stringify(dataToSave));
         }
 
-        // Función para exportar a Excel
-        function exportToExcel() {
-            // Crear un array con los datos a exportar
-            const exportData = [
-                ['Nombre', 'RUT', 'Carrera', 'Sede', 'Encargado práctica', 'Centro de práctica', 
-                'Instructor', 'Fecha Inicio', 'Fecha Término', 'Seguimiento 1', 'Evaluación parcial', 
-                'Seguimiento 2', 'Revisión avance', 'Evaluación instructor', 'Finalización práctica', 
-                'Asignación hora examen', 'Nota Final']
-            ];
+ // Función para exportar a Excel
+function exportToExcel() {
+    // Crear un array con los datos a exportar
+    const exportData = [
+        ['Nombre', 'RUT', 'Carrera', 'Sede', 'Línea de Investigación', 'Encargado práctica', 'Centro de práctica', 
+        'Instructor', 'Instrumento Metodológico', 'Fecha Inicio', 'Fecha Término', 'Seguimiento 1', 'Evaluación parcial', 
+        'Seguimiento 2', 'Revisión avance', 'Evaluación instructor', 'Finalización práctica', 
+        'Asignación hora examen', 'Nota Final']
+    ];
             
-            studentsData.forEach(student => {
-                exportData.push([
-                    student.nombre,
-                    student.rut,
-                    student.carrera,
-                    student.sede,
-                    student.encargadoPractica,
-                    student.centroPractica,
-                    student.instructor,
-                    student.fechaInicio,
-                    student.fechaTermino,
-                    student.seguimiento1 === 'no-comienza' ? 'Pendiente' : 
-                        student.seguimiento1 === 'en-proceso' ? 'En proceso' : 'Completado',
-                    student.evaluacionParcial.charAt(0).toUpperCase() + student.evaluacionParcial.slice(1),
-                    student.seguimiento2 === 'no-comienza' ? 'Pendiente' : 
-                        student.seguimiento2 === 'en-proceso' ? 'En proceso' : 'Completado',
-                    student.revisionAvance.charAt(0).toUpperCase() + student.revisionAvance.slice(1),
-                    student.evaluacionInstructor.charAt(0).toUpperCase() + student.evaluacionInstructor.slice(1),
-                    student.finalizacionPractica === 'no-comienza' ? 'Pendiente' : 
-                        student.finalizacionPractica === 'en-proceso' ? 'En proceso' : 'Completado',
-                    student.asignacionHoraExamen === 'no-comienza' ? 'Pendiente' : 
-                        student.asignacionHoraExamen === 'en-proceso' ? 'En proceso' : 'Completado',
-                    student.notaFinal.toFixed(1)
-                ]);
-            });
-            
-            // Crear workbook y worksheet
-            const ws = XLSX.utils.aoa_to_sheet(exportData);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Seguimiento Prácticas");
-            
-            // Guardar archivo
-            XLSX.writeFile(wb, "seguimiento_practicas_ingenieria.xlsx");
-            
-            showAlert('Datos exportados correctamente a Excel', 'success');
+    studentsData.forEach(student => {
+        // Obtener el texto completo de la línea de investigación basado en el valor
+        let lineaInvestigacionTexto = '';
+        if (student.lineaInvestigacion === 'industrias') {
+            lineaInvestigacionTexto = 'Escuela de Industrias: "Transformación Industrial Inteligente: Integración de Tecnologías 4.0 y Optimización de Procesos Productivos"';
+        } else if (student.lineaInvestigacion === 'mineria') {
+            lineaInvestigacionTexto = 'Escuela de Mineria: "Minería Sustentable y Tecnológica: Integración de Innovación, Seguridad, inclusión y Desarrollo Social"';
+        } else if (student.lineaInvestigacion === 'negocios') {
+            lineaInvestigacionTexto = 'Escuela de Negocios: "Transformación Digital y Sostenibilidad en la Gestión Empresarial: Innovación y Competitividad en Mercados Globalizados"';
         }
+
+        exportData.push([
+            student.nombre,
+            student.rut,
+            student.carrera,
+            student.sede,
+            lineaInvestigacionTexto,
+            student.encargadoPractica,
+            student.centroPractica,
+            student.instructor,
+            student.instrumentoMetodologico,
+            student.fechaInicio,
+            student.fechaTermino,
+            student.seguimiento1 === 'no-comienza' ? 'Pendiente' : 
+                student.seguimiento1 === 'en-proceso' ? 'En proceso' : 'Completado',
+            student.evaluacionParcial.charAt(0).toUpperCase() + student.evaluacionParcial.slice(1),
+            student.seguimiento2 === 'no-comienza' ? 'Pendiente' : 
+                student.seguimiento2 === 'en-proceso' ? 'En proceso' : 'Completado',
+            student.revisionAvance.charAt(0).toUpperCase() + student.revisionAvance.slice(1),
+            student.evaluacionInstructor.charAt(0).toUpperCase() + student.evaluacionInstructor.slice(1),
+            student.finalizacionPractica === 'no-comienza' ? 'Pendiente' : 
+                student.finalizacionPractica === 'en-proceso' ? 'En proceso' : 'Completada',
+            student.asignacionHoraExamen === 'no-comienza' ? 'Pendiente' : 
+                student.asignacionHoraExamen === 'en-proceso' ? 'En proceso' : 'Completada',
+            student.notaFinal
+        ]);
+    });
+    
+    // Crear libro y hoja de Excel
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(exportData);
+    
+    // Ajustar ancho de columnas
+    const wscols = exportData[0].map((col, i) => {
+        const maxLength = Math.max(
+            col.length,
+            ...exportData.slice(1).map(row => row[i] ? String(row[i]).length : 0)
+        );
+        return { wch: maxLength + 2 };
+    });
+    ws['!cols'] = wscols;
+    
+    // Añadir la hoja al libro
+    XLSX.utils.book_append_sheet(wb, ws, "Estudiantes");
+    
+    // Generar el archivo Excel y descargarlo
+    const now = new Date();
+    const dateStr = `${now.getDate()}-${now.getMonth()+1}-${now.getFullYear()}`;
+    XLSX.writeFile(wb, `Reporte_Practicas_UAC_${dateStr}.xlsx`);
+    
+    showAlert('Archivo Excel generado correctamente', 'success');
+}
         
         // Función para obtener datos para gráficos
         function getReportData() {
@@ -3267,7 +3442,9 @@
                 
                 // Actualizar encargado de práctica
                 const sede = document.getElementById('studentCampus').value;
-                document.getElementById('practiceSupervisor').value = obtenerEncargadoPractica(value, sede);
+                const tipoEncargado = obtenerEncargadoPractica(value, sede);
+                document.querySelector(`input[name="practiceSupervisorType"][value="${tipoEncargado}"]`).checked = true;
+                document.getElementById('practiceSupervisor').value = tipoEncargado;
             });
             
             // Seleccionar carrera en modal de agregar
@@ -3284,7 +3461,9 @@
                 
                 // Actualizar encargado de práctica
                 const sede = document.getElementById('newStudentCampus').value;
-                document.getElementById('newPracticeSupervisor').value = obtenerEncargadoPractica(value, sede);
+                const tipoEncargado = obtenerEncargadoPractica(value, sede);
+                document.querySelector(`input[name="newPracticeSupervisorType"][value="${tipoEncargado}"]`).checked = true;
+                document.getElementById('newPracticeSupervisor').value = tipoEncargado;
             });
             
             // Cerrar selectores de carrera al hacer clic fuera
@@ -3326,6 +3505,14 @@
                 document.getElementById('examAssignment').value = this.value;
             });
             
+            $(document).on('change', 'input[name="instrumentoMetodologico"]', function() {
+                document.getElementById('instrumentoMetodologicoValue').value = this.value;
+            });
+            
+            $(document).on('change', 'input[name="practiceSupervisorType"]', function() {
+                document.getElementById('practiceSupervisor').value = this.value;
+            });
+            
             // Modal nuevo estudiante
             $(document).on('change', 'input[name="newPracticeState"]', function() {
                 document.getElementById('newPracticeState').value = this.value;
@@ -3355,6 +3542,14 @@
                 document.getElementById('newExamAssignment').value = this.value;
             });
             
+            $(document).on('change', 'input[name="newInstrumentoMetodologico"]', function() {
+                document.getElementById('newInstrumentoMetodologicoValue').value = this.value;
+            });
+            
+            $(document).on('change', 'input[name="newPracticeSupervisorType"]', function() {
+                document.getElementById('newPracticeSupervisor').value = this.value;
+            });
+            
             // Editar estudiante
             $(document).on('click', '.edit-student', function() {
                 const studentId = parseInt($(this).data('id'));
@@ -3381,10 +3576,10 @@
             
             // Botón para eliminar estudiante
             $(document).on('click', '#deleteStudentBtn', function() {
-    const studentId = parseInt($('#studentId').val());
-        showDeleteConfirmationModal(studentId);
-    $('#editStudentModal').modal('hide');
-});
+                const studentId = parseInt($('#studentId').val());
+                showDeleteConfirmationModal(studentId);
+                $('#editStudentModal').modal('hide');
+            });
             
             // Confirmar eliminación de estudiante
             $('#confirmDeleteBtn').on('click', function() {
