@@ -1144,6 +1144,10 @@
                                                 <input type="radio" name="practiceSupervisorType" id="practiceSupervisorTutorVirtual" value="Tutor/a Virtual">
                                                 <label for="practiceSupervisorTutorVirtual">Tutor/a Virtual</label>
                                             </div>
+                                            <div class="option-item">
+                                                <input type="radio" name="practiceSupervisorType" id="practiceSupervisorDocente" value="Docente">
+                                                <label for="practiceSupervisorDocente">Docente</label>
+                                            </div>
                                         </div>
                                         <input type="hidden" id="practiceSupervisor" required>
                                     </div>
@@ -1201,6 +1205,14 @@
                                                 <input type="radio" name="instrumentoMetodologico" id="instrumentoInforme" value="Informe de Practica">
                                                 <label for="instrumentoInforme">Informe de Practica</label>
                                             </div>
+                                            <div class="option-item">
+                                                <input type="radio" name="instrumentoMetodologico" id="instrumentoIntegradora1" value="Asignatura Integradora 1">
+                                                <label for="instrumentoIntegradora1">Asignatura Integradora 1</label>
+                                            </div>
+                                            <div class="option-item">
+                                                <input type="radio" name="instrumentoMetodologico" id="instrumentoIntegradora2" value="Asignatura Integradora 2">
+                                                <label for="instrumentoIntegradora2">Asignatura Integradora 2</label>
+                                            </div>
                                         </div>
                                         <input type="hidden" id="instrumentoMetodologicoValue" required>
                                     </div>
@@ -1221,46 +1233,6 @@
                         <!-- Seguimiento y evaluación -->
                         <div class="form-section">
                             <h5 class="form-section-title"><i class="fas fa-tasks me-2"></i>Seguimiento y Evaluación</h5>
-                            
-                            <!-- NUEVOS ELEMENTOS: Asignatura Integradora 1 -->
-                            <div class="option-selector">
-                                <label class="form-label">Asignatura Integradora 1</label>
-                                <div class="options-container">
-                                    <div class="option-item status-pending">
-                                        <input type="radio" name="asignaturaIntegradora1" id="asignaturaIntegradora1Pending" value="no-comienza">
-                                        <label for="asignaturaIntegradora1Pending">No comienza</label>
-                                    </div>
-                                    <div class="option-item status-in-progress">
-                                        <input type="radio" name="asignaturaIntegradora1" id="asignaturaIntegradora1InProgress" value="en-proceso">
-                                        <label for="asignaturaIntegradora1InProgress">En proceso</label>
-                                    </div>
-                                    <div class="option-item status-completed">
-                                        <input type="radio" name="asignaturaIntegradora1" id="asignaturaIntegradora1Completed" value="completada">
-                                        <label for="asignaturaIntegradora1Completed">Completada</label>
-                                    </div>
-                                </div>
-                                <input type="hidden" id="asignaturaIntegradora1">
-                            </div>
-                            
-                            <!-- NUEVOS ELEMENTOS: Asignatura Integradora 2 -->
-                            <div class="option-selector">
-                                <label class="form-label">Asignatura Integradora 2</label>
-                                <div class="options-container">
-                                    <div class="option-item status-pending">
-                                        <input type="radio" name="asignaturaIntegradora2" id="asignaturaIntegradora2Pending" value="no-comienza">
-                                        <label for="asignaturaIntegradora2Pending">No comienza</label>
-                                    </div>
-                                    <div class="option-item status-in-progress">
-                                        <input type="radio" name="asignaturaIntegradora2" id="asignaturaIntegradora2InProgress" value="en-proceso">
-                                        <label for="asignaturaIntegradora2InProgress">En proceso</label>
-                                    </div>
-                                    <div class="option-item status-completed">
-                                        <input type="radio" name="asignaturaIntegradora2" id="asignaturaIntegradora2Completed" value="completada">
-                                        <label for="asignaturaIntegradora2Completed">Completada</label>
-                                    </div>
-                                </div>
-                                <input type="hidden" id="asignaturaIntegradora2">
-                            </div>
                             
                             <!-- Reemplazo del desplegable de Seguimiento 1 por opciones visuales -->
                             <div class="option-selector">
@@ -1530,6 +1502,10 @@
                                                 <input type="radio" name="newPracticeSupervisorType" id="newPracticeSupervisorTutorVirtual" value="Tutor/a Virtual">
                                                 <label for="newPracticeSupervisorTutorVirtual">Tutor/a Virtual</label>
                                             </div>
+                                            <div class="option-item">
+                                                <input type="radio" name="newPracticeSupervisorType" id="newPracticeSupervisorDocente" value="Docente">
+                                                <label for="newPracticeSupervisorDocente">Docente</label>
+                                            </div>
                                         </div>
                                         <input type="hidden" id="newPracticeSupervisor" required>
                                     </div>
@@ -1587,6 +1563,14 @@
                                                 <input type="radio" name="newInstrumentoMetodologico" id="newInstrumentoInforme" value="Informe de Practica">
                                                 <label for="newInstrumentoInforme">Informe de Practica</label>
                                             </div>
+                                            <div class="option-item">
+                                                <input type="radio" name="newInstrumentoMetodologico" id="newInstrumentoIntegradora1" value="Asignatura Integradora 1">
+                                                <label for="newInstrumentoIntegradora1">Asignatura Integradora 1</label>
+                                            </div>
+                                            <div class="option-item">
+                                                <input type="radio" name="newInstrumentoMetodologico" id="newInstrumentoIntegradora2" value="Asignatura Integradora 2">
+                                                <label for="newInstrumentoIntegradora2">Asignatura Integradora 2</label>
+                                            </div>
                                         </div>
                                         <input type="hidden" id="newInstrumentoMetodologicoValue" required>
                                     </div>
@@ -1607,46 +1591,6 @@
                         <!-- Seguimiento y evaluación -->
                         <div class="form-section">
                             <h5 class="form-section-title"><i class="fas fa-tasks me-2"></i>Seguimiento y Evaluación</h5>
-                            
-                            <!-- NUEVOS ELEMENTOS: Asignatura Integradora 1 -->
-                            <div class="option-selector">
-                                <label class="form-label">Asignatura Integradora 1</label>
-                                <div class="options-container">
-                                    <div class="option-item status-pending">
-                                        <input type="radio" name="newAsignaturaIntegradora1" id="newAsignaturaIntegradora1Pending" value="no-comienza">
-                                        <label for="newAsignaturaIntegradora1Pending">No comienza</label>
-                                    </div>
-                                    <div class="option-item status-in-progress">
-                                        <input type="radio" name="newAsignaturaIntegradora1" id="newAsignaturaIntegradora1InProgress" value="en-proceso">
-                                        <label for="newAsignaturaIntegradora1InProgress">En proceso</label>
-                                    </div>
-                                    <div class="option-item status-completed">
-                                        <input type="radio" name="newAsignaturaIntegradora1" id="newAsignaturaIntegradora1Completed" value="completada">
-                                        <label for="newAsignaturaIntegradora1Completed">Completada</label>
-                                    </div>
-                                </div>
-                                <input type="hidden" id="newAsignaturaIntegradora1">
-                            </div>
-                            
-                            <!-- NUEVOS ELEMENTOS: Asignatura Integradora 2 -->
-                            <div class="option-selector">
-                                <label class="form-label">Asignatura Integradora 2</label>
-                                <div class="options-container">
-                                    <div class="option-item status-pending">
-                                        <input type="radio" name="newAsignaturaIntegradora2" id="newAsignaturaIntegradora2Pending" value="no-comienza">
-                                        <label for="newAsignaturaIntegradora2Pending">No comienza</label>
-                                    </div>
-                                    <div class="option-item status-in-progress">
-                                        <input type="radio" name="newAsignaturaIntegradora2" id="newAsignaturaIntegradora2InProgress" value="en-proceso">
-                                        <label for="newAsignaturaIntegradora2InProgress">En proceso</label>
-                                    </div>
-                                    <div class="option-item status-completed">
-                                        <input type="radio" name="newAsignaturaIntegradora2" id="newAsignaturaIntegradora2Completed" value="completada">
-                                        <label for="newAsignaturaIntegradora2Completed">Completada</label>
-                                    </div>
-                                </div>
-                                <input type="hidden" id="newAsignaturaIntegradora2">
-                            </div>
                             
                             <!-- Reemplazo del desplegable de Seguimiento 1 por opciones visuales -->
                             <div class="option-selector">
@@ -2083,8 +2027,6 @@
                     instrumentoMetodologico: student.instrumentoMetodologico || 'Informe de Practica',
                     fechaInicio: student.fechaInicio || '',
                     fechaTermino: student.fechaTermino || '',
-                    asignaturaIntegradora1: student.asignaturaIntegradora1 || 'no-comienza', // Nuevo campo
-                    asignaturaIntegradora2: student.asignaturaIntegradora2 || 'no-comienza', // Nuevo campo
                     seguimiento1: student.seguimiento1 || 'no-comienza',
                     evaluacionParcial: student.evaluacionParcial || 'excelente',
                     seguimiento2: student.seguimiento2 || 'no-comienza',
@@ -2151,10 +2093,8 @@
             }
             
             currentStudents.forEach(student => {
-                // Calcular progreso - actualizamos para incluir los nuevos campos
+                // Calcular progreso
                 const stagesCompleted = [
-                    student.asignaturaIntegradora1 === 'completada', // Nuevo campo
-                    student.asignaturaIntegradora2 === 'completada', // Nuevo campo
                     student.seguimiento1 === 'completada',
                     student.evaluacionParcial !== '',
                     student.seguimiento2 === 'completada',
@@ -2166,8 +2106,7 @@
                     student.asignacionHoraExamen === 'completada'
                 ].filter(Boolean).length;
                 
-                // Ahora tenemos 11 etapas en lugar de 9
-                const progress = Math.round((stagesCompleted / 11) * 100);
+                const progress = Math.round((stagesCompleted / 9) * 100);
                 
                 // Determinar estado global para color de progreso
                 let statusClass = 'bg-danger';
@@ -2243,18 +2182,6 @@
                             </div>
                             
                             <div class="row">
-                                <div class="col-md-4 mb-2">
-                                    <small>Asig. Integradora 1: <span class="status-${student.asignaturaIntegradora1}">
-                                        ${student.asignaturaIntegradora1 === 'no-comienza' ? 'Pendiente' : 
-                                          student.asignaturaIntegradora1 === 'en-proceso' ? 'En proceso' : 'Completado'}
-                                    </span></small>
-                                </div>
-                                <div class="col-md-4 mb-2">
-                                    <small>Asig. Integradora 2: <span class="status-${student.asignaturaIntegradora2}">
-                                        ${student.asignaturaIntegradora2 === 'no-comienza' ? 'Pendiente' : 
-                                          student.asignaturaIntegradora2 === 'en-proceso' ? 'En proceso' : 'Completado'}
-                                    </span></small>
-                                </div>
                                 <div class="col-md-4 mb-2">
                                     <small>Seguimiento 1: <span class="status-${student.seguimiento1}">
                                         ${student.seguimiento1 === 'no-comienza' ? 'Pendiente' : 
@@ -2497,9 +2424,9 @@ function fillCampusSelector(container, selectedValue = '') {
             );
 
             // Llenar el selector de línea de investigación
-            if (student.lineaInvestigacion) {
-                document.getElementById('researchLine').value = student.lineaInvestigacion;
-            }
+if (student.lineaInvestigacion) {
+    document.getElementById('researchLine').value = student.lineaInvestigacion;
+}
             
             // Información de práctica
             document.getElementById('practiceSupervisor').value = student.encargadoPractica;
@@ -2523,11 +2450,6 @@ function fillCampusSelector(container, selectedValue = '') {
             if (instrumentoRadio) instrumentoRadio.checked = true;
             
             // Seguimiento y evaluación
-            
-            // Nuevos campos
-            document.getElementById('asignaturaIntegradora1').value = student.asignaturaIntegradora1 || 'no-comienza';
-            document.getElementById('asignaturaIntegradora2').value = student.asignaturaIntegradora2 || 'no-comienza';
-            
             document.getElementById('tracking1').value = student.seguimiento1;
             document.getElementById('partialEvaluation').value = student.evaluacionParcial;
             document.getElementById('tracking2').value = student.seguimiento2;
@@ -2537,11 +2459,6 @@ function fillCampusSelector(container, selectedValue = '') {
             document.getElementById('finalGrade').value = student.notaFinal;
             
             // Seleccionar opciones visuales de seguimiento
-            
-            // Nuevos campos
-            document.querySelector(`input[name="asignaturaIntegradora1"][value="${student.asignaturaIntegradora1 || 'no-comienza'}"]`).checked = true;
-            document.querySelector(`input[name="asignaturaIntegradora2"][value="${student.asignaturaIntegradora2 || 'no-comienza'}"]`).checked = true;
-            
             document.querySelector(`input[name="tracking1"][value="${student.seguimiento1}"]`).checked = true;
             document.querySelector(`input[name="partialEvaluation"][value="${student.evaluacionParcial}"]`).checked = true;
             document.querySelector(`input[name="tracking2"][value="${student.seguimiento2}"]`).checked = true;
@@ -2597,11 +2514,6 @@ function fillCampusSelector(container, selectedValue = '') {
             document.getElementById('newPracticeCenter').value = '';
             document.getElementById('newPracticeInstructor').value = '';
             document.getElementById('newPracticeState').value = 'no-comienza';
-            
-            // Valores por defecto para los nuevos campos
-            document.getElementById('newAsignaturaIntegradora1').value = 'no-comienza';
-            document.getElementById('newAsignaturaIntegradora2').value = 'no-comienza';
-            
             document.getElementById('newTracking1').value = 'no-comienza';
             document.getElementById('newPartialEvaluation').value = 'excelente';
             document.getElementById('newTracking2').value = 'no-comienza';
@@ -2612,11 +2524,6 @@ function fillCampusSelector(container, selectedValue = '') {
             
             // Seleccionar opciones por defecto
             document.querySelector('input[name="newPracticeState"][value="no-comienza"]').checked = true;
-            
-            // Selección por defecto para los nuevos campos
-            document.querySelector('input[name="newAsignaturaIntegradora1"][value="no-comienza"]').checked = true;
-            document.querySelector('input[name="newAsignaturaIntegradora2"][value="no-comienza"]').checked = true;
-            
             document.querySelector('input[name="newTracking1"][value="no-comienza"]').checked = true;
             document.querySelector('input[name="newPartialEvaluation"][value="excelente"]').checked = true;
             document.querySelector('input[name="newTracking2"][value="no-comienza"]').checked = true;
@@ -2655,11 +2562,6 @@ function fillCampusSelector(container, selectedValue = '') {
                 
                 // Obtener valores de los radio buttons
                 const practiceState = document.querySelector('input[name="practiceState"]:checked').value;
-                
-                // Obtener valores de los nuevos campos
-                const asignaturaIntegradora1 = document.querySelector('input[name="asignaturaIntegradora1"]:checked').value;
-                const asignaturaIntegradora2 = document.querySelector('input[name="asignaturaIntegradora2"]:checked').value;
-                
                 const tracking1 = document.querySelector('input[name="tracking1"]:checked').value;
                 const partialEvaluation = document.querySelector('input[name="partialEvaluation"]:checked').value;
                 const tracking2 = document.querySelector('input[name="tracking2"]:checked').value;
@@ -2683,8 +2585,6 @@ function fillCampusSelector(container, selectedValue = '') {
                     instrumentoMetodologico: instrumentoMetodologico,
                     fechaInicio: document.getElementById('startDate').value,
                     fechaTermino: document.getElementById('endDate').value,
-                    asignaturaIntegradora1: asignaturaIntegradora1, // Nuevo campo
-                    asignaturaIntegradora2: asignaturaIntegradora2, // Nuevo campo
                     seguimiento1: tracking1,
                     evaluacionParcial: partialEvaluation,
                     seguimiento2: tracking2,
@@ -2736,11 +2636,6 @@ function fillCampusSelector(container, selectedValue = '') {
             
             // Obtener valores de los radio buttons
             const practiceState = document.querySelector('input[name="newPracticeState"]:checked').value;
-            
-            // Obtener valores de los nuevos campos
-            const asignaturaIntegradora1 = document.querySelector('input[name="newAsignaturaIntegradora1"]:checked').value;
-            const asignaturaIntegradora2 = document.querySelector('input[name="newAsignaturaIntegradora2"]:checked').value;
-            
             const tracking1 = document.querySelector('input[name="newTracking1"]:checked').value;
             const partialEvaluation = document.querySelector('input[name="newPartialEvaluation"]:checked').value;
             const tracking2 = document.querySelector('input[name="newTracking2"]:checked').value;
@@ -2763,8 +2658,6 @@ function fillCampusSelector(container, selectedValue = '') {
                 instrumentoMetodologico: instrumentoMetodologico,
                 fechaInicio: document.getElementById('newStartDate').value,
                 fechaTermino: document.getElementById('newEndDate').value,
-                asignaturaIntegradora1: asignaturaIntegradora1, // Nuevo campo
-                asignaturaIntegradora2: asignaturaIntegradora2, // Nuevo campo
                 seguimiento1: tracking1,
                 evaluacionParcial: partialEvaluation,
                 seguimiento2: tracking2,
@@ -2850,8 +2743,6 @@ function fillCampusSelector(container, selectedValue = '') {
                 instrumentoMetodologico: student.instrumentoMetodologico,
                 fechaInicio: student.fechaInicio,
                 fechaTermino: student.fechaTermino,
-                asignaturaIntegradora1: student.asignaturaIntegradora1, // Nuevo campo
-                asignaturaIntegradora2: student.asignaturaIntegradora2, // Nuevo campo
                 seguimiento1: student.seguimiento1,
                 evaluacionParcial: student.evaluacionParcial,
                 seguimiento2: student.seguimiento2,
@@ -2870,8 +2761,7 @@ function exportToExcel() {
     // Crear un array con los datos a exportar
     const exportData = [
         ['Nombre', 'RUT', 'Carrera', 'Sede', 'Línea de Investigación', 'Encargado práctica', 'Centro de práctica', 
-        'Instructor', 'Instrumento Metodológico', 'Fecha Inicio', 'Fecha Término', 
-        'Asignatura Integradora 1', 'Asignatura Integradora 2', 'Seguimiento 1', 'Evaluación parcial', 
+        'Instructor', 'Instrumento Metodológico', 'Fecha Inicio', 'Fecha Término', 'Seguimiento 1', 'Evaluación parcial', 
         'Seguimiento 2', 'Revisión avance', 'Evaluación instructor', 'Finalización práctica', 
         'Asignación hora examen', 'Nota Final']
     ];
@@ -2899,10 +2789,6 @@ function exportToExcel() {
             student.instrumentoMetodologico,
             student.fechaInicio,
             student.fechaTermino,
-            student.asignaturaIntegradora1 === 'no-comienza' ? 'Pendiente' : 
-                student.asignaturaIntegradora1 === 'en-proceso' ? 'En proceso' : 'Completado',
-            student.asignaturaIntegradora2 === 'no-comienza' ? 'Pendiente' : 
-                student.asignaturaIntegradora2 === 'en-proceso' ? 'En proceso' : 'Completado',
             student.seguimiento1 === 'no-comienza' ? 'Pendiente' : 
                 student.seguimiento1 === 'en-proceso' ? 'En proceso' : 'Completado',
             student.evaluacionParcial.charAt(0).toUpperCase() + student.evaluacionParcial.slice(1),
@@ -3619,15 +3505,6 @@ function exportToExcel() {
                 document.getElementById('practiceState').value = this.value;
             });
             
-            // Nuevos event listeners para los nuevos campos
-            $(document).on('change', 'input[name="asignaturaIntegradora1"]', function() {
-                document.getElementById('asignaturaIntegradora1').value = this.value;
-            });
-            
-            $(document).on('change', 'input[name="asignaturaIntegradora2"]', function() {
-                document.getElementById('asignaturaIntegradora2').value = this.value;
-            });
-            
             $(document).on('change', 'input[name="tracking1"]', function() {
                 document.getElementById('tracking1').value = this.value;
             });
@@ -3663,15 +3540,6 @@ function exportToExcel() {
             // Modal nuevo estudiante
             $(document).on('change', 'input[name="newPracticeState"]', function() {
                 document.getElementById('newPracticeState').value = this.value;
-            });
-            
-            // Nuevos event listeners para los nuevos campos en el modal de agregar
-            $(document).on('change', 'input[name="newAsignaturaIntegradora1"]', function() {
-                document.getElementById('newAsignaturaIntegradora1').value = this.value;
-            });
-            
-            $(document).on('change', 'input[name="newAsignaturaIntegradora2"]', function() {
-                document.getElementById('newAsignaturaIntegradora2').value = this.value;
             });
             
             $(document).on('change', 'input[name="newTracking1"]', function() {
