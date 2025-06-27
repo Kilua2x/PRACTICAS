@@ -1758,35 +1758,43 @@
         let statusChart, campusChart, careerChart, evaluationChart, nivelPracticaChart;
 
         // Función para cargar los datos de estudiantes
-        function loadStudentsData() {
-            const savedData = JSON.parse(localStorage.getItem('datosPracticas')) || [];
-            studentsData = savedData.map((student, index) => {
-                return {
-                    id: index,
-                    nombre: student.nombre || '',
-                    rut: student.rut || '',
-                    carrera: student.carrera || carreras[0],
-                    sede: student.sede || sedes[0],
-                    supervisorPractica: student.supervisorPractica || '',
-                    centroPractica: student.centroPractica || '',
-                    instructor: student.instructor || '',
-                    nivelPractica: student.nivelPractica || 'practica-intermedia-1',
-                    fechaInicio: student.fechaInicio || '',
-                    fechaTermino: student.fechaTermino || '',
-                    seguimiento1: student.seguimiento1 || 'no-comienza',
-                    seguimiento2: student.seguimiento2 || 'no-comienza',
-                    evaluacionInstructor: student.evaluacionInstructor || 'excelente',
-                    documentacionInstructor: false, // Este campo requeriría almacenamiento de archivos real
-                    finalizacionPractica: student.finalizacionPractica || 'no-comienza',
-                    documentacionFinalizacion: false, // Este campo requeriría almacenamiento de archivos real
-                    evaluacionFinal: student.evaluacionFinal || 'no-comienza'
-                };
-            }).filter(student => student.nombre.trim() !== ''); // Filtrar estudiantes sin nombre
-            
-            updateStatistics();
-            renderStudentsList();
-            setupFilterCareerOptions();
-        }
+// Función mejorada para cargar datos con manejo de errores
+function loadStudentsData() {
+    try {
+        const savedData = JSON.parse(localStorage.getItem('datosPracticas')) || [];
+        studentsData = savedData.map((student, index) => {
+            return {
+                id: index,
+                nombre: student.nombre || '',
+                rut: student.rut || '',
+                carrera: student.carrera || carreras[0],
+                sede: student.sede || sedes[0],
+                supervisorPractica: student.supervisorPractica || '',
+                centroPractica: student.centroPractica || '',
+                instructor: student.instructor || '',
+                nivelPractica: student.nivelPractica || 'practica-intermedia-1',
+                fechaInicio: student.fechaInicio || '',
+                fechaTermino: student.fechaTermino || '',
+                seguimiento1: student.seguimiento1 || 'no-comienza',
+                seguimiento2: student.seguimiento2 || 'no-comienza',
+                evaluacionInstructor: student.evaluacionInstructor || 'excelente',
+                documentacionInstructor: student.documentacionInstructor || false,
+                finalizacionPractica: student.finalizacionPractica || 'no-comienza',
+                documentacionFinalizacion: student.documentacionFinalizacion || false,
+                evaluacionFinal: student.evaluacionFinal || 'no-comienza'
+            };
+        }).filter(student => student.nombre.trim() !== ''); // Filtrar estudiantes sin nombre
+    } catch (error) {
+        console.error('Error al cargar datos:', error);
+        showAlert('Error al cargar los datos. Se han restablecido los datos.', 'danger');
+        studentsData = [];
+        initializeDataIfEmpty(); // Cargar datos de muestra si hay error
+    }
+    
+    updateStatistics();
+    renderStudentsList();
+    setupFilterCareerOptions();
+}
 
         // Función para filtrar estudiantes según los criterios activos
         function filterStudents() {
@@ -3195,11 +3203,11 @@ function fillCampusSelector(container, selectedValue = '') {
             });
             
             // Botón para eliminar estudiante
-            $(document).on('click', '#deleteStudentBtn', function() {
-                const studentId = parseInt($('#studentId').value);
-                showDeleteConfirmationModal(studentId);
-                $('#editStudentModal').modal('hide');
-            });
+$(document).on('click', '#deleteStudentBtn', function() {
+    const studentId = parseInt($('#studentId').val()); // Corrección: usar .val() en lugar de .value
+    showDeleteConfirmationModal(studentId);
+    $('#editStudentModal').modal('hide');
+});
             
             // Confirmar eliminación de estudiante
             $('#confirmDeleteBtn').on('click', function() {
