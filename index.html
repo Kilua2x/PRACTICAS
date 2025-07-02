@@ -1,689 +1,491 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sistema de seguimiento de prácticas profesionales de la Universidad de Aconcagua">
-    <title>Seguimiento Prácticas UAC</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome para íconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Estilos personalizados -->
-    <style>
-        :root {
-            --primary-color: #00204e;
-            --secondary-color: #FFA500;
-            --accent-color: #ff8c00;
-            --light-bg: rgba(255, 255, 255, 0.1);
-            --text-color: #ffffff;
-            --error-color: #ff6b6b;
-            --dark-overlay: rgba(0, 0, 0, 0.2);
-        }
-        
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--primary-color);
-            background-image: linear-gradient(135deg, var(--primary-color) 0%, #001530 100%);
-            color: var(--text-color);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        /* Decorative elements */
-        .bg-shapes {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
-        
-        .bg-shapes::before {
-            content: '';
-            position: absolute;
-            top: 10%;
-            left: 5%;
-            width: 60vw;
-            height: 60vw;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255, 165, 0, 0.05) 0%, rgba(0, 32, 78, 0) 70%);
-            animation: float 15s infinite alternate ease-in-out;
-        }
-        
-        .bg-shapes::after {
-            content: '';
-            position: absolute;
-            bottom: 5%;
-            right: 10%;
-            width: 50vw;
-            height: 50vw;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(0, 75, 150, 0.1) 0%, rgba(0, 32, 78, 0) 70%);
-            animation: float 20s infinite alternate-reverse ease-in-out;
-        }
-        
-        @keyframes float {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            100% { transform: translate(3%, 3%) rotate(5deg); }
-        }
-        
-        .navbar-brand {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-        
-        .navbar-dark {
-            background-color: var(--dark-overlay);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-        }
-        
-        .btn-logout {
-            background-color: #dc3545;
-            color: white;
-            transition: all 0.3s;
-            border-radius: 8px;
-            font-weight: 500;
-        }
-        
-        .btn-logout:hover {
-            background-color: #c82333;
-            color: white;
-            transform: translateY(-2px);
-        }
-        
-        .login-container {
-            background-color: var(--light-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 30px;
-            max-width: 450px;
-            width: 100%;
-            margin: 60px auto;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .login-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-        }
-        
-        .login-title {
-            text-align: center;
-            margin-bottom: 30px;
-            color: var(--text-color);
-            font-weight: 600;
-            position: relative;
-            padding-bottom: 15px;
-        }
-        
-        .login-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
-            border-radius: 3px;
-        }
-        
-        /* Ajuste para que los iconos sean proporcionados */
-        .form-control {
-            background-color: rgba(255, 255, 255, 0.9);
-            border: none;
-            height: 45px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s;
-            padding-left: 40px; /* Espacio para el icono */
-        }
-        
-        .form-control:focus {
-            box-shadow: 0 0 0 0.25rem rgba(255, 165, 0, 0.25);
-            border-color: var(--secondary-color);
-            transform: translateY(-2px);
-        }
-        
-        /* Ajuste de posición de los iconos */
-        .input-group {
-            position: relative;
-        }
-        
-        .input-group-text {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 45px;
-            width: 40px;
-            z-index: 5;
-            justify-content: center;
-            background-color: transparent;
-            border: none;
-            border-radius: 8px 0 0 8px;
-        }
-        
-        .input-icon {
-            font-size: 14px; /* Tamaño reducido */
-            color: #536b8b; /* Color suave */
-            transition: all 0.3s;
-        }
-        
-        .input-group:focus-within .input-icon {
-            color: var(--secondary-color);
-        }
-        
-        .btn-toggle-password {
-            position: absolute;
-            top: 0;
-            right: 0;
-            height: 45px;
-            width: 40px;
-            background-color: transparent;
-            border: none;
-            z-index: 5;
-            border-radius: 0 8px 8px 0;
-        }
-        
-        .btn-toggle-password:hover .input-icon {
-            color: var(--secondary-color);
-        }
-        
-        .btn-login {
-            background-color: var(--secondary-color);
-            border: none;
-            color: white;
-            height: 45px;
-            font-weight: bold;
-            transition: all 0.3s;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(255, 165, 0, 0.3);
-        }
-        
-        .btn-login:hover {
-            background-color: var(--accent-color);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(255, 165, 0, 0.5);
-        }
-        
-        .alert-login {
-            display: none;
-            border-radius: 8px;
-            background-color: rgba(220, 53, 69, 0.8);
-            border: none;
-        }
-        
-        /* Iconos para las tarjetas también más proporcionados */
-        .faculty-card {
-            background-color: var(--light-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 15px;
-            transition: all 0.3s ease;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .faculty-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 165, 0, 0.08), transparent 70%);
-            transition: all 0.5s ease;
-            opacity: 0;
-        }
-        
-        .faculty-card:hover::before {
-            opacity: 1;
-            transform: scale(1.2);
-        }
-        
-        .faculty-card:hover {
-            transform: translateY(-10px);
-            background-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-        }
-        
-        .card-icon {
-            font-size: 2.5rem;
-            color: var(--secondary-color);
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
-        
-        .faculty-card:hover .card-icon {
-            transform: scale(1.1);
-        }
-        
-        .card-title {
-            font-size: 1.4rem;
-            font-weight: bold;
-            margin-bottom: 15px;
-            transition: all 0.3s ease;
-        }
-        
-        .faculty-card:hover .card-title {
-            color: var(--secondary-color);
-        }
-        
-        .btn-faculty {
-            background-color: var(--secondary-color);
-            color: white;
-            border: none;
-            transition: all 0.3s;
-            margin-top: 15px;
-            border-radius: 8px;
-            padding: 8px 20px;
-            box-shadow: 0 4px 15px rgba(255, 165, 0, 0.2);
-        }
-        
-        .btn-faculty:hover {
-            background-color: var(--accent-color);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(255, 165, 0, 0.4);
-        }
-        
-        .main-content {
-            flex: 1;
-            display: none;
-            padding: 40px 0;
-        }
-        
-        .main-heading {
-            text-align: center;
-            margin-bottom: 40px;
-            font-weight: 700;
-            color: var(--text-color);
-            position: relative;
-        }
-        
-        footer {
-            background-color: var(--dark-overlay);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            color: var(--text-color);
-            padding: 20px 0;
-            margin-top: auto;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        /* Animaciones */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .animate-fadeIn {
-            animation: fadeIn 0.5s ease forwards;
-        }
-        
-        /* Loading indicator */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 32, 78, 0.8);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s;
-        }
-        
-        .loading-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            border-top-color: var(--secondary-color);
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Notificación */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: rgba(40, 167, 69, 0.9);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            transform: translateX(150%);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            font-size: 0.9rem;
-        }
-        
-        .notification.show {
-            transform: translateX(0);
-        }
-        
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .faculty-card {
-                margin-bottom: 20px;
-            }
-            
-            .login-container {
-                margin: 40px 20px;
-                padding: 20px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sistema de seguimiento de prácticas profesionales de la Universidad de Aconcagua">
+  <title>Seguimiento Prácticas UAC</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome para íconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Estilos personalizados -->
+  <style>
+    :root {
+      --primary-color: #00204e;
+      --secondary-color: #FFA500;
+      --accent-color: #ff8c00;
+      --light-bg: rgba(255, 255, 255, 0.1);
+      --text-color: #ffffff;
+      --error-color: #ff6b6b;
+    }
+    
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, var(--primary-color) 0%, #001530 100%);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .navbar-brand {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    
+    .navbar-dark {
+      background-color: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(5px);
+    }
+    
+    .btn-logout {
+      background-color: #dc3545;
+      color: white;
+      transition: all 0.3s;
+      border-radius: 8px;
+    }
+    
+    .btn-logout:hover {
+      background-color: #c82333;
+      transform: translateY(-2px);
+    }
+    
+    .login-container {
+      background-color: var(--light-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 30px;
+      max-width: 450px;
+      width: 100%;
+      margin: 60px auto;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .login-title {
+      text-align: center;
+      margin-bottom: 30px;
+      color: var(--text-color);
+      font-weight: 600;
+      position: relative;
+      padding-bottom: 10px;
+    }
+    
+    .login-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 3px;
+      background-color: var(--secondary-color);
+      border-radius: 3px;
+    }
+    
+    /* Input y iconos: Se reduce el tamaño de los íconos a 14px para que vayan de la mano con los 45px de alto del input */
+    .form-control {
+      background-color: rgba(255,255,255,0.9);
+      border: none;
+      height: 45px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      padding-left: 40px;
+    }
+    
+    .form-control:focus {
+      box-shadow: 0 0 0 0.25rem rgba(255,165,0,0.25);
+      border-color: var(--secondary-color);
+    }
+    
+    .input-group {
+      position: relative;
+    }
+    
+    .input-group-text {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 45px;
+      width: 40px;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(255,255,255,0.9);
+      border: none;
+      border-radius: 8px 0 0 8px;
+    }
+    
+    .input-icon {
+      font-size: 14px;
+      color: var(--primary-color);
+    }
+    
+    /* Botón para mostrar contraseña sin alterar los tamaños de los inputs */
+    .btn-toggle-password {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 45px;
+      width: 40px;
+      background-color: rgba(255,255,255,0.9);
+      border: none;
+      z-index: 5;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .btn-toggle-password:hover .input-icon {
+      color: var(--secondary-color);
+    }
+    
+    .btn-login {
+      background-color: var(--secondary-color);
+      border: none;
+      color: white;
+      height: 45px;
+      font-weight: bold;
+      transition: all 0.3s;
+      border-radius: 8px;
+    }
+    
+    .btn-login:hover {
+      background-color: var(--accent-color);
+      transform: translateY(-3px);
+    }
+    
+    .alert-login {
+      display: none;
+      border-radius: 8px;
+      background-color: rgba(220,53,69,0.8);
+      padding: 10px 15px;
+    }
+    
+    /* Tarjetas de facultad: Se conserva la funcionalidad del original manteniendo los enlaces intactos */
+    .faculty-card {
+      background-color: var(--light-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    
+    .faculty-card:hover {
+      transform: translateY(-10px);
+      background-color: rgba(255,255,255,0.2);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+    
+    .card-icon {
+      font-size: 3.5rem;
+      color: var(--secondary-color);
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+    
+    .faculty-card:hover .card-icon {
+      transform: scale(1.1);
+    }
+    
+    .card-title {
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+    
+    /* Botones de acceso a facultades sin alterar el comportamiento de enlace */
+    .btn-faculty {
+      background-color: var(--secondary-color);
+      color: white;
+      border: none;
+      transition: all 0.3s;
+      margin-top: 15px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      display: inline-block;
+    }
+    
+    .btn-faculty:hover {
+      background-color: var(--accent-color);
+      color: white;
+      text-decoration: none;
+    }
+    
+    .main-content {
+      flex: 1;
+      display: none;
+      padding: 40px 0;
+    }
+    
+    footer {
+      background-color: rgba(0,0,0,0.2);
+      backdrop-filter: blur(5px);
+      color: var(--text-color);
+      padding: 20px 0;
+      margin-top: auto;
+    }
+    
+    /* Animación de fadeIn */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .animate-fadeIn {
+      animation: fadeIn 0.5s ease forwards;
+    }
+    
+    /* Notificación */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: rgba(40,167,69,0.9);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      z-index: 1000;
+      transform: translateX(150%);
+      transition: transform 0.4s;
+      font-size: 0.9rem;
+    }
+    
+    .notification.show {
+      transform: translateX(0);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .faculty-card {
+        margin-bottom: 20px;
+      }
+      .login-container {
+        margin: 40px 20px;
+        padding: 20px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <!-- Background Shapes -->
-    <div class="bg-shapes"></div>
-    
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner"></div>
-    </div>
-    
-    <!-- Notification -->
-    <div class="notification" id="notification">
-        <i class="fas fa-check-circle me-2"></i>
-        <span id="notificationText">Inicio de sesión exitoso</span>
-    </div>
+  <!-- Notificación -->
+  <div class="notification" id="notification">
+    <i class="fas fa-check-circle me-2"></i>
+    <span id="notificationText">Inicio de sesión exitoso</span>
+  </div>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">
-                <i class="fas fa-graduation-cap me-2"></i>
-                Seguimiento Prácticas UAC
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-graduation-cap me-2"></i>
+        Seguimiento Prácticas UAC
+      </a>
+      <div id="navbarButtons">
+        <button id="logoutBtn" class="btn btn-logout" style="display: none;">
+          <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Formulario de Login -->
+  <div class="container" id="loginContainer">
+    <div class="login-container">
+      <h2 class="login-title">Acceso al Sistema</h2>
+      <div class="alert alert-danger alert-login" id="errorMessage" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>Usuario o contraseña incorrectos
+      </div>
+      <form id="loginForm">
+        <div class="mb-3">
+          <label for="username" class="form-label visually-hidden">Usuario</label>
+          <div class="input-group">
+            <span class="input-group-text">
+              <i class="fas fa-user input-icon"></i>
+            </span>
+            <input type="text" class="form-control" id="username" placeholder="Usuario" required autocomplete="username">
+          </div>
+        </div>
+        <div class="mb-4">
+          <label for="password" class="form-label visually-hidden">Contraseña</label>
+          <div class="input-group">
+            <span class="input-group-text">
+              <i class="fas fa-lock input-icon"></i>
+            </span>
+            <input type="password" class="form-control" id="password" placeholder="Contraseña" required autocomplete="current-password">
+            <button class="btn btn-toggle-password" type="button" id="togglePassword">
+              <i class="fas fa-eye input-icon"></i>
+            </button>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-login w-100">
+          <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Contenido Principal (visible tras login) -->
+  <div class="main-content" id="mainContent">
+    <div class="container">
+      <div class="row mb-4">
+        <div class="col-12">
+          <h2 class="text-center mb-5">Seleccione una Facultad</h2>
+        </div>
+      </div>
+      <div class="row">
+        <!-- Tarjeta Ingeniería -->
+        <div class="col-md-4 mb-4">
+          <div class="faculty-card p-4 text-center" id="card1">
+            <div>
+              <i class="fas fa-cogs card-icon"></i>
+              <h3 class="card-title">Facultad de Ingenierías</h3>
+              <p>Seguimiento de prácticas para estudiantes de ingeniería.</p>
+            </div>
+            <a href="pagina1.html" class="btn btn-faculty">
+              <i class="fas fa-arrow-right me-2"></i>Acceder
             </a>
-            <div id="navbarButtons">
-                <button id="logoutBtn" class="btn btn-logout" style="display: none;">
-                    <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
-                </button>
-            </div>
+          </div>
         </div>
-    </nav>
-
-    <!-- Login Form -->
-    <div class="container" id="loginContainer">
-        <div class="login-container">
-            <h2 class="login-title">Acceso al Sistema</h2>
-            <div class="alert alert-danger alert-login" id="errorMessage" role="alert">
-                <i class="fas fa-exclamation-circle me-2"></i>Usuario o contraseña incorrectos
+        <!-- Tarjeta Humanidades -->
+        <div class="col-md-4 mb-4">
+          <div class="faculty-card p-4 text-center" id="card2">
+            <div>
+              <i class="fas fa-book card-icon"></i>
+              <h3 class="card-title">Facultad de Humanidades</h3>
+              <p>Seguimiento de prácticas para estudiantes de humanidades.</p>
             </div>
-            <form id="loginForm">
-                <div class="mb-3">
-                    <label for="username" class="form-label visually-hidden">Usuario</label>
-                    <div class="input-group">
-                        <span class="input-group-text">
-                            <i class="fas fa-user input-icon"></i>
-                        </span>
-                        <input type="text" class="form-control" id="username" placeholder="Usuario" required autocomplete="username">
-                    </div>
-                </div>
-                <div class="mb-4">
-                    <label for="password" class="form-label visually-hidden">Contraseña</label>
-                    <div class="input-group">
-                        <span class="input-group-text">
-                            <i class="fas fa-lock input-icon"></i>
-                        </span>
-                        <input type="password" class="form-control" id="password" placeholder="Contraseña" required autocomplete="current-password">
-                        <button class="btn-toggle-password" type="button" id="togglePassword">
-                            <i class="fas fa-eye input-icon"></i>
-                        </button>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-login w-100">
-                    <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
-                </button>
-            </form>
+            <a href="pagina2.html" class="btn btn-faculty">
+              <i class="fas fa-arrow-right me-2"></i>Acceder
+            </a>
+          </div>
         </div>
+        <!-- Tarjeta Salud -->
+        <div class="col-md-4 mb-4">
+          <div class="faculty-card p-4 text-center" id="card3">
+            <div>
+              <i class="fas fa-heartbeat card-icon"></i>
+              <h3 class="card-title">Facultad de Salud</h3>
+              <p>Seguimiento de prácticas para estudiantes del área de salud.</p>
+            </div>
+            <a href="pagina3.html" class="btn btn-faculty">
+              <i class="fas fa-arrow-right me-2"></i>Acceder
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Main Content (Hidden until login) -->
-    <div class="main-content" id="mainContent">
-        <div class="container">
-            <div class="row mb-4">
-                <div class="col-12">
-                    <h2 class="text-center mb-5">Seleccione una Facultad</h2>
-                </div>
-            </div>
-            <div class="row">
-                <!-- Ingeniería Card -->
-                <div class="col-md-4 mb-4">
-                    <div class="faculty-card p-4 text-center" id="card1">
-                        <div>
-                            <i class="fas fa-cogs card-icon"></i>
-                            <h3 class="card-title">Facultad de Ingenierías</h3>
-                            <p>Seguimiento de prácticas para estudiantes de ingeniería.</p>
-                        </div>
-                        <a href="pagina1.html" class="btn btn-faculty">
-                            <i class="fas fa-arrow-right me-2"></i>Acceder
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Humanidades Card -->
-                <div class="col-md-4 mb-4">
-                    <div class="faculty-card p-4 text-center" id="card2">
-                        <div>
-                            <i class="fas fa-book card-icon"></i>
-                            <h3 class="card-title">Facultad de Humanidades</h3>
-                            <p>Seguimiento de prácticas para estudiantes de humanidades.</p>
-                        </div>
-                        <a href="pagina2.html" class="btn btn-faculty">
-                            <i class="fas fa-arrow-right me-2"></i>Acceder
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Salud Card -->
-                <div class="col-md-4 mb-4">
-                    <div class="faculty-card p-4 text-center" id="card3">
-                        <div>
-                            <i class="fas fa-heartbeat card-icon"></i>
-                            <h3 class="card-title">Facultad de Salud</h3>
-                            <p>Seguimiento de prácticas para estudiantes del área de salud.</p>
-                        </div>
-                        <a href="pagina3.html" class="btn btn-faculty">
-                            <i class="fas fa-arrow-right me-2"></i>Acceder
-                        </a>
-                    </div>
-                </div>
-            </div>
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <p class="mb-0"><i class="far fa-copyright me-2"></i>2025 Universidad de Aconcagua</p>
         </div>
+        <div class="col-md-6 text-md-end">
+          <p class="mb-0">Coordinación de Centros de Prácticas e Inserción Laboral</p>
+        </div>
+      </div>
     </div>
+  </footer>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <p class="mb-0"><i class="far fa-copyright me-2"></i>2025 Universidad de Aconcagua</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <p class="mb-0">Coordinación de Centros de Prácticas e Inserción Laboral</p>
-                </div>
-            </div>
-        </div>
-    </footer>
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Toggle de visibilidad de contraseña
+      const togglePassword = document.getElementById('togglePassword');
+      const password = document.getElementById('password');
+      togglePassword.addEventListener('click', function() {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        this.querySelector('i').classList.toggle('fa-eye');
+        this.querySelector('i').classList.toggle('fa-eye-slash');
+      });
 
-    <!-- Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom JavaScript -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Referencias a elementos del DOM
-            const togglePassword = document.getElementById('togglePassword');
-            const password = document.getElementById('password');
-            const loginForm = document.getElementById('loginForm');
-            const errorMessage = document.getElementById('errorMessage');
-            const mainContent = document.getElementById('mainContent');
-            const loginContainer = document.getElementById('loginContainer');
-            const logoutBtn = document.getElementById('logoutBtn');
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            const notification = document.getElementById('notification');
-            const notificationText = document.getElementById('notificationText');
-            
-            // Función para mostrar notificaciones
-            function showNotification(message) {
-                notificationText.textContent = message;
-                notification.classList.add('show');
-                
-                setTimeout(() => {
-                    notification.classList.remove('show');
-                }, 3000);
-            }
-            
-            // Función para mostrar/ocultar el overlay de carga
-            function toggleLoading(show) {
-                if (show) {
-                    loadingOverlay.classList.add('active');
-                } else {
-                    setTimeout(() => {
-                        loadingOverlay.classList.remove('active');
-                    }, 500);
-                }
-            }
-            
-            // Toggle password visibility
-            togglePassword.addEventListener('click', function() {
-                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-                password.setAttribute('type', type);
-                
-                // Toggle eye icon
-                this.querySelector('i').classList.toggle('fa-eye');
-                this.querySelector('i').classList.toggle('fa-eye-slash');
-            });
-            
-            // Check if user is already logged in (from session storage)
-            if (sessionStorage.getItem('loggedIn') === 'true') {
-                showMainContent();
-            }
-            
-            // Login form submission
-            loginForm.addEventListener('submit', function(event) {
-                event.preventDefault();
-                
-                const username = document.getElementById('username').value;
-                const passwordValue = document.getElementById('password').value;
-                
-                // Mostrar indicador de carga
-                toggleLoading(true);
-                
-                setTimeout(() => {
-                    toggleLoading(false);
-                    
-                    // Mantener las credenciales originales
-                    if (username === 'ciclofinal' && passwordValue === 'Uac.2022') {
-                        // Store login state in session storage
-                        sessionStorage.setItem('loggedIn', 'true');
-                        
-                        // Mostrar notificación
-                        showNotification('Inicio de sesión exitoso');
-                        
-                        showMainContent();
-                    } else {
-                        errorMessage.style.display = 'block';
-                        setTimeout(() => {
-                            errorMessage.style.display = 'none';
-                        }, 3000);
-                    }
-                }, 800);
-            });
-            
-            // Logout functionality
-            logoutBtn.addEventListener('click', function() {
-                // Confirmar cierre de sesión
-                if (confirm('¿Está seguro que desea cerrar sesión?')) {
-                    // Clear session storage
-                    sessionStorage.removeItem('loggedIn');
-                    
-                    // Hide main content and show login form
-                    mainContent.style.display = 'none';
-                    loginContainer.style.display = 'block';
-                    logoutBtn.style.display = 'none';
-                    
-                    // Clear form fields
-                    document.getElementById('username').value = '';
-                    document.getElementById('password').value = '';
-                    
-                    // Mostrar notificación
-                    showNotification('Sesión cerrada exitosamente');
-                }
-            });
-            
-            // Function to show main content after successful login
-            function showMainContent() {
-                loginContainer.style.display = 'none';
-                mainContent.style.display = 'block';
-                logoutBtn.style.display = 'block';
-                
-                // Add animation to cards
-                const cards = document.querySelectorAll('.faculty-card');
-                cards.forEach((card, index) => {
-                    setTimeout(() => {
-                        card.classList.add('animate-fadeIn');
-                    }, 100 * index);
-                });
-                
-                // Setup periodic animation
-                setupCardAnimations();
-            }
-            
-            // Random card animation
-            function setupCardAnimations() {
-                function animateRandomCard() {
-                    const cardIds = ['card1', 'card2', 'card3'];
-                    const randomCard = document.getElementById(cardIds[Math.floor(Math.random() * cardIds.length)]);
-                    
-                    randomCard.style.transform = 'translateY(-15px)';
-                    setTimeout(() => {
-                        randomCard.style.transform = '';
-                    }, 500);
-                }
-                
-                // Start animation loop
-                setInterval(animateRandomCard, 3000);
-            }
+      // Función para mostrar notificaciones
+      function showNotification(message) {
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notificationText');
+        notificationText.textContent = message;
+        notification.classList.add('show');
+        setTimeout(() => {
+          notification.classList.remove('show');
+        }, 3000);
+      }
+
+      // Lógica de login (se conservan las credenciales originales)
+      const loginForm = document.getElementById('loginForm');
+      const errorMessage = document.getElementById('errorMessage');
+      const mainContent = document.getElementById('mainContent');
+      const loginContainer = document.getElementById('loginContainer');
+      const logoutBtn = document.getElementById('logoutBtn');
+
+      if (sessionStorage.getItem('loggedIn') === 'true') {
+        showMainContent();
+      }
+
+      loginForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const username = document.getElementById('username').value;
+        const passwordValue = document.getElementById('password').value;
+        if (username === 'ciclofinal' && passwordValue === 'Uac.2022') {
+          sessionStorage.setItem('loggedIn', 'true');
+          showNotification('Inicio de sesión exitoso');
+          showMainContent();
+        } else {
+          errorMessage.style.display = 'block';
+          setTimeout(() => { errorMessage.style.display = 'none'; }, 3000);
+        }
+      });
+
+      logoutBtn.addEventListener('click', function() {
+        if (confirm('¿Está seguro que desea cerrar sesión?')) {
+          sessionStorage.removeItem('loggedIn');
+          mainContent.style.display = 'none';
+          loginContainer.style.display = 'block';
+          logoutBtn.style.display = 'none';
+          document.getElementById('username').value = '';
+          document.getElementById('password').value = '';
+          showNotification('Sesión cerrada exitosamente');
+        }
+      });
+
+      function showMainContent() {
+        loginContainer.style.display = 'none';
+        mainContent.style.display = 'block';
+        logoutBtn.style.display = 'block';
+        const cards = document.querySelectorAll('.faculty-card');
+        cards.forEach((card, index) => {
+          setTimeout(() => {
+            card.classList.add('animate-fadeIn');
+          }, 100 * index);
         });
-    </script>
+      }
+
+      // Animación sencilla para las tarjetas
+      function setupCardAnimations() {
+        function animateRandomCard() {
+          const cardIds = ['card1', 'card2', 'card3'];
+          const randomCard = document.getElementById(cardIds[Math.floor(Math.random() * cardIds.length)]);
+          randomCard.style.transform = 'translateY(-15px)';
+          setTimeout(() => { randomCard.style.transform = ''; }, 500);
+        }
+        setInterval(animateRandomCard, 3000);
+      }
+      setupCardAnimations();
+    });
+  </script>
 </body>
 </html>
