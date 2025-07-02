@@ -9,8 +9,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome para íconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Estilos personalizados -->
-  <style>
+    <style>
         :root {
             --primary-color: #00204e;
             --secondary-color: #FFA500;
@@ -84,28 +86,25 @@
         }
         
         .btn-logout {
-            background-color: rgba(220, 53, 69, 0.9);
+            background-color: #dc3545;
             color: white;
             transition: all 0.3s;
             border-radius: 8px;
-            padding: 8px 16px;
             font-weight: 500;
-            border: none;
         }
         
         .btn-logout:hover {
-            background-color: #dc3545;
+            background-color: #c82333;
             color: white;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
         }
         
         .login-container {
-            background-color: rgba(0, 32, 78, 0.4);
+            background-color: var(--light-bg);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border-radius: 15px;
-            padding: 35px;
+            padding: 30px;
             max-width: 450px;
             width: 100%;
             margin: 60px auto;
@@ -140,26 +139,25 @@
             border-radius: 3px;
         }
         
-        /* Ajuste de los campos de formulario */
+        /* Ajuste para que los iconos sean proporcionados */
         .form-control {
             background-color: rgba(255, 255, 255, 0.9);
             border: none;
-            height: 46px; /* Altura reducida */
+            height: 45px;
             margin-bottom: 20px;
             border-radius: 8px;
-            font-size: 0.95rem;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             transition: all 0.3s;
-            padding-left: 45px; /* Espacio para el icono */
+            padding-left: 40px; /* Espacio para el icono */
         }
         
         .form-control:focus {
-            box-shadow: 0 0 0 3px rgba(255, 165, 0, 0.25);
+            box-shadow: 0 0 0 0.25rem rgba(255, 165, 0, 0.25);
             border-color: var(--secondary-color);
             transform: translateY(-2px);
         }
         
-        /* Ajuste de los iconos para que estén proporcionados */
+        /* Ajuste de posición de los iconos */
         .input-group {
             position: relative;
         }
@@ -168,9 +166,9 @@
             position: absolute;
             top: 0;
             left: 0;
-            height: 46px;
+            height: 45px;
             width: 40px;
-            z-index: 10;
+            z-index: 5;
             justify-content: center;
             background-color: transparent;
             border: none;
@@ -179,7 +177,7 @@
         
         .input-icon {
             font-size: 14px; /* Tamaño reducido */
-            color: #536b8b; /* Color más suave */
+            color: #536b8b; /* Color suave */
             transition: all 0.3s;
         }
         
@@ -191,12 +189,12 @@
             position: absolute;
             top: 0;
             right: 0;
-            height: 46px;
+            height: 45px;
             width: 40px;
             background-color: transparent;
             border: none;
-            z-index: 10;
-            transition: all 0.3s;
+            z-index: 5;
+            border-radius: 0 8px 8px 0;
         }
         
         .btn-toggle-password:hover .input-icon {
@@ -204,26 +202,20 @@
         }
         
         .btn-login {
-            background: linear-gradient(45deg, var(--secondary-color), var(--accent-color));
+            background-color: var(--secondary-color);
             border: none;
             color: white;
-            height: 46px;
-            font-weight: 600;
+            height: 45px;
+            font-weight: bold;
             transition: all 0.3s;
             border-radius: 8px;
-            letter-spacing: 0.5px;
             box-shadow: 0 4px 15px rgba(255, 165, 0, 0.3);
         }
         
         .btn-login:hover {
-            background: linear-gradient(45deg, var(--accent-color), var(--secondary-color));
+            background-color: var(--accent-color);
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(255, 165, 0, 0.5);
-        }
-        
-        .btn-login:active {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(255, 165, 0, 0.3);
         }
         
         .alert-login {
@@ -231,19 +223,15 @@
             border-radius: 8px;
             background-color: rgba(220, 53, 69, 0.8);
             border: none;
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            padding: 12px 15px;
-            font-size: 0.9rem;
         }
         
-        /* Mejoras en las tarjetas de facultad */
+        /* Iconos para las tarjetas también más proporcionados */
         .faculty-card {
-            background-color: rgba(0, 32, 78, 0.4);
+            background-color: var(--light-bg);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border-radius: 15px;
-            transition: all 0.4s ease;
+            transition: all 0.3s ease;
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -273,42 +261,24 @@
         
         .faculty-card:hover {
             transform: translateY(-10px);
-            background-color: rgba(255, 255, 255, 0.15);
+            background-color: rgba(255, 255, 255, 0.2);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
         }
         
-        /* Iconos de tarjetas proporcionados */
-        .card-icon-wrapper {
-            width: 70px; /* Tamaño más proporcionado */
-            height: 70px;
-            margin: 0 auto 20px;
-            background-color: rgba(255, 165, 0, 0.15);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.4s ease;
-        }
-        
-        .faculty-card:hover .card-icon-wrapper {
-            background-color: rgba(255, 165, 0, 0.3);
-            transform: scale(1.1) rotate(5deg);
-        }
-        
         .card-icon {
-            font-size: 1.8rem; /* Tamaño reducido */
+            font-size: 2.5rem;
             color: var(--secondary-color);
-            transition: all 0.4s ease;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
         }
         
         .faculty-card:hover .card-icon {
-            color: #FFC107;
             transform: scale(1.1);
         }
         
         .card-title {
-            font-size: 1.3rem; /* Tamaño ajustado */
-            font-weight: 600;
+            font-size: 1.4rem;
+            font-weight: bold;
             margin-bottom: 15px;
             transition: all 0.3s ease;
         }
@@ -317,41 +287,21 @@
             color: var(--secondary-color);
         }
         
-        .card-text {
-            font-size: 0.9rem; /* Tamaño ajustado */
-            opacity: 0.9;
-            margin-bottom: 10px;
-        }
-        
         .btn-faculty {
-            background: linear-gradient(45deg, var(--secondary-color), var(--accent-color));
+            background-color: var(--secondary-color);
             color: white;
             border: none;
             transition: all 0.3s;
             margin-top: 15px;
             border-radius: 8px;
-            font-weight: 500;
-            padding: 8px 18px; /* Tamaño ajustado */
+            padding: 8px 20px;
             box-shadow: 0 4px 15px rgba(255, 165, 0, 0.2);
-            font-size: 0.9rem;
         }
         
         .btn-faculty:hover {
-            background: linear-gradient(45deg, var(--accent-color), var(--secondary-color));
+            background-color: var(--accent-color);
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(255, 165, 0, 0.4);
-        }
-        
-        .btn-faculty:active {
-            transform: translateY(-1px);
-        }
-        
-        .btn-faculty i {
-            transition: transform 0.3s;
-        }
-        
-        .btn-faculty:hover i {
-            transform: translateX(5px);
         }
         
         .main-content {
@@ -362,23 +312,10 @@
         
         .main-heading {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
             font-weight: 700;
             color: var(--text-color);
             position: relative;
-            display: inline-block;
-            font-size: 1.8rem;
-        }
-        
-        .main-heading::after {
-            content: '';
-            position: absolute;
-            bottom: -15px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
-            border-radius: 3px;
         }
         
         footer {
@@ -389,7 +326,6 @@
             padding: 20px 0;
             margin-top: auto;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
-            font-size: 0.9rem;
         }
         
         /* Animaciones */
@@ -398,28 +334,8 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
-        
         .animate-fadeIn {
             animation: fadeIn 0.5s ease forwards;
-        }
-        
-        .animate-pulse {
-            animation: pulse 2s infinite ease-in-out;
-        }
-        
-        .animate-shake {
-            animation: shake 0.5s ease forwards;
         }
         
         /* Loading indicator */
@@ -467,7 +383,7 @@
             right: 20px;
             background-color: rgba(40, 167, 69, 0.9);
             color: white;
-            padding: 12px 18px;
+            padding: 12px 20px;
             border-radius: 8px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             z-index: 1000;
@@ -483,12 +399,6 @@
         }
         
         /* Responsive adjustments */
-        @media (max-width: 992px) {
-            .faculty-card {
-                margin-bottom: 30px;
-            }
-        }
-        
         @media (max-width: 768px) {
             .faculty-card {
                 margin-bottom: 20px;
@@ -496,30 +406,7 @@
             
             .login-container {
                 margin: 40px 20px;
-                padding: 25px;
-            }
-            
-            .card-icon-wrapper {
-                width: 60px;
-                height: 60px;
-            }
-            
-            .card-icon {
-                font-size: 1.5rem;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .login-title {
-                font-size: 1.6rem;
-            }
-            
-            .main-heading {
-                font-size: 1.5rem;
-            }
-            
-            .card-title {
-                font-size: 1.2rem;
+                padding: 20px;
             }
         }
     </style>
@@ -559,8 +446,7 @@
         <div class="login-container">
             <h2 class="login-title">Acceso al Sistema</h2>
             <div class="alert alert-danger alert-login" id="errorMessage" role="alert">
-                <i class="fas fa-exclamation-circle me-2"></i>
-                <span id="errorText">Usuario o contraseña incorrectos</span>
+                <i class="fas fa-exclamation-circle me-2"></i>Usuario o contraseña incorrectos
             </div>
             <form id="loginForm">
                 <div class="mb-3">
@@ -650,7 +536,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <p class="mb-0">© 2025 Universidad de Aconcagua</p>
+                    <p class="mb-0"><i class="far fa-copyright me-2"></i>2025 Universidad de Aconcagua</p>
                 </div>
                 <div class="col-md-6 text-md-end">
                     <p class="mb-0">Coordinación de Centros de Prácticas e Inserción Laboral</p>
@@ -664,10 +550,40 @@
     <!-- Custom JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Toggle password visibility
+            // Referencias a elementos del DOM
             const togglePassword = document.getElementById('togglePassword');
             const password = document.getElementById('password');
+            const loginForm = document.getElementById('loginForm');
+            const errorMessage = document.getElementById('errorMessage');
+            const mainContent = document.getElementById('mainContent');
+            const loginContainer = document.getElementById('loginContainer');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
             
+            // Función para mostrar notificaciones
+            function showNotification(message) {
+                notificationText.textContent = message;
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+            
+            // Función para mostrar/ocultar el overlay de carga
+            function toggleLoading(show) {
+                if (show) {
+                    loadingOverlay.classList.add('active');
+                } else {
+                    setTimeout(() => {
+                        loadingOverlay.classList.remove('active');
+                    }, 500);
+                }
+            }
+            
+            // Toggle password visibility
             togglePassword.addEventListener('click', function() {
                 const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
                 password.setAttribute('type', type);
@@ -677,50 +593,61 @@
                 this.querySelector('i').classList.toggle('fa-eye-slash');
             });
             
-            // Login form submission
-            const loginForm = document.getElementById('loginForm');
-            const errorMessage = document.getElementById('errorMessage');
-            const mainContent = document.getElementById('mainContent');
-            const loginContainer = document.getElementById('loginContainer');
-            const logoutBtn = document.getElementById('logoutBtn');
-            
             // Check if user is already logged in (from session storage)
             if (sessionStorage.getItem('loggedIn') === 'true') {
                 showMainContent();
             }
             
+            // Login form submission
             loginForm.addEventListener('submit', function(event) {
                 event.preventDefault();
                 
                 const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
+                const passwordValue = document.getElementById('password').value;
                 
-                // Mantenemos las credenciales originales
-                if (username === 'ciclofinal' && password === 'Uac.2022') {
-                    // Store login state in session storage
-                    sessionStorage.setItem('loggedIn', 'true');
-                    showMainContent();
-                } else {
-                    errorMessage.style.display = 'block';
-                    setTimeout(() => {
-                        errorMessage.style.display = 'none';
-                    }, 3000);
-                }
+                // Mostrar indicador de carga
+                toggleLoading(true);
+                
+                setTimeout(() => {
+                    toggleLoading(false);
+                    
+                    // Mantener las credenciales originales
+                    if (username === 'ciclofinal' && passwordValue === 'Uac.2022') {
+                        // Store login state in session storage
+                        sessionStorage.setItem('loggedIn', 'true');
+                        
+                        // Mostrar notificación
+                        showNotification('Inicio de sesión exitoso');
+                        
+                        showMainContent();
+                    } else {
+                        errorMessage.style.display = 'block';
+                        setTimeout(() => {
+                            errorMessage.style.display = 'none';
+                        }, 3000);
+                    }
+                }, 800);
             });
             
             // Logout functionality
             logoutBtn.addEventListener('click', function() {
-                // Clear session storage
-                sessionStorage.removeItem('loggedIn');
-                
-                // Hide main content and show login form
-                mainContent.style.display = 'none';
-                loginContainer.style.display = 'block';
-                logoutBtn.style.display = 'none';
-                
-                // Clear form fields
-                document.getElementById('username').value = '';
-                document.getElementById('password').value = '';
+                // Confirmar cierre de sesión
+                if (confirm('¿Está seguro que desea cerrar sesión?')) {
+                    // Clear session storage
+                    sessionStorage.removeItem('loggedIn');
+                    
+                    // Hide main content and show login form
+                    mainContent.style.display = 'none';
+                    loginContainer.style.display = 'block';
+                    logoutBtn.style.display = 'none';
+                    
+                    // Clear form fields
+                    document.getElementById('username').value = '';
+                    document.getElementById('password').value = '';
+                    
+                    // Mostrar notificación
+                    showNotification('Sesión cerrada exitosamente');
+                }
             });
             
             // Function to show main content after successful login
