@@ -593,16 +593,16 @@
         </div>
     </div>
 
-    <!-- Main Content (Hidden until login) -->
+   <!-- Main Content (Hidden until login) -->
     <div class="main-content" id="mainContent">
         <div class="container">
             <div class="row mb-4">
-                <div class="col-12 text-center">
-                    <h2 class="main-heading d-inline-block">Seleccione una Facultad</h2>
+                <div class="col-12">
+                    <h2 class="text-center mb-5">Seleccione una Facultad</h2>
                 </div>
             </div>
             <div class="row">
-                 <!-- Ingeniería Card -->
+                <!-- Ingeniería Card -->
                 <div class="col-md-4 mb-4">
                     <div class="faculty-card p-4 text-center" id="card1">
                         <div>
@@ -630,7 +630,7 @@
                     </div>
                 </div>
                 
-                 <!-- Salud Card -->
+                <!-- Salud Card -->
                 <div class="col-md-4 mb-4">
                     <div class="faculty-card p-4 text-center" id="card3">
                         <div>
@@ -652,10 +652,10 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <p class="mb-0"><i class="far fa-copyright me-2"></i>2025 Universidad de Aconcagua</p>
+                    <p class="mb-0">© 2025 Universidad de Aconcagua</p>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <p class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>Coordinación de Centros de Prácticas e Inserción Laboral</p>
+                    <p class="mb-0">Coordinación de Centros de Prácticas e Inserción Laboral</p>
                 </div>
             </div>
         </div>
@@ -666,258 +666,98 @@
     <!-- Custom JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Referencias a elementos del DOM
+            // Toggle password visibility
             const togglePassword = document.getElementById('togglePassword');
             const password = document.getElementById('password');
-            const loginForm = document.getElementById('loginForm');
-            const errorMessage = document.getElementById('errorMessage');
-            const errorText = document.getElementById('errorText');
-            const mainContent = document.getElementById('mainContent');
-            const loginContainer = document.getElementById('loginContainer');
-            const logoutBtn = document.getElementById('logoutBtn');
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            const notification = document.getElementById('notification');
-            const notificationText = document.getElementById('notificationText');
             
-            // Función para mostrar notificaciones
-            function showNotification(message, success = true) {
-                notificationText.textContent = message;
-                notification.style.backgroundColor = success ? 'rgba(40, 167, 69, 0.9)' : 'rgba(220, 53, 69, 0.9)';
-                notification.classList.add('show');
-                
-                setTimeout(() => {
-                    notification.classList.remove('show');
-                }, 3000);
-            }
-            
-            // Función para mostrar/ocultar el overlay de carga
-            function toggleLoading(show) {
-                if (show) {
-                    loadingOverlay.classList.add('active');
-                } else {
-                    setTimeout(() => {
-                        loadingOverlay.classList.remove('active');
-                    }, 500);
-                }
-            }
-            
-            // Toggle password visibility
             togglePassword.addEventListener('click', function() {
                 const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
                 password.setAttribute('type', type);
                 
-                // Toggle eye icon con animación
-                const icon = this.querySelector('i');
-                icon.classList.toggle('fa-eye');
-                icon.classList.toggle('fa-eye-slash');
-                
-                // Añadir animación al icono
-                icon.style.transform = 'scale(1.2)';
-                setTimeout(() => {
-                    icon.style.transform = '';
-                }, 200);
+                // Toggle eye icon
+                this.querySelector('i').classList.toggle('fa-eye');
+                this.querySelector('i').classList.toggle('fa-eye-slash');
             });
+            
+            // Login form submission
+            const loginForm = document.getElementById('loginForm');
+            const errorMessage = document.getElementById('errorMessage');
+            const mainContent = document.getElementById('mainContent');
+            const loginContainer = document.getElementById('loginContainer');
+            const logoutBtn = document.getElementById('logoutBtn');
             
             // Check if user is already logged in (from session storage)
             if (sessionStorage.getItem('loggedIn') === 'true') {
                 showMainContent();
             }
             
-            // Login form submission
             loginForm.addEventListener('submit', function(event) {
                 event.preventDefault();
                 
                 const username = document.getElementById('username').value;
-                const passwordValue = document.getElementById('password').value;
+                const password = document.getElementById('password').value;
                 
-                // Deshabilitar el botón y mostrar indicador de carga
-                const submitBtn = this.querySelector('button[type="submit"]');
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Verificando...';
-                
-                // Simular verificación con servidor
-                toggleLoading(true);
-                
-                setTimeout(() => {
-                    toggleLoading(false);
-                    
-                    // Mantener las credenciales originales
-                    if (username === 'ciclofinal' && passwordValue === 'Uac.2022') {
-                        // Store login state in session storage
-                        sessionStorage.setItem('loggedIn', 'true');
-                        
-                        // Mostrar notificación de éxito
-                        showNotification('Inicio de sesión exitoso', true);
-                        
-                        showMainContent();
-                    } else {
-                        // Restaurar botón
-                        submitBtn.disabled = false;
-                        submitBtn.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión';
-                        
-                        // Mostrar error
-                        errorText.textContent = 'Usuario o contraseña incorrectos';
-                        errorMessage.style.display = 'block';
-                        errorMessage.classList.add('animate-shake');
-                        
-                        setTimeout(() => {
-                            errorMessage.classList.remove('animate-shake');
-                            setTimeout(() => {
-                                errorMessage.style.display = 'none';
-                            }, 3000);
-                        }, 500);
-                    }
-                }, 1000);
+                // Mantenemos las credenciales originales
+                if (username === 'ciclofinal' && password === 'Uac.2022') {
+                    // Store login state in session storage
+                    sessionStorage.setItem('loggedIn', 'true');
+                    showMainContent();
+                } else {
+                    errorMessage.style.display = 'block';
+                    setTimeout(() => {
+                        errorMessage.style.display = 'none';
+                    }, 3000);
+                }
             });
             
             // Logout functionality
             logoutBtn.addEventListener('click', function() {
-                // Confirmar cierre de sesión
-                if (confirm('¿Está seguro que desea cerrar sesión?')) {
-                    // Añadir efecto de desvanecimiento
-                    mainContent.style.opacity = '0';
-                    mainContent.style.transform = 'translateY(20px)';
-                    
-                    setTimeout(() => {
-                        // Clear session storage
-                        sessionStorage.removeItem('loggedIn');
-                        
-                        // Hide main content and show login form
-                        mainContent.style.display = 'none';
-                        mainContent.style.opacity = '1';
-                        mainContent.style.transform = 'translateY(0)';
-                        
-                        loginContainer.style.display = 'block';
-                        loginContainer.classList.add('animate-fadeIn');
-                        
-                        logoutBtn.style.display = 'none';
-                        
-                        // Clear form fields
-                        document.getElementById('username').value = '';
-                        document.getElementById('password').value = '';
-                        
-                        // Mostrar notificación
-                        showNotification('Sesión cerrada exitosamente');
-                    }, 300);
-                }
+                // Clear session storage
+                sessionStorage.removeItem('loggedIn');
+                
+                // Hide main content and show login form
+                mainContent.style.display = 'none';
+                loginContainer.style.display = 'block';
+                logoutBtn.style.display = 'none';
+                
+                // Clear form fields
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
             });
             
             // Function to show main content after successful login
             function showMainContent() {
-                // Ocultar formulario de login con animación
-                loginContainer.style.opacity = '0';
-                loginContainer.style.transform = 'translateY(20px)';
+                loginContainer.style.display = 'none';
+                mainContent.style.display = 'block';
+                logoutBtn.style.display = 'block';
                 
-                setTimeout(() => {
-                    loginContainer.style.display = 'none';
-                    
-                    // Mostrar contenido principal con animación
-                    mainContent.style.display = 'block';
-                    mainContent.style.opacity = '0';
-                    
+                // Add animation to cards
+                const cards = document.querySelectorAll('.faculty-card');
+                cards.forEach((card, index) => {
                     setTimeout(() => {
-                        mainContent.style.opacity = '1';
-                        mainContent.style.transform = 'translateY(0)';
-                        
-                        // Restaurar estilos del contenedor de login
-                        loginContainer.style.opacity = '1';
-                        loginContainer.style.transform = 'translateY(0)';
-                        
-                        // Mostrar botón de logout
-                        logoutBtn.style.display = 'block';
-                        
-                        // Add animation to cards
-                        const cards = document.querySelectorAll('.faculty-card');
-                        cards.forEach((card, index) => {
-                            setTimeout(() => {
-                                card.classList.add('animate-fadeIn');
-                            }, 150 * index);
-                        });
-                        
-                        // Setup periodic animation
-                        setupCardAnimations();
-                    }, 100);
-                }, 300);
+                        card.classList.add('animate-fadeIn');
+                    }, 100 * index);
+                });
+                
+                // Setup periodic animation
+                setupCardAnimations();
             }
             
-            // Enhanced card animations
+            // Random card animation
             function setupCardAnimations() {
-                // Función para animar una tarjeta aleatoria
                 function animateRandomCard() {
                     const cardIds = ['card1', 'card2', 'card3'];
                     const randomCard = document.getElementById(cardIds[Math.floor(Math.random() * cardIds.length)]);
                     
-                    if (randomCard && mainContent.style.display === 'block') {
-                        // Animación más suave
-                        randomCard.style.transition = 'transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-                        randomCard.style.transform = 'translateY(-15px)';
-                        
-                        // Animar también el icono
-                        const iconWrapper = randomCard.querySelector('.card-icon-wrapper');
-                        if (iconWrapper) {
-                            iconWrapper.style.backgroundColor = 'rgba(255, 165, 0, 0.3)';
-                        }
-                        
-                        setTimeout(() => {
-                            randomCard.style.transform = '';
-                            if (iconWrapper) {
-                                iconWrapper.style.backgroundColor = '';
-                            }
-                        }, 800);
-                    }
+                    randomCard.style.transform = 'translateY(-15px)';
+                    setTimeout(() => {
+                        randomCard.style.transform = '';
+                    }, 500);
                 }
                 
-                // Iniciar animación con intervalos variables
-                let animationInterval;
-                
-                function startAnimationLoop() {
-                    // Limpiar intervalo existente si hay uno
-                    if (animationInterval) {
-                        clearInterval(animationInterval);
-                    }
-                    
-                    // Configurar nuevo intervalo aleatorio entre 3-6 segundos
-                    const randomDelay = Math.floor(Math.random() * 3000) + 3000;
-                    animationInterval = setInterval(() => {
-                        if (mainContent.style.display === 'block') {
-                            animateRandomCard();
-                        } else {
-                            clearInterval(animationInterval);
-                        }
-                    }, randomDelay);
-                }
-                
-                // Iniciar loop de animación
-                startAnimationLoop();
-                
-                // Reiniciar animaciones al interactuar con las tarjetas
-                const cards = document.querySelectorAll('.faculty-card');
-                cards.forEach(card => {
-                    card.addEventListener('mouseenter', function() {
-                        // Detener animaciones aleatorias temporalmente
-                        clearInterval(animationInterval);
-                    });
-                    
-                    card.addEventListener('mouseleave', function() {
-                        // Reiniciar animaciones aleatorias
-                        startAnimationLoop();
-                    });
-                });
+                // Start animation loop
+                setInterval(animateRandomCard, 3000);
             }
-            
-            // Mejorar interactividad en hover de campos de formulario
-            const formInputs = document.querySelectorAll('.form-control');
-            formInputs.forEach(input => {
-                input.addEventListener('focus', function() {
-                    this.parentElement.querySelector('.input-icon').style.color = 'var(--secondary-color)';
-                });
-                
-                input.addEventListener('blur', function() {
-                    if (!this.value) {
-                        this.parentElement.querySelector('.input-icon').style.color = '#536b8b';
-                    }
-                });
-            });
         });
     </script>
 </body>
