@@ -5888,6 +5888,35 @@ $(document).ready(function() {
         window.location.href = 'index.html';
     });
     
+// Nueva función para exportar datos a Excel
+function exportToExcel(data, fileName, sheetName) {
+    if (data.length === 0) {
+        showAlert('No hay datos para exportar', 'warning');
+        return;
+    }
+    
+    // Crear hoja de cálculo a partir de los datos (array de objetos)
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    
+    // Crear libro de trabajo
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+    
+    // Generar y descargar el archivo Excel
+    XLSX.writeFile(workbook, `${fileName}.xlsx`);
+}
+
+// Event listener para exportar estudiantes (aplica filtros activos)
+$('#exportExcelBtn').on('click', function() {
+    const filteredStudents = filterStudents(); // Usar los datos filtrados
+    exportToExcel(filteredStudents, 'estudiantes_practicas', 'Estudiantes');
+});
+
+// Event listener para exportar centros de práctica
+$('#exportCentersBtn').on('click', function() {
+    exportToExcel(centersData, 'centros_practicas', 'Centros');
+});
+
     // Botón para volver al menú principal
     $('#volverPrincipal, .navbar-brand').on('click', function(e) {
         e.preventDefault();
