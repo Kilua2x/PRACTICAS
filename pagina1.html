@@ -5496,6 +5496,179 @@ $(document).ready(function() {
         width: '100%'
     });
     
+    // Generar informe completo en PDF
+$('#generateReportBtn').on('click', function() {
+    // Crear nuevo objeto PDF
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // Configuración inicial
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.text('INFORME DE PRÁCTICAS PROFESIONALES', 105, 20, { align: 'center' });
+    doc.text('Universidad de Aconcagua', 105, 30, { align: 'center' });
+    
+    // Fecha actual
+    const today = new Date();
+    const dateStr = today.toLocaleDateString('es-CL');
+    doc.setFontSize(12);
+    doc.text(`Fecha de emisión: ${dateStr}`, 20, 40);
+    
+    // Estadísticas generales
+    doc.setFont('helvetica', 'bold');
+    doc.text('ESTADÍSTICAS GENERALES', 20, 55);
+    doc.setFont('helvetica', 'normal');
+    
+    const totalStudents = studentsData.length;
+    const inProgress = studentsData.filter(s => s.finalizacionPractica === 'en-proceso').length;
+    const completed = studentsData.filter(s => s.finalizacionPractica === 'completada').length;
+    const pending = studentsData.filter(s => s.finalizacionPractica === 'no-comienza').length;
+    
+    doc.text(`Total de estudiantes: ${totalStudents}`, 25, 65);
+    doc.text(`En proceso: ${inProgress} (${Math.round((inProgress/totalStudents)*100) || 0}%)`, 25, 75);
+    doc.text(`Completadas: ${completed} (${Math.round((completed/totalStudents)*100) || 0}%)`, 25, 85);
+    doc.text(`Pendientes: ${pending} (${Math.round((pending/totalStudents)*100) || 0}%)`, 25, 95);
+    
+    // Listado de estudiantes
+    doc.setFont('helvetica', 'bold');
+    doc.text('LISTADO DE ESTUDIANTES', 20, 115);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    
+    let yPosition = 125;
+    const filteredStudents = filterStudents();
+    
+    filteredStudents.forEach((student, index) => {
+        // Agregar nueva página si es necesario
+        if (yPosition > 270) {
+            doc.addPage();
+            yPosition = 20;
+        }
+        
+        const status = student.finalizacionPractica === 'completada' ? 'Completada' : 
+                      student.finalizacionPractica === 'en-proceso' ? 'En proceso' : 'Pendiente';
+        
+        doc.setFont('helvetica', 'bold');
+        doc.text(`${index + 1}. ${student.nombre}`, 25, yPosition);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`RUT: ${student.rut} | Carrera: ${student.carrera}`, 25, yPosition + 7);
+        doc.text(`Centro: ${student.centroPractica || 'No asignado'} | Estado: ${status} | Nota: ${student.notaFinal}`, 25, yPosition + 14);
+        
+        yPosition += 25;
+    });
+    
+    // Guardar PDF
+    doc.save('informe_practicas_uac.pdf');
+    
+    showAlert('Informe generado correctamente', 'success');
+});
+
+// Generar análisis de centros de práctica
+$('#generateCentersReportBtn').on('click', function() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // Configuración inicial
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.text('ANÁLISIS DE CENTROS DE PRÁCTICA', 105, 20, { align: 'center' });
+    doc.text('Universidad de Aconcagua', 105, 30, { align: 'center' });
+    
+    // Fecha actual
+    const today = new Date();
+    const dateStr = today.toLocaleDateString('es-CL');
+    doc.setFontSize(12);
+    doc.text(`Fecha de emisión: ${dateStr}`, 20, 40);
+    
+    // Estadísticas de centros
+    doc.setFont('helvetica', 'bold');
+    doc.text('ESTADÍSTICAS DE CENTROS', 20, 55);
+    doc.setFont('helvetica', 'normal');
+    
+    const totalCenters = centersData.length;
+    const highQuality = centersData.filter(c => c.alineacionPerfil === 'excelente' && c.relevanciaIndustria === 'alta').length;
+    const mediumQuality = centersData.filter(c => c.alineacionPerfil === 'buena' || c.relevanciaIndustria === 'media').length;
+    const lowQuality = centersData.filter(c => c.alineacionPerfil === 'suficiente' || c.relevanciaIndustria === 'baja').length;
+    
+    doc.text(`Total de centros: ${totalCenters}`, 25, 65);
+    doc.text(`Alta pertinencia: ${highQuality} (${Math.round((highQuality/totalCenters)*100) || 0}%)`, 25, 75);
+    doc.text(`Media pertinencia: ${mediumQuality} (${Math.round((mediumQuality/totalCenters)*100) || 0}%)`, 25, 85);
+    doc.text(`Baja pertinencia: ${lowQuality} (${Math.round((lowQuality/totalCenters)*100) || 0}%)`, 25, 95);
+    
+    // Distribución por sector
+    doc.setFont('helvetica', 'bold');
+    doc.text('DISTRIBUCIÓN POR SECTOR', 20, 115);
+    doc.setFont('helvetica', 'normal');
+    
+    const sectors = {};
+    centersData.forEach(center => {
+        if (!sectors[center.sector]) sectors[center.sector] = 0;
+        sectors[center.sector]++;
+    });
+    
+    let yPosition = 125;
+    for (const [sector, count] of Object.entries(sectors)) {
+        let sectorName = sector;
+        switch(sector) {
+            case 'mineria': sectorName = 'Minería'; break;
+            case 'industria': sectorName = 'Industria manufacturera'; break;
+            case 'tecnologia': sectorName = 'Tecnología'; break;
+            case 'servicios': sectorName = 'Servicios'; break;
+            case 'comercio': sectorName = 'Comercio'; break;
+            case 'construccion': sectorName = 'Construcción'; break;
+            // Otros sectores...
+        }
+        doc.text(`${sectorName}: ${count} centros (${Math.round((count/totalCenters)*100)}%)`, 25, yPosition);
+        yPosition += 10;
+    }
+    
+    // Recomendaciones estratégicas
+    doc.addPage();
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(14);
+    doc.text('RECOMENDACIONES ESTRATÉGICAS', 20, 20);
+    doc.setFontSize(12);
+    
+    // Áreas geográficas
+    doc.text('Áreas geográficas a desarrollar:', 20, 35);
+    doc.setFont('helvetica', 'normal');
+    doc.text('• Aysén: 0 centros activos. Potencial en minería y energías renovables.', 25, 45);
+    doc.text('• Magallanes: 1 centro activo. Oportunidades en turismo, logística y energía.', 25, 55);
+    doc.text('• Atacama: 2 centros activos. Alto potencial en minería y energía solar.', 25, 65);
+    
+    // Sectores industriales
+    doc.setFont('helvetica', 'bold');
+    doc.text('Sectores industriales a fortalecer:', 20, 80);
+    doc.setFont('helvetica', 'normal');
+    doc.text('• Energías renovables: Sector en crecimiento con alta demanda de ingenieros.', 25, 90);
+    doc.text('• Tecnologías 4.0: Automatización, IA y robótica con pocas alianzas actuales.', 25, 100);
+    doc.text('• Biotecnología: Sin representación actual, relevante para carreras de ingeniería.', 25, 110);
+    
+    // Centros prioritarios
+    doc.setFont('helvetica', 'bold');
+    doc.text('Centros de alta prioridad estratégica:', 20, 125);
+    doc.setFont('helvetica', 'normal');
+    
+    const priorityCenters = centersData
+        .filter(center => center.impactoEstrategico === 'alto' && center.potencialColaboracion === 'alto')
+        .slice(0, 5);
+        
+    if (priorityCenters.length > 0) {
+        yPosition = 135;
+        priorityCenters.forEach((center, index) => {
+            doc.text(`• ${center.nombre} (${center.ciudad}, ${center.region})`, 25, yPosition);
+            yPosition += 10;
+        });
+    } else {
+        doc.text('No hay centros identificados como alta prioridad estratégica.', 25, 135);
+    }
+    
+    // Guardar PDF
+    doc.save('analisis_centros_practica.pdf');
+    
+    showAlert('Análisis generado correctamente', 'success');
+});
+
     // Event listeners para filtros de estudiantes
     
     // Filtro de búsqueda
@@ -5793,11 +5966,23 @@ $(document).ready(function() {
     });
     
     // Ver detalles de centro
-    $(document).on('click', '.view-center', function() {
-        const centerId = parseInt($(this).data('id'));
-        showCenterDetails(centerId);
-    });
+// Ver detalles de centro (reemplaza el existente)
+$(document).on('click', '.view-center', function(e) {
+    e.preventDefault(); // Evita comportamiento predeterminado
+    const centerId = parseInt($(this).data('id'));
     
+    // Asegurarse de que el ID sea válido
+    if (!isNaN(centerId)) {
+        const center = centersData.find(c => c.id === centerId);
+        if (center) {
+            showCenterDetails(centerId);
+        } else {
+            showAlert('No se encontró el centro solicitado', 'danger');
+        }
+    } else {
+        showAlert('ID de centro inválido', 'danger');
+    }
+});
     // Editar centro
     $(document).on('click', '.edit-center', function() {
         const centerId = parseInt($(this).data('id'));
